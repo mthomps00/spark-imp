@@ -1,0 +1,35 @@
+    {% if user %}
+        <div class="row">
+            <div class="span12">
+                <div class="alert alert-block">
+                <h4 class="alert-heading">A word of warning.</h4>
+                Keep the URL of this page secret. We didn't want to hassle you to log in, but that means anyone who has this link can change your bio to say you rose to fame as a cast member on "Jersey Shore."</h4>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="span12">
+                <div class="page-header">
+                <h1>Spark Camp logistics <small> for {{ user.first_name }} {{ user.last_name }}</h1>
+                </div>
+            </div>
+            <div class="span8 offset4">
+                {% if stipend %}<h3>You've requested a travel stipend.</h3><p>We hope to be able to accommodate your request. We'll get back to you as soon as we've finalized our attendee list.</p>
+                <p><a class="btn js-btn" href="/rsvp/{{ invitation.rand_id }}/stipend/show">View your stipend request</a></p>{% endif %}
+                {% if not stipend %}<h3>Request a travel stipend</h3> 
+                <p>A limited number of partial travel stipends are available to ensure campers can attend regardless of financial situation.</p>
+                <p><a class="btn js-btn" href="/rsvp/{{ invitation.rand_id }}/stipend/">Stipend request form</a></p>{% endif %}
+
+                {% if roommate %}<h3>You've requested a roommate.</h3><p>Coming soon: a list of Campers seeking roommates. Found a match? <a class="btn js-btn" href="/rsvp/{{ invitation.rand_id }}/roommate/show">Let us know.</a></p>{% endif %}
+                {% if not roommate %}<h3>Request a roommate</h3> 
+                <p>Tell us a few details about the rooming situation you're comfortable with, and we'll try to match you up with another Camper.</p>
+                <p><a class="btn js-btn" href="/rsvp/{{ invitation.rand_id }}/roommate/">Roommate request form</a></p>{% endif %}
+                
+                <h3>Sign up for Ignite</h3> 
+                <p>An Ignite talk is a 5-minute presentation with an auto-advancing deck of PowerPoint slides that tick forward every 15 seconds. <a href="http://igniteshow.com/" target="_blank">You can learn more about the format here.</a></p>
+                <p><a class="btn js-btn" href="/rsvp/{{ invitation.rand_id }}/ignite/">Ignite sign-up</a></p>
+            </div>
+        </div>
+    {% else %}
+        <p>No user found.</p>
+    {% endif %}

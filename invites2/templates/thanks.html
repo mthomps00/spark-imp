@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block title %}Invitations for Spark Camp {{ camp.theme }}{% endblock %}
+
+{% block pageheader %}Invitations for Spark Camp {{ camp.theme }}{% endblock %}
+
+{% block content %}
+        {% if invitations %}
+            <h2>The following invitations have been created for Spark Camp {{ camp.theme }}:</h2>
+            <ul>
+            {% for invite in invitations %}
+                <li><a href="../../rsvp/{{ invite.rand_id }}">{{ invite.user.username }}</a></li>
+            {% endfor %}
+            </ul>
+        {% else %}
+            <p>No invitations found.</p>
+        {% endif %}
+{% endblock %}

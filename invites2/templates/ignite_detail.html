@@ -1,0 +1,18 @@
+{% extends "form_holder.html" %}
+
+{% block breadcrumb %}Ignite sign-up{% endblock %}
+
+{% block form %}
+{% if ignite %}
+
+    <h3>Ignite sign-up for {{ ignite.invitation.user.first_name }} {{ ignite.invitation.user.last_name }}</h3>
+        <ul>
+            <li><strong>Title:</strong> {{ ignite.title }}</li>
+            <li><strong>Your experience with Ignite:</strong> {{ ignite.experience }}</li>
+            <li><strong>Description:</strong> {{ ignite.description }}</li>
+        </ul>
+</div>
+{% else %}
+<p>No ignite request found for this invitation.</p>
+{% endif %}
+{% endblock %}

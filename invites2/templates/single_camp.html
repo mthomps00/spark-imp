@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+
+{% block title %}Invitations for Spark Camp {{ camp.theme }}{% endblock %}
+
+{% block pageheader %}Invitations for Spark Camp {{ camp.theme }}{% endblock %}
+
+{% block content %}
+        {% if invitations %}
+            <div class="row">
+                <div class="span12">
+                    <table class="table table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th>Invite No.</th>
+                                <th>First name</th>
+                                <th>Last name</th>
+                                <th>Status</th>
+                                <th>Stipend</th>
+                                <th>Roommate</th>
+                                <th>Ignite</th>
+                                <th>Expires</th>
+                            </tr>
+                        </thead>                        
+                    {% for invite in invitations %}
+                        <tr>
+                            <td><a href="../../rsvp/{{ invite.rand_id }}">{{ invite.rand_id }}</a></td>
+                            <td>{{ invite.user.first_name }}</td>
+                            <td>{{ invite.user.last_name }}</td>
+                            <td>{{ invite.status }}</td>
+                            <td>{% if invite.stipend %}<a href="../../rsvp/{{ invite.rand_id }}/stipend/show/">Yes</a>{% endif %}</td>
+                            <td>{% if invite.roommate %}<a href="../../rsvp/{{ invite.rand_id }}/roommate/show/">Yes</a>{% endif %}</td>
+                            <td>{% if invite.ignite %}<a href="../../rsvp/{{ invite.rand_id }}/ignite/show/">Yes</a>{% endif %}</td>
+                            <td>{{ invite.expires }}</td>
+                        </tr>
+                    {% endfor %}
+                    </table>
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="span4">
+                    <h3>Percent women:</h3>
+                    <p>{{ percent_women }}</p>
+                </div>
+                <div class="span4">
+                    <h3>Percent of color:</h3>
+                    <p>{{ percent_poc }}</p>
+                </div>
+                <div class="span4">
+                    <h3>Percent journalists:</h3>
+                    <p>{{ percent_journos }}</p>
+                </div>
+            </div>
+        {% else %}
+            <p>No invitations found.</p>
+        {% endif %}
+{% endblock %}

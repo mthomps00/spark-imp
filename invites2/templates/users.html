@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block title %}Invitations for {{ username }}{% endblock %}
+
+{% block pageheader %}Invitations for {{ username }}{% endblock %}
+
+{% block content %}
+
+    {% if invitations %}
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Dates</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            {% for invitation in invitations %}
+            <tr>
+                <td><a href="../../rsvp/{{ invitation.rand_id }}/">Spark Camp {{ invitation.camp.theme }}</a></td>
+                <td>{{ invitation.camp.start_date|date:"l, F j" }} to {{ invitation.camp.end_date|date:"l, F j, Y" }}</td>
+                <td>{{ invitation.status }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    {% else %}
+        <p>No invitations found.</p>
+    {% endif %}
+
+{% endblock %}

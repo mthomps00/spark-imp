@@ -1,0 +1,18 @@
+{% extends "form_holder.html" %}
+
+{% block breadcrumb %}Roommate request{% endblock %}
+
+{% block form %}
+{% if roommate %}
+
+    <h3>Roommate request for {{ roommate.invitation.user.first_name }} {{ roommate.invitation.user.last_name }}</h3>
+        <ul>
+            <li><strong>You identify as:</strong> {{ roommate.sex }}</li>
+            <li><strong>Your roommate preference:</strong> {{ roommate.roommate }}</li>
+            {% if roommate.more %}<li><strong>Other notes:</strong> {{ roommate.more }}</li>{% endif %}
+        </ul>
+</div>
+{% else %}
+<p>No roommate request found for this invitation.</p>
+{% endif %}
+{% endblock %}

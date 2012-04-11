@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+
+{% block title %}{% if invitation.user.first_name %}{{ invitation.user.first_name }}'s {% endif %}Spark Camp {{ invitation.camp.theme }} Dashboard{% endblock %}
+
+{% block pageheader %}Hi{% if invitation.user.first_name %}, {{ invitation.user.first_name }}{% endif %}.
+<small>Manage your information for Spark Camp {{ invitation.camp.theme }} here.</small>
+{% endblock %}
+
+{% block content %}
+
+        <div class="row">
+            <div class="span4">
+            
+            {% block update %}{% if update %}
+            
+                <div class="alert alert-success">{{ update }}</div>
+
+            {% endif %}{% endblock %}
+            
+            {% if invitation %}
+            
+                <p>{{ message }}</p>
+
+                <form action="/guest/{{ invitation.rand_id }}/" method="post">{% csrf_token %}
+                {{ form.as_p }}
+                <input type="submit" value="Submit" />
+                </form>
+
+            {% else %}
+
+                <p>No invitation found.</p>
+
+            {% endif %}
+
+            </div>
+            
+            <div class="span8">
+            
+            {% if invitation %}
+            
+                <div class="well">
+                    <h2>Information about Spark Camp {{ invitation.camp.theme }}</h2>
+                    
+                    <p><strong>Dates:</strong> {{ invitation.camp.start_date|date:"l, F j" }} to {{ invitation.camp.end_date|date:"l, F j, Y" }}</p>
+                    <p><strong>Description:</strong> {{ invitation.camp.description }}</p>
+                    <p><strong>Official hotel:</strong> {{ invitation.camp.hotel }} (<a href="{{ invitation.camp.hotel_url }}">Reservation link</a>)</p>
+                </div>
+                    
+            {% endif %}
+            
+            </div>
+        </div>
+        
+        {% if invitation.status == 'Y' %}
+            
+            {% include "user_info.html" %}
+        
+        {% endif %}
+        
+{% endblock %}

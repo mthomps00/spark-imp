@@ -1,0 +1,12 @@
+{% extends "form_holder.html" %}
+
+{% block breadcrumb %}Ignite sign-up{% endblock %}
+
+{% block form %}
+    <form class="well" action="/rsvp/{{ invitation.rand_id }}/ignite/" method="post">{% csrf_token %}
+    <h3>Sign up for Ignite</h3>
+    <p>An Ignite talk is a 5-minute presentation with an auto-advancing deck of PowerPoint slides that tick forward every 15 seconds. <a href="http://igniteshow.com/" target="_blank">You can learn more about the format here.</a></p>
+    {{ form.as_p }}
+    <input type="submit" value="Submit" />
+    </form>
+{% endblock %}
