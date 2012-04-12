@@ -13,6 +13,7 @@ class Camp(models.Model):
     # Hotel information
     hotel = models.CharField(max_length=30, blank=True)
     hotel_link = models.URLField(blank=True)
+    hotel_code = models.CharField(max_length=30, blank=True)
     hotel_deadline = models.DateField(blank=True)
     
     # Venue information
@@ -116,6 +117,12 @@ class Roommate(models.Model):
     sex = models.CharField(max_length=1, help_text='What sex do you identify as?', choices=SEX_CHOICES)
     roommate = models.CharField(max_length=1, help_text='What sex are you comfortable rooming with?', choices=ROOMMATE_CHOICES)
     more = models.CharField(max_length=140, blank=True, help_text='Anything else we should know?')
+
+# Perhaps declaring this function here would work better?    
+def create_user_profile(sender, instance, created, **kwargs):
+    if created:
+        SparkProfile.objects.create(user=instance)
+post_save.connect(create_user_profile, sender=User)
     
 class SparkProfile(models.Model):
     user = models.OneToOneField(User)
@@ -128,11 +135,6 @@ class SparkProfile(models.Model):
     poc = models.BooleanField(blank=True, default=False, help_text='Person of color?')
     woman = models.BooleanField(blank=True, default=False, help_text='Woman?')
     journo = models.BooleanField(blank=True, default=False, help_text='Works predominantly in the news industry?')
-    
-    def create_user_profile(sender, instance, created, **kwargs):
-        if created:
-            SparkProfile.objects.create(user=instance)
-    post_save.connect(create_user_profile, sender=User)
     
     def __unicode__(self):
         return u'%s\'s SparkProfile' % (self.user.username)

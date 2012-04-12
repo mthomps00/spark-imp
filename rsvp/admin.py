@@ -36,8 +36,6 @@ admin.site.register(Camp, CampAdmin)
 admin.site.register(Invitation, InvitationAdmin)
 
 # SparkProfile-specific commands. Leave these last, 'cause the order matters.
-admin.site.unregister(User)
-
 class SparkProfileInline(admin.StackedInline):
     model = SparkProfile
     
@@ -45,4 +43,6 @@ class UserProfileAdmin(UserAdmin):
     inlines = [
         SparkProfileInline,
     ]
+
+admin.site.unregister(User)
 admin.site.register(User, UserProfileAdmin)

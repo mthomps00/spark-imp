@@ -86,7 +86,11 @@ def single_camp(request, camptheme):
     confirmed_journos = confirmed.filter(user__sparkprofile__journo=True)
     
     def percent(part, whole):
-        return int(100 * (float(len(part))/float(len(whole))))
+        denominator = float(len(whole))
+        numerator = float(len(part))
+        if denominator <= 0:
+            denominator = 1
+        return int(100 * (numerator/denominator))
         
     percent_poc = percent(confirmed_pocs, confirmed)
     percent_women = percent(confirmed_women, confirmed)
@@ -95,9 +99,9 @@ def single_camp(request, camptheme):
     variables = {
         'camp': camp,
         'invitations': invitations,
+        'confirmed': confirmed,
         'percent_poc': percent_poc,
         'percent_women': percent_women,
-        'percent_journos': percent_journos,
     }
     return render_to_response('single_camp.html', variables, context_instance=RequestContext(request))
 
