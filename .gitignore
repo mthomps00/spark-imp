@@ -26,3 +26,7 @@ nosetests.xml
 
 #Mr Developer
 .mr.developer.cfg
+
+# db
+*.sqlite
+*.db
