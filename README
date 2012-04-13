@@ -1,3 +1,5 @@
 This Django app was developed by Matt Thompson to make the process of managing invites for Spark Camp a lot easier.
 
 Matt Thompson still identifies mostly as a writer of things and manager of projects, not a coder. So there is some messy, hacked-together stuff in this repo, which anyone with more than a beginner's proficiency in code will find amusing and hopefully a little charming. But probably not incredibly useful.
+
+If, for whatever reason, you actually use this code in a Django application, you'll want to include a settings.py file, and set up your own database.

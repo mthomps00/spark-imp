@@ -26,5 +26,6 @@ urlpatterns = patterns('',
     (r'^rsvp/(\d+)/ignite/show/$', ignite_detail),
     (r'^rsvp/(\d+)/stipend/$', stipend),
     (r'^rsvp/(\d+)/stipend/show/$', stipend_detail),
+    (r'^rsvp/(\d+)/logistics/$', invite_logistics),
     (r'^guest/(\d+)/$', guest_invite),
 )
