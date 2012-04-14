@@ -4,7 +4,7 @@
 
 {% block form %}
     <h3>Logistics for {{ invitation.user.first_name }} {{ invitation.user.last_name }}</h3>
-        <form class="form form-inline" action="/rsvp/{{ invitation.rand_id }}/logistics/">
+        <form class="form form-inline" action="/rsvp/{{ invitation.rand_id }}/logistics/" method="post">
         {% csrf_token %}
         {{ form.as_p }}
         <input class="btn btn-small" type="submit" value="submit" />

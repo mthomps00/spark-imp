@@ -6,7 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
     <meta name="author" content="">
-    <base href="http://127.0.0.1:8000/">
 
     <!-- Le styles -->
     <link href="{{ STATIC_URL }}css/bootstrap.css" rel="stylesheet">
@@ -39,14 +38,15 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </a>
-          <a class="brand"{% if user.is_authenticated %} href="#"{% endif %}>Spark Camp</a>
+          <a class="brand">Spark Camp</a>
           <div class="nav-collapse">
             <ul class="nav">
             
             {% if user.is_authenticated %}
               <li><a href="/">Home</a></li>
-              <li><a href="/camps">All camps</a></li>
+              <li><a href="/camps"{% block campnav %} {% endblock %}>All camps</a></li>
               <li><a href="/admin">Admin</a></li>
+              {% block anonnav %}{% endblock %}
             {% endif %}
             </ul>
           </div><!--/.nav-collapse -->
@@ -68,12 +68,20 @@
       
       {% endblock %}
 
-    </div> <!-- /container -->
+    <footer class="footer">
+        <hr />
+        <p class="pull-right"><a href="#">Back to top</a></p>
+        <p>Spark Camp's Invitation Management dashboard is a Django app written by <a href="http://twitter.com/mthomps">Matt Thompson</a>. <br />Special thanks to <a href="http://twitter.com/lavallee">Marc Lavallee</a> and <a href="http://twitter.com/eyeseast">Chris Amico</a> for their assistance.</p>
+    </footer>
+
+    </div> 
+    
+    <!-- /container -->
 
     <!-- Le javascript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
-    <script src="{{ STATIC_URL }}js/jquery.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js" type="text/javascript"></script>
     <script src="{{ STATIC_URL }}js/bootstrap-transition.js"></script>
     <script src="{{ STATIC_URL }}js/bootstrap-alert.js"></script>
     <script src="{{ STATIC_URL }}js/bootstrap-modal.js"></script>

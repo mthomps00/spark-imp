@@ -84,114 +84,6 @@ def single_camp(request, camptheme):
     }
     return render_to_response('single_camp.html', variables, context_instance=RequestContext(request))
 
-#"""
-def single_invite(request, rand_id):
-    try:
-        invitation = Invitation.objects.get(rand_id=rand_id)
-    except Invitation.DoesNotExist:
-        raise Http404(u'Could not find this Invitation.')
-    
-    today = date.today()
-    update = False
-    user = invitation.user
-    detailform = InviteDetailForm()
-
-    if request.method == 'POST':
-        if invitation.status == 'P' and invitation.expires < today: #If the invite is waitlisted...
-            form = WaitlistForm(request.POST)
-            message = 'It\'s after the response deadline for your invitation (%s), but we should still be able to accommodate you if you can make it. Please let us know whether we should put you on the waitlist, and we\'ll be in touch very soon with an update.' % invitation.expires
-        elif invitation.status == 'Y': #If the invitation has been accepted...
-            form = UpdateForm(request.POST)
-            message = 'We\'re looking forward to your attendance at Spark Camp. We have you confirmed as coming. If your plans have changed, please use this form to let us know.'
-        elif invitation.status == 'N': #If the invitation has been declined...  
-            form = ResurrectForm(request.POST)
-            message = 'We\'re sorry to hear you can\'t make it to Spark Camp. Please return here and let us know if your plans change in our favor.'
-        elif invitation.status == 'C': #If the acceptance has been canceled...
-            form = ResurrectForm(request.POST)
-            message = 'We\'re sorry to hear you can\'t make it to Spark Camp. Please return here and let us know if your plans change in our favor.'
-        elif invitation.status == 'W': #If the invitation has been waitlisted...
-            form = WaitlistForm(request.POST)
-            message = 'Your invitation has been waitlisted. Once we\'ve finalized our attendee list, we\'ll let you know as soon as possible whether you have a spot. Thank you for your patience.'
-        else:
-            form = ResponseForm(request.POST)
-            message = 'Please use this form to update us on your status for Spark Camp.'
-        if form.is_valid():
-            invitation.status = form.cleaned_data['status']
-            invitation.save()
-            update = 'Thank you for updating your status.'
-            if invitation.status == 'P' and invitation.expires < today: #If the invite is pending a response...
-                message = 'It\'s after the response deadline for your invitation, but we should still be able to accommodate you if you can make it. Please let us know whether we should put you on the waitlist, and we\'ll be in touch very soon with an update.'
-            elif invitation.status == 'Y': #If the invitation has been accepted...
-                message = 'We\'re looking forward to your attendance at Spark Camp. We have you confirmed as coming. If your plans have changed, please use this form to let us know.'
-            elif invitation.status == 'N': #If the invitation has been declined...  
-                message = 'We\'re sorry to hear you can\'t make it to Spark Camp. Please return here and let us know if your plans change in our favor.'
-            elif invitation.status == 'C': #If the acceptance has been canceled...
-                message = 'We\'re sorry to hear you can\'t make it to Spark Camp. Please return here and let us know if your plans change in our favor.'
-            elif invitation.status == 'W': #If the invitation has been waitlisted...
-                message = 'Your invitation has been waitlisted. Once we\'ve finalized our attendee list, we\'ll let you know as soon as possible whether you have a spot. Thank you for your patience.'
-            else:
-                message = 'Please use this form to update us on your status for Spark Camp.'
-    else:
-        update = False
-        if invitation.status == 'P' and invitation.expires < today: #If the invite is pending a response...
-            message = 'It\'s after the response deadline for your invitation (%s), but we should still be able to accommodate you if you can make it. Please let us know whether we should put you on the waitlist, and we\'ll be in touch very soon with an update.' % invitation.expires
-            form = WaitlistForm()
-        elif invitation.status == 'Y': #If the invitation has been accepted...
-            message = 'We\'re looking forward to your attendance at Spark Camp. We have you confirmed as coming. If your plans have changed, please use this form to let us know.'
-            form = UpdateForm()
-        elif invitation.status == 'N': #If the invitation has been declined...  
-            message = 'We\'re sorry to hear you can\'t make it to Spark Camp. Please return here and let us know if your plans change in our favor.'
-            form = ResurrectForm()
-        elif invitation.status == 'C': #If the acceptance has been canceled...
-            message = 'We\'re sorry to hear you can\'t make it to Spark Camp. Please return here and let us know if your plans change in our favor.'
-            form = ResurrectForm()
-        elif invitation.status == 'W': #If the invitation has been waitlisted...
-            message = 'Your invitation has been waitlisted. Once we\'ve finalized our attendee list, we\'ll let you know as soon as possible whether you have a spot. If it turns out you can\'t make it in any event, please let us know. Otherwise, thank you for your patience.'
-            form = WaitlistForm()
-        else:
-            message = 'Please use this form to update us on your status for Spark Camp.'
-            form = ResponseForm()
-    
-    # Find roommate requests
-    if invitation.roommate_set.all():
-        roommates = invitation.roommate_set.all()
-        roommate = roommates[0]
-        roommate.sex = roommate.get_sex_display()
-        roommate.roommate = roommate.get_roommate_display()
-    else:
-        roommate = False
-    
-    # Find stipend requests
-    if invitation.stipend_set.all():
-        stipends = invitation.stipend_set.all()
-        stipend = stipends[0]
-        stipend.jobhelp = stipend.get_employer_subsidized_display()
-    else:
-        stipend = False
-        
-    # Find Ignite sign-ups
-    if invitation.ignite_set.all():
-        ignites = invitation.ignite_set.all()
-        ignite = ignites[0]
-        ignite.jobhelp = ignite.get_experience_display()
-    else:
-        ignite = False
-        
-    variables = {
-        'invitation': invitation,
-        'form': form,
-        'update': update,
-        'message': message,
-        'user': user,
-        'roommate': roommate,
-        'stipend': stipend,
-        'ignite': ignite,
-        'detailform': detailform,
-    }
-    
-    return render_to_response('single_invite.html', variables, context_instance=RequestContext(request))
-#"""
-
 def guest_invite(request, rand_id):
     try:
         invitation = Invitation.objects.get(rand_id=rand_id)
@@ -202,44 +94,36 @@ def guest_invite(request, rand_id):
     today = date.today()
     update = False
     formvars = False
-    message = 'Please use this form to update us on your status for Spark Camp.'
+    detailform = InviteDetailForm()
     user = invitation.user
-
-    if request.method == 'POST':
-        formvars = request.POST
-        if form.is_valid():
-            invitation.status = form.cleaned_data['status']
-            invitation.save()
-            update = 'Thank you for updating your status.'
     
-    if invitation.status == 'P' and invitation.expires < today:
-        form = WaitlistForm(formvars)
-        message = 'It\'s after the response deadline (%s) for your invitation, but we should still be able to accommodate you if you can make it. Please let us know whether we should put you on the waitlist, and we\'ll be in touch very soon with an update.' % invitation.expires
-    elif invitation.status == 'Y':
-        form = UpdateForm(formvars)
-        message = 'We\'re looking forward to your attendance at Spark Camp. We have you confirmed as coming. If your plans have changed, please use this form to let us know.'
-    elif invitation.status == 'N' or invitation.status == 'C':
-        form = ResurrectForm(formvars)  
-        message = 'We\'re sorry to hear you can\'t make it to Spark Camp. Please return here and let us know if your plans change in our favor.'
-    elif invitation.status == 'W':
-        form = WaitlistForm(formvars)
-        message = 'We have you on the waitlist for Spark Camp. Please let us know if it turns out you can\'t make it.'
-    else:
-        form = ResponseForm(formvars)
-        message = 'Please use this form to update us on your status for Spark Camp.'
+    def decideform(formvars={}):
+        if invitation.status == 'Y':
+            message = 'We\'re looking forward to your attendance at Spark Camp. We have you confirmed as coming. If your plans have changed, please use this form to let us know.'
+            form = UpdateForm(formvars)
+        elif invitation.expires < today:
+            message = 'It\'s after the deadline (%s) for your invitation, but if it turns out you can make it to Spark Camp, we may still be able to accommodate you. Please let us know whether we should put you on the waitlist, and we\'ll be in touch very soon with an update.' % invitation.expires
+            form = WaitlistForm(formvars)
+        elif invitation.status == 'N' or invitation.status == 'C':
+            message = 'We\'re sorry to hear you can\'t make it to Spark Camp. Please return here and let us know if your plans change in our favor.'
+            form = ResurrectForm(formvars)  
+        elif invitation.status == 'W':
+            message = 'We have you on the waitlist for Spark Camp. Please let us know if it turns out you can\'t make it.'
+            form = WaitlistForm(formvars)
+        else:
+            message = 'We very much hope you can make it to Spark Camp. Please use this form to submit your RSVP.'
+            form = ResponseForm(formvars)
+        return message, form
 
-    """
     if request.method == 'POST':
-        formvars = request.POST
-        decideform(formvars)
-        form = ResponseForm(request.POST)
+        message, form = decideform(request.POST)
         if form.is_valid():
             invitation.status = form.cleaned_data['status']
             invitation.save()
+            message, form = decideform(request.POST)
             update = 'Thank you for updating your status.'
     else:
-        decideform(formvars)
-    """
+        message, form = decideform()
         
     # Find roommate requests
     if invitation.roommate_set.all():
@@ -269,6 +153,7 @@ def guest_invite(request, rand_id):
     variables = {
         'invitation': invitation,
         'form': form,
+        'detailform': detailform,
         'update': update,
         'message': message,
         'user': user,
@@ -278,49 +163,6 @@ def guest_invite(request, rand_id):
     }
 
     return render_to_response('single_invite.html', variables, context_instance=RequestContext(request))
-
-"""
-def single_invite_thanks(*args, **kwargs):
-    update = 'Thank you for updating your status.'
-    return single_invite(*args, **kwargs)
-"""
-
-"""
-def user_info(request, rand_id):
-    try:
-        invitation = Invitation.objects.get(id=rand_id)
-    except User.DoesNotExist:   
-        raise Http404(u'Could not find this user.')
-    
-    user = invitation.user
-    
-    # Find roommate requests
-    if invitation.roommate_set.all():
-        roommates = invitation.roommate_set.all()
-        roommate = roommates[0]
-        roommate.sex = roommate.get_sex_display()
-        roommate.roommate = roommate.get_roommate_display()
-    else:
-        roommate = False
-    
-    # Find stipend requests
-    if invitation.stipend_set.all():
-        stipends = invitation.stipend_set.all()
-        stipend = stipends[0]
-        stipend.jobhelp = stipend.get_employer_subsidized_display()
-    else:
-        stipend = False
-        
-    # Find Ignite sign-ups
-        
-    variables = {
-        'user': user,
-        'roommate': roommate,
-        'stipend': stipend,
-    }
-
-    return render_to_response('user_info.html', variables, context_instance=RequestContext(request))
-"""
 
 def roommate(request, rand_id):
     try:
@@ -452,7 +294,7 @@ def invite_logistics(request, rand_id):
         raise Http404(u'Could not find this Invitation.')
 
     if request.method == 'POST':
-        form = InviteDetailForm(request.POST)
+        form = InviteDetailForm(request.POST, instance=invitation)
         if form.is_valid():
             invitation.dietary = form.cleaned_data['dietary']
             invitation.arrival_time = form.cleaned_data['arrival_time']
@@ -460,7 +302,7 @@ def invite_logistics(request, rand_id):
             invitation.hotel_booked = form.cleaned_data['hotel_booked']
             invitation.save()
     else:
-        form = InviteDetailForm()
+        form = InviteDetailForm(instance=invitation)
     
     variables = {
         'invitation': invitation,
