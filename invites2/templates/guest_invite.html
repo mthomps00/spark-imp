@@ -21,7 +21,7 @@
             
                 <p>{{ message }}</p>
 
-                <form action="/guest/{{ invitation.rand_id }}/" method="post">{% csrf_token %}
+                <form action="{% url invitation invitation.rand_id %}" method="post">{% csrf_token %}
                 {{ form.as_p }}
                 <input type="submit" value="Submit" />
                 </form>

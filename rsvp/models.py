@@ -51,6 +51,7 @@ class Invitation(models.Model):
     status = models.CharField(max_length=1, choices=STATUS_CHOICES, default='Q')
     type = models.CharField(max_length=1, choices=ATTENDEE_TYPE, default='G')
     plus_one = models.BooleanField(default=False)
+    inviter = models.ForeignKey('self', blank=True, null=True)
     expires = models.DateField(blank=True)
     
     # User-specific metadata
@@ -59,7 +60,7 @@ class Invitation(models.Model):
     rand_id = models.CharField(max_length=8, unique=True, editable=False)
     
     # Logistical information
-    dietary = models.CharField(max_length=140, blank=True, default='None', help_text='Please note any dietary preferences here.', verbose_name='Dietary preferences')
+    dietary = models.CharField(max_length=140, blank=True, default='None', help_text='Please note any dietary preferences here.', verbose_name='Dietary needs')
     arrival_time = models.DateTimeField(blank=True, null=True, help_text='Tell us the time you\'ll be arriving at Spark Camp.')
     departure_time = models.DateTimeField(blank=True, null=True, help_text='Tell us the time you\'ll be leaving Spark Camp.')
     hotel_booked = models.BooleanField(blank=True, default=False, help_text='Check here if you\'ve taken care of your hotel room.')
@@ -75,6 +76,10 @@ class Invitation(models.Model):
             return True
         else:
             return False
+    
+    @models.permalink
+    def get_absolute_url(self):
+        return ('invitation', [str(self.rand_id)])
             
     class Meta:
         unique_together = ('user', 'camp')
@@ -127,12 +132,20 @@ class Roommate(models.Model):
     roommate = models.CharField(max_length=1, help_text='What sex are you comfortable rooming with?', choices=ROOMMATE_CHOICES)
     more = models.CharField(max_length=140, blank=True, help_text='Anything else we should know?')
 
-# Perhaps declaring this function here would work better?    
-def create_user_profile(sender, instance, created, **kwargs):
-    if created:
-        SparkProfile.objects.create(user=instance)
-post_save.connect(create_user_profile, sender=User)
+class Session(models.Model):
+    invitation = models.ForeignKey(Invitation, unique=True)
+    title = models.CharField(max_length=140, help_text='Suggest a name for this session')
+    description = models.TextField(help_text='What do expect the session to be about?')
     
+class PlusOne(models.Model):
+    invitation = models.ForeignKey(Invitation, unique=True)
+    first_name = models.CharField(max_length=30)
+    last_name = models.CharField(max_length=30)
+    email = models.EmailField()
+    employer = models.CharField(max_length=140, blank=True, help_text='Person\'s place of work')
+    job_title = models.CharField(max_length=140, blank=True, help_text='Person\'s job title')
+    reason = models.TextField(help_text='Tell us why this person would be great for Spark Camp.')
+
 class SparkProfile(models.Model):
     user = models.OneToOneField(User)
     bio = models.CharField(max_length=140, blank=True, help_text='Tell us your bio. Keep it Twitter-length.')
@@ -147,3 +160,9 @@ class SparkProfile(models.Model):
     
     def __unicode__(self):
         return u'%s\'s SparkProfile' % (self.user.username)
+
+# Create a SparkProfile whenever a User instance is created    
+def create_user_profile(sender, instance, created, **kwargs):
+    if created:
+        SparkProfile.objects.create(user=instance)
+post_save.connect(create_user_profile, sender=User)

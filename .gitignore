@@ -30,3 +30,6 @@ nosetests.xml
 # db
 *.sqlite
 *.db
+
+# Custom
+local_settings.py
