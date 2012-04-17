@@ -1,4 +1,5 @@
 from django.conf.urls import patterns, include, url
+from django.contrib.auth.views import login, logout_then_login
 from rsvp.views import *
 
 # Uncomment the next two lines to enable the admin:
@@ -20,9 +21,9 @@ urlpatterns = patterns('',
     url(r'^camps/([a-zA-Z-]+)/$', single_camp, name="single_camp"),
     url(r'^user/(\w+)/$', user_page, name="user_page"),
     url(r'^rsvp/(\d{8})/$', guest_invite, name="invitation"),
-    url(r'^rsvp/(\d{8})/roommate/$', roommate, name="roommate"),
-    url(r'^rsvp/(\d{8})/ignite/$', ignite, name="ignite"),
-    url(r'^rsvp/(\d{8})/stipend/$', stipend, name="stipend"),
     url(r'^rsvp/(\d{8})/logistics/$', invite_logistics, name="invite_logistics"),
+    url(r'^rsvp/(\d{8})/profile/$', profile, name="profile"),
     url(r'^rsvp/(?P<rand_id>\d{8})/(?P<main_object>\w+)/$', invite_related, name="invite_related"),
+    url(r'^login/$', login, {'template_name': 'login.html'}),
+    url(r'^logout/$', logout_then_login),
 )

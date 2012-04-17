@@ -2,11 +2,15 @@
 
 {% block breadcrumb %}Logistics{% endblock %}
 
+{% block logisticsnav %} class="active"{% endblock %}
+
 {% block form %}
-    <h3>Logistics for {{ invitation.user.first_name }} {{ invitation.user.last_name }}</h3>
-        <form class="form form-inline" action="/rsvp/{{ invitation.rand_id }}/logistics/" method="post">
+        <form class="well form form-inline" action="{% url invite_logistics invitation.rand_id %}" method="post">
+    <h3>Logistics for {{ invitation.user.first_name }} {{ invitation.user.last_name }}</h3><br />
+        <table class="table table-bordered table-striped">
         {% csrf_token %}
-        {{ form.as_p }}
+        {{ form.as_table }}
+        </table>
         <input class="btn btn-small" type="submit" value="submit" />
         </form>
 {% endblock %}

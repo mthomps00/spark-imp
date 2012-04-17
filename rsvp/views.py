@@ -85,10 +85,7 @@ def single_camp(request, camptheme):
     return render_to_response('single_camp.html', variables, context_instance=RequestContext(request))
 
 def guest_invite(request, rand_id):
-    try:
-        invitation = Invitation.objects.get(rand_id=rand_id)
-    except Invitation.DoesNotExist:
-        raise Http404(u'Could not find this Invitation.')       
+    invitation = get_object_or_404(Invitation, rand_id=rand_id)
     
     # Declare global variables
     today = date.today()
@@ -96,6 +93,7 @@ def guest_invite(request, rand_id):
     formvars = False
     detailform = InviteDetailForm()
     user = invitation.user
+    sparkprofile = SparkProfile.objects.get(user=user)
     
     def decideform(formvars={}):
         if invitation.status == 'Y':
@@ -152,6 +150,7 @@ def guest_invite(request, rand_id):
     
     variables = {
         'invitation': invitation,
+        'sparkprofile': sparkprofile,
         'form': form,
         'detailform': detailform,
         'update': update,
@@ -176,7 +175,7 @@ def invite_related(request, rand_id, main_object):
     properties = {
         'Roommate': ( 'sex', 'roommate', 'more', ),
         'Ignite': ( 'title', 'experience', 'description', ),
-        'Stipend': ( 'cost_estimate', 'employer_subsidized', 'employer_percentage', 'invitee_percentage', 'details', )
+        'Stipend': ( 'cost_estimate', 'employer_subsidized', 'employer_percentage', 'invitee_percentage', 'details', ),
     }
     
     local_dict = properties[main_object.__name__]
@@ -203,134 +202,6 @@ def invite_related(request, rand_id, main_object):
     
     return render_to_response('related.html', variables, context_instance=RequestContext(request))
 
-
-def roommate(request, rand_id):
-    try:
-        invitation = Invitation.objects.get(rand_id=rand_id)
-    except Invitation.DoesNotExist:
-        raise Http404(u'Could not find this Invitation.')
-
-    roommate, created = Roommate.objects.get_or_create(invitation=invitation)
-
-    if request.method == 'POST':
-        form = RoommateForm(request.POST, instance=roommate)
-        if form.is_valid():
-            roommate.sex = form.cleaned_data['sex']
-            roommate.roommate = form.cleaned_data['roommate']
-            roommate.more = form.cleaned_data['more']
-            roommate.save()
-            return HttpResponseRedirect('/rsvp/%s' % invitation.rand_id)
-    else:
-        form = RoommateForm(instance=roommate)
-    
-    return render_to_response('roommate.html', { 'form': form, 'invitation': invitation, }, context_instance=RequestContext(request))
-    
-def ignite(request, rand_id):
-    try:
-        invitation = Invitation.objects.get(rand_id=rand_id)
-    except Invitation.DoesNotExist:
-        raise Http404(u'Could not find this Invitation.')
-        
-    ignite, created = Ignite.objects.get_or_create(invitation=invitation)
-
-    if request.method == 'POST':
-        form = IgniteForm(request.POST, instance=ignite)
-        if form.is_valid():
-            ignite.title = form.cleaned_data['title']
-            ignite.experience = form.cleaned_data['experience']
-            ignite.description = form.cleaned_data['description']
-            ignite.save()
-            return HttpResponseRedirect('/rsvp/%s' % invitation.rand_id)
-    else:
-        form = IgniteForm(instance=ignite)
-    
-    return render_to_response('ignite.html', { 'form': form, 'invitation': invitation, }, context_instance=RequestContext(request))
-    
-def stipend(request, rand_id):
-    try:
-        invitation = Invitation.objects.get(rand_id=rand_id)
-    except Invitation.DoesNotExist:
-        raise Http404(u'Could not find this Invitation.')
-        
-    stipend, created = Stipend.objects.get_or_create(invitation=invitation)
-
-    if request.method == 'POST':
-        form = StipendForm(request.POST, instance=stipend.id)
-        if form.is_valid():
-            stipend.cost_estimate = form.cleaned_data['cost_estimate']
-            stipend.employer_subsidized = form.cleaned_data['employer_subsidized']
-            stipend.employer_percentage = form.cleaned_data['employer_percentage']
-            stipend.invitee_percentage = form.cleaned_data['invitee_percentage']
-            stipend.details = form.cleaned_data['details']
-            stipend.save()
-            return HttpResponseRedirect('/rsvp/%s' % invitation.rand_id)
-    else:
-        form = StipendForm(instance=stipend.id)
-    
-    return render_to_response('stipend.html', { 'form': form, 'invitation': invitation, }, context_instance=RequestContext(request))
-
-"""   
-def stipend_detail(request, rand_id):
-    try:
-        invitation = Invitation.objects.get(rand_id=rand_id)
-    except Invitation.DoesNotExist:
-        raise Http404(u'Could not find this Invitation, so no stipend.')
-
-    if invitation.stipend_set.all():
-        stipends = invitation.stipend_set.all()
-        stipend = stipends[0]
-        stipend.jobhelp = stipend.get_employer_subsidized_display()
-    else:
-        stipend = False
-        
-    variables = {
-        'stipend': stipend,
-        'invitation': invitation,
-    }
-    
-    return render_to_response('stipend_detail.html', variables, context_instance=RequestContext(request))
-    
-def roommate_detail(request, rand_id):
-    try:
-        invitation = Invitation.objects.get(rand_id=rand_id)
-    except Invitation.DoesNotExist:
-        raise Http404(u'Could not find this Invitation, so no stipend.')
-
-    if invitation.roommate_set.all():
-        roommates = invitation.roommate_set.all()
-        roommate = roommates[0]
-        roommate.sex = roommate.get_sex_display()
-        roommate.roommate = roommate.get_roommate_display()
-    else:
-        roommate = False
-        
-    variables = {
-        'roommate': roommate,
-        'invitation': invitation,
-    }
-    
-    return render_to_response('roommate_detail.html', variables, context_instance=RequestContext(request))
-    
-def ignite_detail(request, rand_id):
-    try:
-        invitation = Invitation.objects.get(rand_id=rand_id)
-    except Invitation.DoesNotExist:
-        raise Http404(u'Could not find this Invitation, so no stipend.')
-
-    if invitation.ignite_set.all():
-        ignites = invitation.ignite_set.all()
-        ignite = ignites[0]
-        ignite.experience = ignite.get_experience_display()
-    else:
-        ignite = False
-        
-    variables = {
-        'ignite': ignite,
-        'invitation': invitation,
-    }
-    
-    return render_to_response('ignite_detail.html', variables, context_instance=RequestContext(request))
-"""
     
 def invite_logistics(request, rand_id):
     try:
@@ -356,3 +227,34 @@ def invite_logistics(request, rand_id):
     }
     
     return render_to_response('logistics.html', variables, context_instance=RequestContext(request))
+    
+def profile(request, rand_id):
+    invitation = get_object_or_404(Invitation, rand_id=rand_id)
+    user = invitation.user
+    profile = SparkProfile.objects.get(user=user)
+    
+    if request.method == 'POST':
+        form = SparkProfileForm(request.POST, instance=profile)
+        if form.is_valid():
+            profile.bio = form.cleaned_data['bio']
+            profile.job_title = form.cleaned_data['job_title']
+            profile.employer = form.cleaned_data['employer']
+            profile.url = form.cleaned_data['url']
+            profile.twitter = form.cleaned_data['twitter']
+            profile.phone = form.cleaned_data['phone']
+            profile.email = form.cleaned_data['email']
+            user.email = form.cleaned_data['email']
+            profile.save()
+            user.save()
+            return HttpResponseRedirect('/rsvp/%s' % invitation.rand_id)
+    else:
+        form = SparkProfileForm(instance=profile)
+    
+    variables = {
+        'invitation': invitation,
+        'user': user,
+        'profile': profile,
+        'form': form,
+    }
+    
+    return render_to_response('profile.html', variables, context_instance=RequestContext(request))

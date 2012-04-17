@@ -1,0 +1,16 @@
+{% extends "form_holder.html" %}
+
+{% block profilenav %} class ="active"{% endblock %}
+
+{% block breadcrumb %}{{ user.first_name }} {{ user.last_name }}{% endblock %}
+
+{% block form %}
+        <form class="well form form-inline" action="{% url profile invitation.rand_id %}" method="post">
+        <h3>Profile for {{ user.first_name }} {{ user.last_name }}</h3><br />
+        <table class="table table-bordered table-striped">
+        {% csrf_token %}
+        {{ form.as_table }}
+        </table>
+        <input class="btn btn-small" type="submit" value="submit" />
+        </form>
+{% endblock %}

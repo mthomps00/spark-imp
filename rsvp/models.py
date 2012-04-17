@@ -52,7 +52,7 @@ class Invitation(models.Model):
     type = models.CharField(max_length=1, choices=ATTENDEE_TYPE, default='G')
     plus_one = models.BooleanField(default=False)
     inviter = models.ForeignKey('self', blank=True, null=True)
-    expires = models.DateField(blank=True)
+    expires = models.DateField(blank=True, null=True)
     
     # User-specific metadata
     user = models.ForeignKey(User)
@@ -150,6 +150,9 @@ class SparkProfile(models.Model):
     user = models.OneToOneField(User)
     bio = models.CharField(max_length=140, blank=True, help_text='Tell us your bio. Keep it Twitter-length.')
     employer = models.CharField(max_length=140, blank=True, help_text='The name of your primary employer.')
+    twitter = models.CharField(max_length=20, blank=True, help_text='What\'s your Twitter username?')
+    url = models.URLField(blank=True, help_text='Link to your personal site or profile.')
+    email = models.EmailField()
     job_title = models.CharField(max_length=140, blank=True, help_text='Your job title.')
     phone = models.CharField(max_length=30, blank=True, help_text='Preferred phone number for us to reach you.')
     

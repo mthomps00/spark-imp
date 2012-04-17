@@ -1,11 +1,11 @@
-{% extends "base.html" %}
+{% extends "anon.html" %}
 
 {% block content %}
 
 <div class="row">
     <div class="span4">
         <ul class="breadcrumb">
-            <li><a href="/rsvp/{{ invitation.rand_id }}">Back to dashboard</a> <span class="divider">/</span></li>
+            <li>{% block maincrumb %}<a href="{% url invitation invitation.rand_id %}">Back to dashboard</a>{% endblock %} <span class="divider">/</span></li>
             <li class="active">{% block breadcrumb %}Generic form{% endblock %}</li>
         </ul>
     </div>

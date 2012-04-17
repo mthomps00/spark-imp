@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block anonnav %}
+<li class="divider-vertical"></li>
+<li{% block dashboardnav %}{% endblock %}><a name="dashboard" href="{% url invitation invitation.rand_id %}">Dashboard</a></li>
+<li{% block profilenav %}{% endblock %}><a name="profile" href="{% url profile invitation.rand_id %}">Profile</a></li>
+<li{% block logisticsnav %}{% endblock %}><a name="logistics" href="{% url invite_logistics invitation.rand_id %}">Logistics</a></li>
+{% endblock %}
+
+{% block title %}{% if invitation.user.first_name %}{{ invitation.user.first_name }}'s {% endif %}Spark Camp {{ invitation.camp.theme }} Dashboard{% endblock %}
+
+{% block pageheader %}Hi{% if invitation.user.first_name %}, {{ invitation.user.first_name }}{% endif %}.
+<small>Manage your information for Spark Camp {{ invitation.camp.theme }} here.</small>
+{% endblock %}
+
+{% block content %}
+        
+{% endblock %}

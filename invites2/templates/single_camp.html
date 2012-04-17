@@ -23,13 +23,13 @@
                         </thead>                        
                     {% for invite in invitations %}
                         <tr>
-                            <td><a href="../../rsvp/{{ invite.rand_id }}">{{ invite.rand_id }}</a></td>
+                            <td><a href="{% url invitation invite.rand_id %}">{{ invite.rand_id }}</a></td>
                             <td>{{ invite.user.first_name }}</td>
                             <td>{{ invite.user.last_name }}</td>
                             <td>{{ invite.status }}</td>
-                            <td>{% if invite.stipend %}<a href="../../rsvp/{{ invite.rand_id }}/stipend/show/">Yes</a>{% endif %}</td>
-                            <td>{% if invite.roommate %}<a href="../../rsvp/{{ invite.rand_id }}/roommate/show/">Yes</a>{% endif %}</td>
-                            <td>{% if invite.ignite %}<a href="../../rsvp/{{ invite.rand_id }}/ignite/show/">Yes</a>{% endif %}</td>
+                            <td>{% if invite.stipend %}<a href="{% url invite_related rand_id=invite.rand_id main_object='Stipend' %}">Yes</a>{% endif %}</td>
+                            <td>{% if invite.roommate %}<a href="{% url invite_related rand_id=invite.rand_id main_object='Roommate' %}">Yes</a>{% endif %}</td>
+                            <td>{% if invite.ignite %}<a href="{% url invite_related rand_id=invite.rand_id main_object='Ignite' %}">Yes</a>{% endif %}</td>
                             <td>{{ invite.expires }}</td>
                         </tr>
                     {% endfor %}

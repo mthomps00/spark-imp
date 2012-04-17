@@ -1,9 +1,6 @@
-{% extends "base.html" %}
+{% extends "anon.html" %}
 
-{% block anonnav %}
-<li class="divider-vertical"></li>
-<li class="active"><a name="dashboard">Dashboard</a></li>
-{% endblock %}
+{% block dashboardnav %} class="active"{% endblock %}
 
 {% block title %}{% if invitation.user.first_name %}{{ invitation.user.first_name }}'s {% endif %}Spark Camp {{ invitation.camp.theme }} Dashboard{% endblock %}
 
@@ -70,18 +67,39 @@
                 <div class="row">
                     <div class="span12">
                         <div class="page-header">
+                        <h1>Contact and bio info</h1>
+                        </div>
+                    </div>
+                    <div class="span8 offset4">
+                        <h3>Tell us more about you.</h3>
+                            <dl class="dl-horizontal">
+                                <dt><strong>Bio:</strong></dt>
+                                <dd>{% if sparkprofile.bio %}{{ sparkprofile.bio }}{% else %}<span class="muted">Submit a bio.</span>{% endif %}</dd>
+                                <dt><strong>Email:</strong></dt>
+                                <dd>{% if user.email %}{{ user.email }}{% else %}<span class="muted">No preferred email address given.</span>{% endif %}</dd>
+                                <dt><strong>Phone:</strong></td>
+                                <dd>{% if sparkprofile.phone %}{{ sparkprofile.phone }}{% else %}<span class="muted">No phone number given.</span>{% endif %}</dd>
+                                <dt><strong>URL:</strong></dt>
+                                <dd>{% if sparkprofile.url %}<a href="{{ sparkprofile.url }}">Your website link.</a>{% else %}<span class="muted">No website given.</span>{% endif %}</dd>
+                                <dt><strong>Twitter:</strong></td>
+                                <dd>{% if sparkprofile.twitter %}<a href="http://twitter.com/{{ sparkprofile.twitter }}">@{{ sparkprofile.twitter }}</a>{% else %}<span class="muted">No Twitter handle given.</span>{% endif %}</dd>
+                                <dt><strong>Job title:</strong></td>
+                                <dd>{% if sparkprofile.job_title %}{{ sparkprofile.job_title }}{% else %}<span class="muted">No job title given.</span>{% endif %}</dd>
+                                <dt><strong>Employer:</strong></td>
+                                <dd>{% if sparkprofile.employer %}{{ sparkprofile.employer }}{% else %}<span class="muted">No employer given.</span>{% endif %}</dd>
+                            </dl>
+                            <a class="btn btn-small" href="{% url profile invitation.rand_id %}">Update contact info</a>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="span12">
+                        <div class="page-header">
                         <h1>Spark Camp logistics</h1>
                         </div>
                     </div>
                     <div class="span8 offset4">
-                        <h3>Please make sure these are accurate and filled-in.</h3>
-                            <dl class="dl-horizontal">
-                                <dt><strong>Bio:</strong></dt>
-                                <dd>{% if invitation.user.sparkprofile_set.bio %}{{ invitation.user.sparkprofile_set.bio }}{% else %}<span class="muted">Tell us your bio.</span>{% endif %}</dd>
-                                <dt><strong>Preferred email:</strong></dt>
-                                <dd>{% if invitation.user.email %}{{ invitation.user.email }}{% else %}<span class="muted">Let us know the best email address to use for you.</span>{% endif %}</dd>
-                                <dt><strong>Phone:</strong></dt>
-                                <dd>{% if invitation.user.sparkprofile_set.phone %}{{ invitation.user.sparkprofile_set.phone }}{% else %}<span class="muted">Tell us the best phone number to reach you at.</span>{% endif %}</dd>
+                        <h3>This info is very helpful for us to have.</h3>
+                             <dl class="dl-horizontal">
                                 <dt><strong>Dietary&nbsp;needs:</strong></dt>
                                 <dd>{% if invitation.dietary %}{{ invitation.dietary }}{% else %}<span class="muted">Please specify any dietary preferences.</span>{% endif %}</dd>
                                 <dt><strong>Arrival time:</strong></dt><dd>{% if invitation.arrival_time %}{{ invitation.arrival_time }}{% else %}<span class="muted">Please let us know when you'll be getting to Spark Camp.</span>{% endif %}</dd>
