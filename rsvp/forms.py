@@ -23,6 +23,11 @@ class StipendForm(ModelForm):
         model = Stipend
         exclude = ('invitation',)
         
+class SessionForm(ModelForm):
+    class Meta:
+        model = Session
+        exclude = ('invitation',)
+        
 class InviteDetailForm(ModelForm):
     class Meta:
         model = Invitation

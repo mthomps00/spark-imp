@@ -61,8 +61,8 @@ class Invitation(models.Model):
     
     # Logistical information
     dietary = models.CharField(max_length=140, blank=True, default='None', help_text='Please note any dietary preferences here.', verbose_name='Dietary needs')
-    arrival_time = models.DateTimeField(blank=True, null=True, help_text='Tell us the time you\'ll be arriving at Spark Camp.')
-    departure_time = models.DateTimeField(blank=True, null=True, help_text='Tell us the time you\'ll be leaving Spark Camp.')
+    arrival_time = models.DateTimeField(blank=True, null=True, help_text='Tell us the time you\'ll be arriving at Spark Camp (format: 2006-10-25 14:30).')
+    departure_time = models.DateTimeField(blank=True, null=True, help_text='Tell us the time you\'ll be leaving Spark Camp (format: 2006-10-25 14:30).')
     hotel_booked = models.BooleanField(blank=True, default=False, help_text='Check here if you\'ve taken care of your hotel room.')
     
     def __unicode__(self):
@@ -135,7 +135,7 @@ class Roommate(models.Model):
 class Session(models.Model):
     invitation = models.ForeignKey(Invitation, unique=True)
     title = models.CharField(max_length=140, help_text='Suggest a name for this session')
-    description = models.TextField(help_text='What do expect the session to be about?')
+    description = models.TextField(help_text='What do you expect the session to be about?')
     
 class PlusOne(models.Model):
     invitation = models.ForeignKey(Invitation, unique=True)

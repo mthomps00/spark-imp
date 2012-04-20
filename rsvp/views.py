@@ -176,6 +176,7 @@ def invite_related(request, rand_id, main_object):
         'Roommate': ( 'sex', 'roommate', 'more', ),
         'Ignite': ( 'title', 'experience', 'description', ),
         'Stipend': ( 'cost_estimate', 'employer_subsidized', 'employer_percentage', 'invitee_percentage', 'details', ),
+        'Session': ( 'title', 'description', ),
     }
     
     local_dict = properties[main_object.__name__]
