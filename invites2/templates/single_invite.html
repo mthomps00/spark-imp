@@ -79,7 +79,7 @@
                                 <dt><strong>Phone:</strong></td>
                                 <dd>{% if sparkprofile.phone %}{{ sparkprofile.phone }}{% else %}<span class="muted">No phone number given.</span>{% endif %}</dd>
                                 <dt><strong>URL:</strong></dt>
-                                <dd>{% if sparkprofile.url %}<a href="{{ sparkprofile.url }}">Your website link.</a>{% else %}<span class="muted">No website given.</span>{% endif %}</dd>
+                                <dd>{% if sparkprofile.url %}<a href="{{ sparkprofile.url }}">{{ sparkprofile.url }}</a>{% else %}<span class="muted">No website given.</span>{% endif %}</dd>
                                 <dt><strong>Twitter:</strong></td>
                                 <dd>{% if sparkprofile.twitter %}<a href="http://twitter.com/{{ sparkprofile.twitter }}">@{{ sparkprofile.twitter }}</a>{% else %}<span class="muted">No Twitter handle given.</span>{% endif %}</dd>
                                 <dt><strong>Job title:</strong></td>
