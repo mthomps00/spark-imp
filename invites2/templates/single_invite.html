@@ -45,7 +45,6 @@
                     
                     <p><strong>Dates:</strong> {{ invitation.camp.start_date|date:"l, F j" }} to {{ invitation.camp.end_date|date:"l, F j, Y" }}</p>
                     <p><strong>Description:</strong> {{ invitation.camp.description }}</p>
-                    <p><strong>Official hotel:</strong> {{ invitation.camp.hotel }} (<a href="{{ invitation.camp.hotel_url }}">Reservation link</a>)</p>
                 </div>
                     
             {% endif %}
@@ -98,7 +97,10 @@
                         </div>
                     </div>
                     <div class="span8 offset4">
-                        <h3>This info is very helpful for us to have.</h3>
+                        <h3>Vital info.</h3>
+                            <p><strong>Venue:</strong> {{ invitation.camp.venue }}{% if invitation.camp.venue_address %} ({{ invitation.camp.venue_address }}){% endif %}</p>
+                            <p><strong>Official hotel:</strong> {{ invitation.camp.hotel }}{% if invitation.camp.hotel_url %} | <a href="{{ invitation.camp.hotel_url }}">Reservation link</a>{% endif %}{% if invitation.camp.hotel_code %} | Group code: {{ invitation.camp.hotel_code }}{% endif %}</p>
+                            {% if invitation.camp.logistics %}<p>{{ invitation.camp.logistics|safe }}</p>{% endif %}
                              <dl class="dl-horizontal">
                                 <dt><strong>Dietary&nbsp;needs:</strong></dt>
                                 <dd>{% if invitation.dietary %}{{ invitation.dietary }}{% else %}<span class="muted">Please specify any dietary preferences.</span>{% endif %}</dd>
