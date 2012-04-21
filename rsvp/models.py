@@ -87,6 +87,8 @@ class Invitation(models.Model):
     def save(self, *args, **kwargs):
         if self.id is None:
             self.rand_id = random_number = random.randrange(10000000,99999999) #Generate a random ID so we can retrieve and edit this anonymously
+        if self.expires is None:
+            self.expires = self.camp.start_date
         super(Invitation, self).save(*args, **kwargs) # Call the "real" save() method.
 
 class Stipend(models.Model):

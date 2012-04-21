@@ -92,19 +92,6 @@ Amy = {
      'journo': True,
 }
 
-Sam = {
-     'username': 'Sam',
-     'first_name': 'Sam',
-     'last_name': 'Waldbuch',
-     'password': 'sparkcandy',
-     'is_staff': False,
-     'employer': 'SeanCody.com',
-     'job_title': 'pornjourno',
-     'poc': False,
-     'woman': False,
-     'journo': True,
- }
-
 Data = {
     'theme': 'Data',
     'description': 'Spark Camp Data is all about how data is fun and only data scientists should have fun with it!',
@@ -131,3 +118,5 @@ for camp in camps:
 for user in users:
     make_full_camper(user)
     make_invitation(user['username'], 'Money')
+
+make_invitation('Matt', 'Money')

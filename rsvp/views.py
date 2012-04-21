@@ -148,6 +148,13 @@ def guest_invite(request, rand_id):
     else:
         ignite = False
     
+    # Find session proposals
+    if invitation.session_set.all():
+        sessions = invitation.session_set.all()
+        session = sessions[0]
+    else:
+        session = False
+
     variables = {
         'invitation': invitation,
         'sparkprofile': sparkprofile,
@@ -159,6 +166,7 @@ def guest_invite(request, rand_id):
         'roommate': roommate,
         'stipend': stipend,
         'ignite': ignite,
+        'session': session,
     }
 
     return render_to_response('single_invite.html', variables, context_instance=RequestContext(request))

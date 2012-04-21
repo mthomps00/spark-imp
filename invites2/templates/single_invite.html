@@ -240,6 +240,37 @@
                             <p>An Ignite talk is a 5-minute presentation with an auto-advancing deck of PowerPoint slides that tick forward every 15 seconds. <a href="http://igniteshow.com/" target="_blank">You can learn more about the format here.</a></p>
                             <p><a class="btn btn-small" href="{% url invite_related rand_id=invitation.rand_id main_object='Ignite' %}">Ignite sign-up</a></p>
                         {% endif %}
+                        <hr />
+
+                        {% if session %}
+                            <h3>You've proposed a session.</h3>
+                            <dl class="dl-horizontal">
+                                <dt><strong>Title:</strong></dt>
+                                <dd>
+                                {% if session.title %}
+                                {{ session.title }}
+                                {% else %}
+                                <span class="muted">
+                                Please specify a title.
+                                </span>
+                                {% endif %}</dd>
+                                <dt><strong>Description:</strong></dt>
+                                <dd>
+                                {% if session.description %}
+                                {{ session.description }}
+                                {% else %}
+                                <span class="muted">
+                                Not specified.
+                                </span>
+                                {% endif %}
+                                </dd>
+                            </dl>
+                            <p><a class="btn btn-small" href="{% url invite_related rand_id=invitation.rand_id main_object='Session' %}">Edit this proposal</a></p>
+                            {% else %}
+                            <h3>Propose a session</h3> 
+                            <p>Spark Camp is an unconference, which means the attendees set the agenda. Give us an idea for a topic you'd like to discuss at the event.</p>
+                            <p><a class="btn btn-small" href="{% url invite_related rand_id=invitation.rand_id main_object='Session' %}">Propose a session</a></p>
+                        {% endif %}
 
                     </div>
                 </div>
