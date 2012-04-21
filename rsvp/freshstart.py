@@ -110,7 +110,7 @@ Money = {
 }
 
 camps = (Money, Data)
-users = (Andy, Amanda, Amy, Jenny, Sam)
+users = (Andy, Amanda, Amy, Jenny)
 
 for camp in camps:
     make_camp(camp)
