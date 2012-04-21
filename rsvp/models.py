@@ -154,7 +154,7 @@ class SparkProfile(models.Model):
     employer = models.CharField(max_length=140, blank=True, help_text='The name of your primary employer.')
     twitter = models.CharField(max_length=20, blank=True, help_text='What\'s your Twitter username?')
     url = models.URLField(blank=True, help_text='Link to your personal site or profile.')
-    email = models.EmailField()
+    email = models.EmailField(blank=True, help_text='Preferred email address.')
     job_title = models.CharField(max_length=140, blank=True, help_text='Your job title.')
     phone = models.CharField(max_length=30, blank=True, help_text='Preferred phone number for us to reach you.')
     
