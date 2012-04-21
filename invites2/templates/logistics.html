@@ -25,6 +25,12 @@
 <script src="{{ STATIC_URL }}js/jquery-ui-timepicker-addon.js"></script>
 <script type="text/javascript">
  $(document).ready(function() {
+    if ($("#id_arrival_time").val() == 0) {
+        $("#id_arrival_time").val("{{ invitation.camp.start_date|date:"m/d/Y H:i" }}");
+        }
+    if ($("#id_departure_time").val() == 0) {
+        $("#id_departure_time").val("{{ invitation.camp.end_date|date:"m/d/Y H:i" }}");
+        }
     $("#id_arrival_time").datetimepicker();
     $("#id_departure_time").datetimepicker();
   });

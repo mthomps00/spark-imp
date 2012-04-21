@@ -1,0 +1,16 @@
+{% extends "form_holder.html" %}
+
+{% block breadcrumb %}
+Cancellation request
+{% endblock %}
+
+{% block form %}
+<div class="well">
+<h3>{{ main_object }} request cancellation</h3><br />
+<p>Are you sure you want to cancel your request for a {{ main_object|lower }}?</p>
+<div class="btn-group">
+<a class="btn btn-success" href="{% url confirm_delete main_object=main_object object_id=object.id %}">Yes, cancel it</a>
+<a class="btn btn-inverse" href="{{ url }}">No, take me back</a>
+</div>
+</div>
+{% endblock %}

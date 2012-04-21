@@ -211,6 +211,31 @@ def invite_related(request, rand_id, main_object):
     
     return render_to_response('related.html', variables, context_instance=RequestContext(request))
 
+def invite_related_delete(request, rand_id, main_object):
+    invitation = get_object_or_404(Invitation, rand_id=rand_id)
+    url = invitation.get_absolute_url()
+    main_object = eval(main_object)
+    try:
+        object = main_object.objects.get(invitation=invitation)
+    except main_object.DoesNotExist:
+        raise Http404(u'Could not find this %s.' % main_object)
+    
+    variables = {
+        'invitation': invitation,
+        'object': object,
+        'main_object': main_object.__name__,
+        'rand_id': rand_id,
+        'url': url,
+    }
+    
+    return render_to_response('related_delete.html', variables, context_instance=RequestContext(request))
+
+def confirm_delete(request, main_object, object_id):
+    main_object = eval(main_object)
+    object = get_object_or_404(main_object, id=object_id)
+    url = object.invitation.get_absolute_url()
+    object.delete()
+    return HttpResponseRedirect(url)
     
 def invite_logistics(request, rand_id):
     try:

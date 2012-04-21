@@ -24,6 +24,8 @@ urlpatterns = patterns('',
     url(r'^rsvp/(\d{8})/logistics/$', invite_logistics, name="invite_logistics"),
     url(r'^rsvp/(\d{8})/profile/$', profile, name="profile"),
     url(r'^rsvp/(?P<rand_id>\d{8})/(?P<main_object>\w+)/$', invite_related, name="invite_related"),
+    url(r'^rsvp/(?P<rand_id>\d{8})/(?P<main_object>\w+)/delete/$', invite_related_delete, name="invite_related_delete"),
+    url(r'^(?P<main_object>\w+)/(?P<object_id>\d+)/confirmdelete/$', confirm_delete, name="confirm_delete"),
     url(r'^login/$', login, {'template_name': 'login.html'}),
     url(r'^logout/$', logout_then_login),
 )

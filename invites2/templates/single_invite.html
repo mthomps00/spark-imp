@@ -151,7 +151,9 @@
                                 {% endif %}
                                 </dd>
                             </dl>
-                            <p><a class="btn btn-small" href="{% url invite_related rand_id=invitation.rand_id main_object='Stipend' %}">Edit this request</a></p>
+                            <div class="btn-group"><a class="btn btn-small" href="{% url invite_related rand_id=invitation.rand_id main_object='Stipend' %}">Edit this request</a>
+                            <a class="btn btn-small btn-danger" href="{% url invite_related_delete main_object='Stipend' rand_id=invitation.rand_id %}">Cancel this request</a>
+                            </div>
                             {% else %}
                             <h3>Request a travel stipend.</h3> 
                             <p>A limited number of partial travel stipends are available to ensure campers can attend regardless of financial situation.</p>
@@ -192,7 +194,9 @@
                                 {% endif %}
                                 </dd>
                             </dl>
-                            <p><a class="btn btn-small" href="{% url invite_related rand_id=invitation.rand_id main_object='Roommate' %}">Edit this request</a></p>
+                            <div class="btn-group"><a class="btn btn-small" href="{% url invite_related rand_id=invitation.rand_id main_object='Roommate' %}">Edit this request</a>
+                            <a class="btn btn-small btn-danger" href="{% url invite_related_delete main_object='Roommate' rand_id=invitation.rand_id %}">Cancel this request</a>
+                            </div>
                             {% else %}
                             <h3>Request a roommate.</h3> 
                             <p>Tell us a few details about the rooming situation you're comfortable with, and we'll try to match you up with another Camper.</p>
@@ -234,7 +238,10 @@
                                 {% endif %}
                                 </dd>
                             </dl>
-                            <p><a class="btn btn-small" href="{% url invite_related rand_id=invitation.rand_id main_object='Ignite' %}">Edit this proposal</a></p>
+                            <div class="btn-group">
+                            <a class="btn btn-small" href="{% url invite_related rand_id=invitation.rand_id main_object='Ignite' %}">Edit this proposal</a>
+                            <a class="btn btn-small btn-danger" href="{% url invite_related_delete main_object='Ignite' rand_id=invitation.rand_id %}">Cancel this proposal</a>
+                            </div>
                             {% else %}
                             <h3>Sign up for Ignite</h3> 
                             <p>An Ignite talk is a 5-minute presentation with an auto-advancing deck of PowerPoint slides that tick forward every 15 seconds. <a href="http://igniteshow.com/" target="_blank">You can learn more about the format here.</a></p>
@@ -265,7 +272,9 @@
                                 {% endif %}
                                 </dd>
                             </dl>
-                            <p><a class="btn btn-small" href="{% url invite_related rand_id=invitation.rand_id main_object='Session' %}">Edit this proposal</a></p>
+                            <div class="btn-group"><a class="btn btn-small" href="{% url invite_related rand_id=invitation.rand_id main_object='Session' %}">Edit this proposal</a>
+                            <a class="btn btn-small btn-danger" href="{% url invite_related_delete main_object='Session' rand_id=invitation.rand_id %}">Cancel this proposal</a>
+                            </div>
                             {% else %}
                             <h3>Propose a session</h3> 
                             <p>Spark Camp is an unconference, which means the attendees set the agenda. Give us an idea for a topic you'd like to discuss at the event.</p>
