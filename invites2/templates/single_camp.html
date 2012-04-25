@@ -34,6 +34,15 @@
                         </tr>
                     {% endfor %}
                     </table>
+                    {% if camp.spreadsheet_url %}
+                    <form class="form-inline" action="{% url google_sync camptheme=camp.theme %}" method="get">
+                        <p><strong>Sync this with Google Spreadsheet.</strong></p>
+                        <label for="deadline">Number of days till expiration: </label>
+                        <div class="input-append">
+                            <input type="text" class="input-mini" value="14" name="deadline"><input class="btn" type="submit" value="Submit" />
+                        </div>
+                    </form>
+                    {% endif %}
                 </div>
             </div>
             

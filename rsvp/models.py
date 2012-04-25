@@ -24,6 +24,12 @@ class Camp(models.Model):
     ignite = models.BooleanField(blank=True, default=False)
     stipends = models.BooleanField(blank=True, default=False)
     
+    # Google Spreadsheet with invitee information
+    spreadsheet_url = models.URLField(blank=True)
+    
+    # MailChimp list name
+    mailchimp_list = models.CharField(max_length=140, blank=True)
+    
     def __unicode__(self):
         return u'Spark Camp %s' % self.theme
 

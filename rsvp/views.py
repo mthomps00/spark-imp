@@ -2,12 +2,14 @@ from django.http import HttpResponse, Http404, HttpResponseRedirect
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.template import Context, RequestContext
+from django.template.defaultfilters import slugify
 from django.template.loader import get_template
 from django.shortcuts import get_object_or_404, render_to_response
 from rsvp.models import *
 from rsvp.forms import *
-import random
-from datetime import date
+import random, csv, datetime
+from datetime import date, timedelta
+from urllib import urlopen
 
 @login_required
 def main_page(request):
@@ -47,10 +49,8 @@ def camps(request):
     
 @login_required
 def single_camp(request, camptheme):
-    try:
-        camp = Camp.objects.get(theme__iexact=camptheme)
-    except Camp.DoesNotExist:
-        raise Http404(u'Could not find this Camp.')
+    camp = get_object_or_404(Camp, theme__iexact=camptheme)
+    syncform = GoogleSyncForm()
     invitations = Invitation.objects.filter(camp=camp)
     for invitation in invitations:
         invitation.status = invitation.get_status_display()
@@ -83,6 +83,64 @@ def single_camp(request, camptheme):
         'percent_journos': percent_journos,
     }
     return render_to_response('single_camp.html', variables, context_instance=RequestContext(request))
+
+@login_required
+def google_sync(request, camptheme, deadline=14):
+    camp = get_object_or_404(Camp, theme__iexact=camptheme)
+    url = camp.spreadsheet_url
+    
+    myreader = csv.DictReader(urlopen(url))
+    today = datetime.date.today()
+    rows = []
+    
+    # Change the number of days in the following line to alter the RSVP response deadline for the new invitations.
+    daysleft = timedelta(days=int(deadline))
+    expiration_date = today + daysleft
+    
+    for row in myreader:
+        if row['E-mail'] != '' and row['Invite?'] == 'YES':
+             user, created = User.objects.get_or_create(email=row['E-mail'])
+             user.email = row['E-mail']
+             user.first_name = row['First Name']
+             user.last_name = row['Last Name']
+             if created == True:
+                 combinedname = user.first_name + user.last_name
+                 password = User.objects.make_random_password(length=10)
+                 user.username = slugify(combinedname)
+                 user.set_password(password)
+             user.save()
+             profile, created = SparkProfile.objects.get_or_create(user=user)
+             profile.email = row['E-mail']
+             profile.employer = row['Organization']
+             if row['POC'] != '0':
+                     profile.poc = True
+             if row['W'] != '0':
+                     profile.woman = True
+             if row['JOURN?'] != '0':
+                     profile.journo = True
+             profile.save()
+             invitation, created = Invitation.objects.get_or_create(user=user,camp=camp)
+             invitation.expires = expiration_date
+             invitation.status = 'P'
+             invitation.save()
+             rows.append({
+                'username': user.username,
+                'email': row['E-mail'],
+                'first_name': row['First Name'],
+                'last_name': row['Last Name'],
+                'employer': row['Organization'],
+                'POC': profile.poc,
+                'W': profile.woman,
+                'J': profile.journo,
+                'expires': expiration_date,
+                'rand_id': invitation.rand_id,
+                })
+    
+    variables = {
+        'rows': rows,
+        'camp': camp,
+    }
+    return render_to_response('google_sync.html', variables, context_instance=RequestContext(request))
 
 def guest_invite(request, rand_id):
     invitation = get_object_or_404(Invitation, rand_id=rand_id)

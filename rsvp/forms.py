@@ -69,3 +69,5 @@ class ResurrectForm(forms.Form):
     )
     status = forms.ChoiceField(choices=RESURRECT_CHOICES)
     
+class GoogleSyncForm(forms.Form):
+    deadline = forms.IntegerField(max_value=100, min_value=1, required=False, initial='Days till RSVP deadline')

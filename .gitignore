@@ -33,3 +33,6 @@ nosetests.xml
 
 # Custom
 local_settings.py
+app_settings.py
+readerscript.py
+mailsync.py
