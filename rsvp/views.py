@@ -87,7 +87,7 @@ def single_camp(request, camptheme):
 @login_required
 def dietary(request, camptheme):
     camp = get_object_or_404(Camp, theme__iexact=camptheme)
-    invitations = Invitation.objects.filter(camp=camp)
+    invitations = Invitation.objects.filter(camp=camp).filter(status='Y')
     
     variables = {
         'camp': camp,
