@@ -2,13 +2,42 @@
 
 {% block title %}Invitations for Spark Camp {{ camp.theme }}{% endblock %}
 
+{% block pagestyles %}
+    th.headerSortUp {
+        background-color: #f3edd2;
+    }
+    
+    th.headerSortDown {
+        background-color: #d9edf7;
+    }
+{% endblock %}   
+
 {% block pageheader %}Invitations for Spark Camp {{ camp.theme }}{% endblock %}
 
 {% block content %}
         {% if invitations %}
             <div class="row">
+                <div class="span2 offset2">
+                    <h3>{{ confirmed|length }}</h3>
+                    <p>confirmed</p>
+                </div>
+                <div class="span2">
+                    <h3>{{ percent_women }}%</h3>
+                    <p>women</p>
+                </div>
+                <div class="span2">
+                    <h3>{{ percent_poc }}%</h3>
+                    <p>people of color</p>
+                </div>
+                <div class="span2">
+                    <h3>{{ percent_journos }}%</h3>
+                    <p>journalists</p>
+                </div>
+            </div>
+            <hr />
+            <div class="row">
                 <div class="span12">
-                    <table class="table table-bordered table-striped">
+                    <table class="table table-bordered table-striped" id="invites-table">
                         <thead>
                             <tr>
                                 <th>Invite No.</th>
@@ -43,24 +72,23 @@
                         </div>
                     </form>
                     {% endif %}
+                    <p><a href="{% url dietary camptheme=camp.theme %}">Dietary preferences</a> | <a href="{% url stipends camptheme=camp.theme %}">Stipend requests</a></p>
                 </div>
             </div>
             
-            <div class="row">
-                <div class="span4">
-                    <h3>Percent women:</h3>
-                    <p>{{ percent_women }}</p>
-                </div>
-                <div class="span4">
-                    <h3>Percent of color:</h3>
-                    <p>{{ percent_poc }}</p>
-                </div>
-                <div class="span4">
-                    <h3>Percent journalists:</h3>
-                    <p>{{ percent_journos }}</p>
-                </div>
-            </div>
         {% else %}
             <p>No invitations found.</p>
         {% endif %}
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ STATIC_URL }}js/jquery.tablesorter.min.js"></script>
+
+<script type="text/javascript">
+ $(document).ready(function() {
+    $("#invites-table").tablesorter({
+        sortList: [[3,0],[2,0]]
+    }); 
+  });
+</script>
 {% endblock %}

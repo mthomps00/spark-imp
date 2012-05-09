@@ -85,6 +85,47 @@ def single_camp(request, camptheme):
     return render_to_response('single_camp.html', variables, context_instance=RequestContext(request))
 
 @login_required
+def dietary(request, camptheme):
+    camp = get_object_or_404(Camp, theme__iexact=camptheme)
+    invitations = Invitation.objects.filter(camp=camp)
+    
+    variables = {
+        'camp': camp,
+        'invitations': invitations,
+    }
+    
+    return render_to_response('dietary.html', variables, context_instance=RequestContext(request))
+
+@login_required
+def stipends(request, camptheme):
+    camp = get_object_or_404(Camp, theme__iexact=camptheme)
+    invitations = Invitation.objects.filter(camp=camp)
+    stipends = []
+    for invitation in invitations:
+        stipendrequests = invitation.stipend_set.all()
+        for stipend in stipendrequests:
+            stipends.append({
+                'user': stipend.invitation.user,
+                'first_name': stipend.invitation.user.first_name,
+                'last_name': stipend.invitation.user.last_name,
+                'url': stipend.invitation.get_absolute_url(),
+                'rand_id': stipend.invitation.rand_id,
+                'cost_estimate': stipend.cost_estimate,
+                'employer_subsidized': stipend.employer_subsidized,
+                'employer_percentage': stipend.employer_percentage,
+                'invitee_percentage': stipend.invitee_percentage,
+                'details': stipend.details,
+            })       
+    
+    variables = {
+        'camp': camp,
+        'invitations': invitations,
+        'stipends': stipends,
+    }
+    
+    return render_to_response('stipends.html', variables, context_instance=RequestContext(request))
+
+@login_required
 def google_sync(request, camptheme, deadline=14):
     camp = get_object_or_404(Camp, theme__iexact=camptheme)
     url = camp.spreadsheet_url

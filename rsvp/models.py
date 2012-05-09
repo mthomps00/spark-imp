@@ -105,10 +105,10 @@ class Stipend(models.Model):
         ('U', 'Unsure'),
     )
     
-    cost_estimate = models.IntegerField(max_length=140, null=True, blank=True, help_text='How much do you estimate air and ground transportation will cost? Don\'t include lodging and meals.')
+    cost_estimate = models.IntegerField(max_length=140, null=True, blank=True, help_text='How much do you estimate air and ground transportation will cost? Don\'t include lodging and meals. (Just numbers, no dollar signs or symbols.)')
     employer_subsidized = models.CharField(max_length=1, choices=SUBSIDY_CHOICES, default='U', help_text='Will your employer provide any funds towards travel?', verbose_name='Employer will cover some costs')
-    employer_percentage = models.IntegerField(blank=True, null=True, help_text='What part of the cost will your employer cover?')
-    invitee_percentage = models.IntegerField(blank=True, null=True, help_text='What part of the cost can you cover yourself?')
+    employer_percentage = models.IntegerField(blank=True, null=True, help_text='What percentage of the cost will your employer cover? (Just numbers, no dollar signs or symbols.)')
+    invitee_percentage = models.IntegerField(blank=True, null=True, help_text='What percentage of the cost can you cover yourself? (Just numbers, no dollar signs or symbols.)')
     details = models.TextField(blank=True, help_text='Please explain any other factors that would assist us in processing this request.')
 
 class Ignite(models.Model):
