@@ -164,7 +164,7 @@
                         <hr />
         
                         {% if roommate %}
-                            <h3>You've requested a roommate.</h3><p>Coming soon: a list of Campers seeking roommates. Found a match? <a href="{% url invite_related rand_id=invitation.rand_id main_object='Roommate' %}">Let us know.</a></p>
+                            <h3>You've requested a roommate.</h3>
                             <dl class="dl-horizontal">
                                 <dt><strong>Your sex:</strong></dt>
                                 <dd>
@@ -196,6 +196,14 @@
                                 {% endif %}
                                 </dd>
                             </dl>
+                        {% if roommate.potentials %}
+                                <p>We may have found some potential roommates for you. Click on a name below to email the Camper.</p><ul>
+                            {% for potential in roommate.potentials %}
+                                <li><a href="mailto:{{ potential.invitation.user.email }}?subject=Sharing a room at Spark Camp">{{ potential.invitation.user.first_name }} {{ potential.invitation.user.last_name }}</strong></a>{% if potential.invitation.user.sparkprofile.employer %} ({{ potential.invitation.user.sparkprofile.employer }}){% endif %}{% if potential.invitation.user.sparkprofile.bio %}: {{ potential.invitation.user.sparkprofile.bio }}{% endif %}</li>
+                            {% endfor %}
+                                </ul>
+                        {% endif %}
+                            <p>Found a match? <a href="{% url invite_related_delete rand_id=invitation.rand_id main_object='Roommate' %}">Cancel your roommate request.</a></p>
                             <div class="btn-group"><a class="btn btn-small" href="{% url invite_related rand_id=invitation.rand_id main_object='Roommate' %}">Edit this request</a>
                             <a class="btn btn-small btn-danger" href="{% url invite_related_delete main_object='Roommate' rand_id=invitation.rand_id %}">Cancel this request</a>
                             </div>

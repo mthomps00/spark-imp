@@ -140,30 +140,32 @@ def google_sync(request, camptheme, deadline=14):
     
     for row in myreader:
         if row['E-mail'] != '' and row['Invite?'] == 'YES':
-             user, created = User.objects.get_or_create(email=row['E-mail'])
-             user.email = row['E-mail']
-             user.first_name = row['First Name']
-             user.last_name = row['Last Name']
-             if created == True:
-                 combinedname = user.first_name + user.last_name
+             combinedname = row['First Name'] + row['Last Name']
+             username = slugify(combinedname)
+             user, usercreated = User.objects.get_or_create(username)
+             if usercreated == True:
+                 user.email = row['E-mail']
+                 user.first_name = row['First Name']
+                 user.last_name = row['Last Name']
                  password = User.objects.make_random_password(length=10)
-                 user.username = slugify(combinedname)
                  user.set_password(password)
-             user.save()
-             profile, created = SparkProfile.objects.get_or_create(user=user)
-             profile.email = row['E-mail']
-             profile.employer = row['Organization']
-             if row['POC'] != '0':
-                     profile.poc = True
-             if row['W'] != '0':
-                     profile.woman = True
-             if row['JOURN?'] != '0':
-                     profile.journo = True
-             profile.save()
-             invitation, created = Invitation.objects.get_or_create(user=user,camp=camp)
-             invitation.expires = expiration_date
-             invitation.status = 'P'
-             invitation.save()
+                 user.save()
+             profile, profilecreated = SparkProfile.objects.get_or_create(user=user)
+             if profilecreated == True:
+                 profile.email = row['E-mail']
+                 profile.employer = row['Organization']
+                 if row['POC'] != '0':
+                         profile.poc = True
+                 if row['W'] != '0':
+                         profile.woman = True
+                 if row['JOURN?'] != '0':
+                         profile.journo = True
+                 profile.save()
+             invitation, invitecreated = Invitation.objects.get_or_create(user=user,camp=camp)
+             if invitecreated == True:
+                 invitation.expires = expiration_date
+                 invitation.status = 'P'
+                 invitation.save()
              rows.append({
                 'username': user.username,
                 'email': row['E-mail'],
@@ -226,8 +228,19 @@ def guest_invite(request, rand_id):
     if invitation.roommate_set.all():
         roommates = invitation.roommate_set.all()
         roommate = roommates[0]
+        
+        # Find potential roommate matches
+        roommate.potentials = []
+        
+        for potential in Roommate.objects.exclude(invitation=invitation):
+            if (potential.invitation.camp == invitation.camp):
+                if (roommate.roommate == 'A') or (potential.sex == roommate.roommate):
+                    if (potential.roommate == 'A') or (roommate.sex == potential.roommate):
+                        roommate.potentials.append(potential)
+        
         roommate.sex = roommate.get_sex_display()
         roommate.roommate = roommate.get_roommate_display()
+        
     else:
         roommate = False
     
