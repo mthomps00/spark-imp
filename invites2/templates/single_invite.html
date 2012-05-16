@@ -302,7 +302,16 @@
                     </div>
                     <div class="span8 offset4">
                         <h3>Confirmed Campers.</h3>
+                        {% if confirmed|length > 20 %}
+                        <dl>
+                        {% for camper in confirmed %}
+                            <dt>{{ camper.user.first_name }} {{ camper.user.last_name }}</dt>
+                        <dd>{% if camper.user.sparkprofile.employer or camper.user.sparkprofile.job_title %}<span class="muted">{{ camper.user.sparkprofile.job_title }}{% if camper.user.sparkprofile.employer and camper.user.sparkprofile.job_title %}, {% endif %}<em>{{ camper.user.sparkprofile.employer }}</em>.</span>{% endif %}{% if camper.user.sparkprofile.bio %} {{ camper.user.sparkprofile.bio }}{% endif %}</dd>
+                        {% endfor %}
+                        </dl>
+                        {% else %}
                         <p>Check back soon for a full list of confirmed attendees.</p>
+                        {% endif %}
                         <hr />
                         
                         <h3>Session ideas.</h3>

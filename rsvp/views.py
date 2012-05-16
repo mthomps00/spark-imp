@@ -195,6 +195,7 @@ def guest_invite(request, rand_id):
     detailform = InviteDetailForm()
     user = invitation.user
     sparkprofile = SparkProfile.objects.get(user=user)
+    confirmed = Invitation.objects.filter(camp=invitation.camp).filter(status='Y')
     
     def decideform(formvars={}):
         if invitation.status == 'Y':
@@ -270,6 +271,7 @@ def guest_invite(request, rand_id):
     variables = {
         'invitation': invitation,
         'sparkprofile': sparkprofile,
+        'confirmed': confirmed,
         'form': form,
         'detailform': detailform,
         'update': update,
