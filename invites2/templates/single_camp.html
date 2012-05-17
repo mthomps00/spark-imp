@@ -39,7 +39,7 @@
                 <div class="span12">
                     <table class="table table-bordered table-striped" id="invites-table">
                         <thead>
-                            <tr>
+                            <tr id="invites-header" title="Click header to sort. Hold shift to sort on multiple columns.">
                                 <th>Invite No.</th>
                                 <th>First name</th>
                                 <th>Last name</th>
@@ -83,12 +83,14 @@
 
 {% block scripts %}
 <script src="{{ STATIC_URL }}js/jquery.tablesorter.min.js"></script>
+<script src="{{ STATIC_URL }}js/bootstrap-tooltip.js"></script>
 
 <script type="text/javascript">
  $(document).ready(function() {
     $("#invites-table").tablesorter({
         sortList: [[3,0],[2,0]]
-    }); 
+    });
+    $("#invites-header").tooltip();
   });
 </script>
 {% endblock %}
