@@ -126,6 +126,59 @@ def stipends(request, camptheme):
     return render_to_response('stipends.html', variables, context_instance=RequestContext(request))
 
 @login_required
+def sessions(request, camptheme):
+    camp = get_object_or_404(Camp, theme__iexact=camptheme)
+    invitations = Invitation.objects.filter(camp=camp)
+    sessions = []
+    for invitation in invitations:
+        proposals = invitation.session_set.all()
+        for proposal in proposals:
+            sessions.append({
+                'user': proposal.invitation.user,
+                'first_name': proposal.invitation.user.first_name,
+                'last_name': proposal.invitation.user.last_name,
+                'url': proposal.invitation.get_absolute_url(),
+                'rand_id': proposal.invitation.rand_id,
+                'title': proposal.title,
+                'description': proposal.description,
+            })       
+    
+    variables = {
+        'camp': camp,
+        'invitations': invitations,
+        'sessions': sessions,
+    }
+    
+    return render_to_response('sessions.html', variables, context_instance=RequestContext(request))
+
+def sessions_related(request, rand_id):
+    invitation = get_object_or_404(Invitation, rand_id=rand_id)
+    camp = invitation.camp    
+    invitations = Invitation.objects.filter(camp=camp)
+    sessions = []
+
+    for invite in invitations:
+        proposals = invite.session_set.all()
+        for proposal in proposals:
+            sessions.append({
+                'user': proposal.invitation.user,
+                'first_name': proposal.invitation.user.first_name,
+                'last_name': proposal.invitation.user.last_name,
+                'title': proposal.title,
+                'description': proposal.description,
+            })       
+    
+    variables = {
+        'camp': camp,
+        'invitation': invitation,
+        'invitations': invitations,
+        'sessions': sessions,
+    }
+    
+    return render_to_response('sessions_related.html', variables, context_instance=RequestContext(request))
+    
+
+@login_required
 def google_sync(request, camptheme, deadline=14):
     camp = get_object_or_404(Camp, theme__iexact=camptheme)
     url = camp.spreadsheet_url

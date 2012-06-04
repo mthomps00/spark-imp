@@ -1,0 +1,57 @@
+{% extends "form_holder.html" %}
+
+{% block title %}Session proposals for Spark Camp {{ camp.theme }}{% endblock %}
+
+{% block pagestyles %}
+    th.headerSortUp {
+        background-color: #f3edd2;
+    }
+    
+    th.headerSortDown {
+        background-color: #d9edf7;
+    }
+{% endblock %}   
+
+{% block pageheader %}Session proposals for Spark Camp {{ camp.theme }}{% endblock %}
+
+{% block breadcrumb %}Session proposals{% endblock %}
+
+{% block form %}
+        {% if sessions %}
+                    <table class="table table-bordered table-striped" id="invites-table">
+                        <thead>
+                            <tr id="invites-header" title="Click header to sort. Hold shift to sort on multiple columns.">
+                                <th>First name</th>
+                                <th>Last name</th>
+                                <th>Title</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>                        
+                    {% for session in sessions %}
+                        <tr>
+                            <td>{{ session.first_name }}</td>
+                            <td>{{ session.last_name }}</td>
+                            <td>{{ session.title }}</td>
+                            <td>{{ session.description }}</td>
+                        </tr>
+                    {% endfor %}
+                    </table>
+            
+        {% else %}
+            <p>No session proposals found.</p>
+        {% endif %}
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ STATIC_URL }}js/jquery.tablesorter.min.js"></script>
+<script src="{{ STATIC_URL }}js/bootstrap-tooltip.js"></script>
+
+<script type="text/javascript">
+ $(document).ready(function() {
+    $("#invites-table").tablesorter({
+        sortList: [[1,0],[2,0]]
+    });
+    $("#invites-header").tooltip();
+  });
+</script>
+{% endblock %}
