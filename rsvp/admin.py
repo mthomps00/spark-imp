@@ -3,14 +3,17 @@ from django.contrib.auth.models import User
 from django.contrib.auth.admin import UserAdmin
 from rsvp.models import *
 
-class StipendInline(admin.StackedInline):
+class StipendInline(admin.TabularInline):
     model = Stipend
 
-class IgniteInline(admin.StackedInline):
+class IgniteInline(admin.TabularInline):
     model = Ignite
     
-class RoommateInline(admin.StackedInline):
+class RoommateInline(admin.TabularInline):
     model = Roommate
+
+class SessionInline(admin.TabularInline):
+    model = Session
 
 class InvitationAdmin(admin.ModelAdmin):
     list_display = ('user', 'camp', 'status', 'expires', 'rand_id')
@@ -20,6 +23,8 @@ class InvitationAdmin(admin.ModelAdmin):
     inlines = [
         StipendInline,
         IgniteInline,
+        RoommateInline,
+        SessionInline,
     ]
 
 class InvitationInline(admin.TabularInline):
