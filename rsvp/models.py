@@ -89,6 +89,7 @@ class Invitation(models.Model):
             
     class Meta:
         unique_together = ('user', 'camp')
+        order_with_respect_to = 'user'
         
     def save(self, *args, **kwargs):
         if self.id is None:
