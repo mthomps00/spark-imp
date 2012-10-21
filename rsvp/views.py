@@ -2,6 +2,7 @@ from django.conf import settings
 from django.http import HttpResponse, Http404, HttpResponseRedirect
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
+from django.core.mail import send_mail
 from django.template import Context, RequestContext
 from django.template.defaultfilters import slugify
 from django.template.loader import get_template
@@ -298,19 +299,23 @@ def guest_invite(request, rand_id):
     
     def decideform(formvars={}):
         if invitation.status == 'Y':
-            message = 'We\'re looking forward to your attendance at Spark Camp. We have you confirmed as coming. If your plans have changed, please use this form to let us know.'
+            message = 'We\'re looking forward to your attendance at Spark Camp. We have you confirmed as coming. If your plans change, please let us know as early as possible.'
             form = UpdateForm(formvars)
         elif invitation.expires < today:
-            message = 'It\'s after the deadline (%s) for your invitation, but if it turns out you can make it to Spark Camp, we may still be able to accommodate you. Please let us know whether we should put you on the waitlist, and we\'ll be in touch very soon with an update.' % invitation.expires
+            message = 'It\'s after the deadline (%s) for your invitation, but ' % invitation.expires
+            if invitation.status == 'W':
+                message = message + 'we have you on the waitlist. Please let us know if it turns out you can\'t make it after all.'
+            else:
+                message = message + 'if it turns out you can make it to Spark Camp, we may still be able to accommodate you. If so, please let us know whether we should put you on the waitlist, and we\'ll be in touch very soon with an update.'
             form = WaitlistForm(formvars)
         elif invitation.status == 'N' or invitation.status == 'C':
-            message = 'We\'re sorry to hear you can\'t make it to Spark Camp. Please return here and let us know if your plans change in our favor.'
+            message = 'We\'re sorry to hear you can\'t make it to Spark Camp. Please let us know if your plans change in our favor.'
             form = ResurrectForm(formvars)  
         elif invitation.status == 'W':
             message = 'We have you on the waitlist for Spark Camp. Please let us know if it turns out you can\'t make it.'
             form = WaitlistForm(formvars)
         else:
-            message = 'We very much hope you can make it to Spark Camp. Please use this form to submit your RSVP.'
+            message = 'We very much hope you can make it to Spark Camp. Please submit your RSVP.'
             form = ResponseForm(formvars)
         return message, form
 
@@ -321,6 +326,11 @@ def guest_invite(request, rand_id):
             invitation.save()
             message, form = decideform(request.POST)
             update = 'Thank you for updating your status.'
+
+            # Send an email confirming their change
+            subject = 'Confirming your Spark Camp RSVP [%s %s]' % (invitation.user.first_name, invitation.user.last_name)
+            body = message + ' Remember, the URL to update or change your RSVP is http://apps.sparkcamp.com%s.' % invitation.get_absolute_url()
+            send_mail(subject, body, 'rsvp@sparkcamp.com', ['rsvp@sparkcamp.com', invitation.user.email], fail_silently=True)
     else:
         message, form = decideform()
         

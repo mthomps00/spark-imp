@@ -1,92 +1,188 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <title>Spark Camp: Error</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="">
-    <meta name="author" content="">
-    <base href="http://apps.sparkcamp.com/static" />
 
-    <!-- Le styles -->
-    <link href="/css/bootstrap.css" rel="stylesheet">
+<!doctype html>
+<!--[if lt IE 7]> <html class="no-js ie6 lt-ie9 lt-ie8 lt-ie7 oldie" lang="en"> <![endif]-->
+<!--[if IE 7]>    <html class="no-js ie7 lt-ie9 lt-ie8 oldie" lang="en"> <![endif]-->
+<!--[if IE 8]>    <html class="no-js ie8 lt-ie9 oldie " lang="en"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
+	<title>500 - Something's gone horribly awry.</title>
+	<meta name="description" content="">
+	<meta name="author" content="">
+
+	<meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, initial-scale=1.0">
+	
+	<!-- Icons -->
+	<link rel="shortcut icon" href="favicon.ico">
+
+	<!-- Stylesheets -->
+	<link rel="stylesheet" href="http://apps.sparkcamp.com/static/ups/_css/screen.css?v=2">
+    
     <style>
-      body {
-        padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */
-      }
+    
     </style>
-    <link href="/css/bootstrap-responsive.css" rel="stylesheet">
 
-    <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
-    <!--[if lt IE 9]>
-      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
+	<!-- Scripts -->
+	<!--[if IE 8 ]>
+	<script type="text/javascript" src="http://apps.sparkcamp.com/static/ups/_js/libs/respond.js"></script>
+	<![endif]-->  
+	<script type="text/javascript" src="http://apps.sparkcamp.com/static/ups/_js/libs/modernizr-2.6.1.min.js"></script>
+	<script type="text/javascript">
+	  WebFontConfig = {
+	  	typekit: { id: 'pgf7xqn' },
+	  };
+	  (function() {
+	    var wf = document.createElement('script');
+	    wf.src = ('https:' == document.location.protocol ? 'https' : 'http') +
+	        '://ajax.googleapis.com/ajax/libs/webfont/1/webfont.js';
+	    wf.type = 'text/javascript';
+	    wf.async = 'true';
+	    var s = document.getElementsByTagName('script')[0];
+	    s.parentNode.insertBefore(wf, s);
+	  })();
+	</script>
+</head>
+<body>
+	<section id="mod">
+		<div class="mod-inner page">
+			<header class="header-main">
+				<div class="nav-mod">
+					<div class="nav-content-mod">
+						<div class="nav-section-1">
+							<ul class="nav-link-mod">
+								<li class="nav-link">
+									<a href="http://sparkcamp.com/camps">Camps</a>	
+								</li>	
+								<li class="nav-link">
+									<a href="http://sparkcamp.com/about">About</a>
+								</li>	
+							</ul>	
+						</div> <!-- /.nav-section-1 -->	
+						<a href="http://sparkcamp.com/"><img class="nav-logo-m" src="http://apps.sparkcamp.com/static/ups/_img/nav-logo-m@2x.png"/ rel="nav-logo"></a>
+						<a href="http://sparkcamp.com/" class="nav-logo-mod">
+							<div class="nav-logo-img"></div>
+						</a>
+				
+						<div class="nav-section-2">
+							<ul class="nav-link-mod">
+								<li class="nav-link">
+									<a href="http://sparkcamp.com/team">Team</a>	
+								</li>	
+								<li class="nav-link">
+									<a href="http://sparkcamp.com/news">News</a>
+								</li>	
+							</ul>	
+						</div> <!-- /.nav-section-2 -->				
+					</div> <!-- /.nav-content-mod -->	
+				</div> <!-- /.nav-mod -->		
+			</header>
+	
+			<header class="m-nav">
+				<div class="m-nav-mod">
+					<ul class="m-nav-list">
+						<li class="m-nav-item">
+							<a href="http://sparkcamp.com/camps">Camps</a>	
+						</li>
+						<li class="m-nav-item">
+							<a href="http://sparkcamp.com/about">About</a>
+						</li>
+						<li class="m-nav-item">
+							<a href="http://sparkcamp.com/team">Team</a>	
+						</li>
+						<li class="m-nav-item">
+							<a href="http://sparkcamp.com/news">News</a>	
+						</li>																								
+					</ul>	
+				</div> <!-- /.m-nav-mod -->
+			</header> <!-- /.m-nav -->
 
-    <!-- Le fav and touch icons -->
-    <link rel="shortcut icon" href="/templates/ico/favicon.ico">
-    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="/ico/apple-touch-icon-114-precomposed.png">
-    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="/ico/apple-touch-icon-72-precomposed.png">
-    <link rel="apple-touch-icon-precomposed" href="/templates/ico/apple-touch-icon-57-precomposed.png">
-  </head>
 
-  <body>
+        <div id="main" role="main" class="main-page">
+            <div class="page-mod">
+                <div class="ui-block-1">
+                    
+                    <h1 class="h1">
+Uh-oh. Something's gone horribly awry.
+</h1>
+                    
+<section class="content">                    
+    <p class="text-large">The Spark Camp gnomes have been put on notice, and will attend to the problem immediately. Until it's fixed, you can <a href="mailto:info@sparkcamp.com">email us</a>.</p>
+</section>
 
-    <div class="navbar navbar-fixed-top">
-      <div class="navbar-inner">
-        <div class="container">
-          <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </a>
-          <a class="brand">Spark Camp</a>
-          <div class="nav-collapse">
-            <ul class="nav">
-            
-            </ul>
-          </div><!--/.nav-collapse -->
-        </div>
-      </div>
-    </div>
 
-    <div class="container">
-    
-    <div class="page-header">
 
-      <h1>Uh-oh.
-      <small>Something went wrong.</small>
-      </h1>
-      
-    </div>
-    
-      <p>We're on it. Meanwhile, if you need to get in touch with us, just <a href="mailto:team@sparkcamp.com">email us</a>.</p>
+                </div> <!-- /.ui-block-1 -->	
+            </div> <!-- /.page-mod -->
+        </div> <!-- /#main -->	
 
-    <footer class="footer">
-        <hr />
-        <p class="pull-right"><a href="#">Back to top</a></p>
-        <p>Spark Camp's Invitation Management dashboard is a Django app written by <a href="http://twitter.com/mthomps">Matt Thompson</a>. <br />Special thanks to <a href="http://twitter.com/lavallee">Marc Lavallee</a> and <a href="http://twitter.com/eyeseast">Chris Amico</a> for their assistance.</p>
-    </footer>
+				
+		<div class="footer-scene-mod">
+			<img class="camp-scene-inside" src="http://apps.sparkcamp.com/static/ups/_img/camp-scene@2x.png">
+			<img class="camp-scene-m footer-scene" src="http://apps.sparkcamp.com/static/ups/_img/camp-scene-mobile@2x.png">
+			<div class="the-moon-mod footer-scene"></div>
+			<div class="bg-mountains-mod footer-scene"></div>
+		</div>
 
-    </div> 
-    
-    <!-- /container -->
+		<footer class="footer footer-info">
+			<section class="ftr-nav-mod">
+				<div class="ftr-nav-wrap">
+					<article class="ftr-section past-camps media-block">
+						<h4 class="ftr-section-h">Past Camps</h4>
+						<ul class="ftr-nav-list">
+							<li class="ftr-nav-item">Camp #4 "Design" - Palo Alto, CA</li>	
+							<li class="ftr-nav-item">Camp #3 "Money" - Boston, MA</li>	
+							<li class="ftr-nav-item">Camp #2 "Data" - Austin, TX</li>	
+							<li class="ftr-nav-item">Camp #1 "Real Time" - New York, NY</li>	
+						</ul>	
+					</article> <!-- /.past-camps -->
 
-    <!-- Le javascript
-    ================================================== -->
-    <!-- Placed at the end of the document so the pages load faster -->
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js" type="text/javascript"></script>
-    <script src="/js/bootstrap-transition.js"></script>
-    <script src="/js/bootstrap-alert.js"></script>
-    <script src="/js/bootstrap-modal.js"></script>
-    <script src="/js/bootstrap-dropdown.js"></script>
-    <script src="/js/bootstrap-scrollspy.js"></script>
-    <script src="/js/bootstrap-tab.js"></script>
-    <script src="/js/bootstrap-tooltip.js"></script>
-    <script src="/js/bootstrap-popover.js"></script>
-    <script src="/js/bootstrap-button.js"></script>
-    <script src="/js/bootstrap-collapse.js"></script>
-    <script src="/js/bootstrap-carousel.js"></script>
-    <script src="/js/bootstrap-typeahead.js"></script>
+					<article class="ftr-section contact media-block">
+						<h4 class="ftr-section-h">Contact</h4>
+						<ul class="ftr-nav-list">
+							<li class="ftr-nav-item"><a href="mailto:info@sparkcamp.com">info@sparkcamp.com</a></li>		
+						</ul>	
+					</article> <!-- /.past-camps -->
 
-  </body>
+					<article class="ftr-section sponsors media-block">
+						<h4 class="ftr-section-h">Sponsors</h4>
+						<ul class="ftr-nav-list">
+							<li class="ftr-nav-item"><a href="http://www.google.com"><img class="ftr-logo" src="http://apps.sparkcamp.com/static/ups/_img/googlelogogrey-resized.png"></a></li>
+							<li class="ftr-nav-item"><a href="http://www.gatesfoundation.org/"><img class="ftr-logo" src="http://apps.sparkcamp.com/static/ups/_img/gates_foundation_logo-grayscale.png"></a></li>
+							<li class="ftr-nav-item"><a href="http://www.knightfoundation.org/"><img class="ftr-logo" src="http://apps.sparkcamp.com/static/ups/_img/knight-logo.png"></a></li>
+                            <li class="ftr-nav-item"><a href="http://www.opensocietyfoundations.org/"><img class="ftr-logo" src="http://apps.sparkcamp.com/static/ups/_img/OSF_logo-grayscale.png"></a></li>
+							<li class="ftr-nav-item"><a href="http://www.webbmediagroup.com/"><img class="ftr-logo" src="http://apps.sparkcamp.com/static/ups/_img/webbmedia-group-logo-grayscale.png"></a></li>
+						</ul>	
+					</article> <!-- /.past-camps -->
+				</div> <!-- /.ftr-nav-wrap -->						
+			</section> <!-- /.footer-link-mod -->						
+
+	<section class="scripts">
+		<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+		<!-- Scripts					-->
+		<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+		<script>window.jQuery || document.write('<script src="http://apps.sparkcamp.com/static/ups/_js/libs/jquery-1.7.2.min.js"><\/script>')</script>  	
+
+	  	<!-- Project-Specific stuff, start with up-base and go into script.js for your code --> 
+		<!--<script type="text/javascript" src="http://apps.sparkcamp.com/static/ups/_js/up-base.js"></script>-->
+		
+
+		<!-- Placeholder Polyfill -->
+		<script src="http://apps.sparkcamp.com/static/ups/_js/libs/jquery.pjax.js"></script>
+		<script src="http://apps.sparkcamp.com/static/ups/_js/libs/jquery.placeholder.min.js"></script>
+        
+		<!-- end scripts-->
+		
+		<script type="text/javascript" src="http://apps.sparkcamp.com/static/ups/_js/script.js"></script>
+
+		<!-- Prompt IE 6 users to install Chrome Frame. Remove this if you want to support IE 6.
+	       chromium.org/developers/how-tos/chrome-frame-getting-started -->
+		<!--[if lt IE 7 ]>
+	    	<script src="//ajax.googleapis.com/ajax/libs/chrome-frame/1.0.3/CFInstall.min.js"></script>
+			<script>window.attachEvent('onload',function(){CFInstall.check({mode:'overlay'})})</script>
+		<![endif]-->
+	</section>
+</body>
 </html>
