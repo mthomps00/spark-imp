@@ -1,7 +1,7 @@
 from django.conf.urls import patterns, include, url
 from django.contrib.auth.views import login, logout_then_login
 from rsvp.views import *
-from nominations.views import *
+# from nominations.views import *
 
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
@@ -33,10 +33,10 @@ urlpatterns = patterns('',
     url(r'^rsvp/(?P<rand_id>\d{8})/(?P<main_object>\w+)/$', invite_related, name="invite_related"),
     url(r'^rsvp/(?P<rand_id>\d{8})/(?P<main_object>\w+)/delete/$', invite_related_delete, name="invite_related_delete"),
     url(r'^(?P<main_object>\w+)/(?P<object_id>\d+)/confirmdelete/$', confirm_delete, name="confirm_delete"),
-    url(r'^nominate/$', nominate, name="nominate"),
-    url(r'^nominate/(?P<camptheme>[a-zA-Z-]+)/$', nominate_for, name="nominate_for"),
-    url(r'^nominees/$', nominees, name="nominees"),
-    url(r'^nominees/(?P<theme>[a-zA-Z-]+)/$', nominees, name="nominees"),
+    # url(r'^nominate/$', nominate, name="nominate"),
+    # url(r'^nominate/(?P<camptheme>[a-zA-Z-]+)/$', nominate_for, name="nominate_for"),
+    # url(r'^nominees/$', nominees, name="nominees"),
+    # url(r'^nominees/(?P<theme>[a-zA-Z-]+)/$', nominees, name="nominees"),
     url(r'^login/$', login, {'template_name': 'login.html'}),
     url(r'^logout/$', logout_then_login),
 )
