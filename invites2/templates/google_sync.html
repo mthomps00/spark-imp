@@ -5,41 +5,38 @@
 {% block pageheader %}Synced from Google - Spark Camp {{ camp.theme }}{% endblock %}
 
 {% block content %}
-        {% if rows %}
-            <div class="row">
-                <div class="span12">
-                    <table class="table table-bordered table-striped">
-                        <thead>
-                            <tr>
-                                <th>Username</th>
-                                <th>First name</th>
-                                <th>Last name</th>
-                                <th>Employer</th>
-                                <th>Email</th>
-                                <th>POC</th>
-                                <th>W</th>
-                                <th>J</th>
-                                <th>Expires</th>
-                            </tr>
-                        </thead>                        
-                    {% for row in rows %}
-                        <tr>
-                            <td><a href="{% url invitation row.rand_id %}">{{ row.username }}</a></td>
-                            <td>{{ row.first_name }}</td>
-                            <td>{{ row.last_name }}</td>
-                            <td>{{ row.employer }}</td>
-                            <td>{{ row.email }}</td>
-                            <td>{% if row.POC %}Yes{% endif %}</td>
-                            <td>{% if row.W %}Yes{% endif %}</td>
-                            <td>{% if row.J %}Yes{% endif %}</td>
-                            <td>{{ row.expires }}</td>
-                        </tr>
-                    {% endfor %}
-                    </table>
-                </div>
-            </div>
-            
+<section class="content">
+    {% if rows %}
+        <table class="table table-basic">
+            <thead>
+                <tr>
+                    <th>Username</th>
+                    <th>First name</th>
+                    <th>Last name</th>
+                    <th>Employer</th>
+                    <th>Email</th>
+                    <th>POC</th>
+                    <th>W</th>
+                    <th>J</th>
+                    <th>Expires</th>
+                </tr>
+            </thead>                        
+        {% for row in rows %}
+            <tr>
+                <td><a href="{% url invitation row.rand_id %}">{{ row.username }}</a></td>
+                <td>{{ row.first_name }}</td>
+                <td>{{ row.last_name }}</td>
+                <td>{{ row.employer }}</td>
+                <td>{{ row.email }}</td>
+                <td>{% if row.POC %}Yes{% endif %}</td>
+                <td>{% if row.W %}Yes{% endif %}</td>
+                <td>{% if row.J %}Yes{% endif %}</td>
+                <td>{{ row.expires }}</td>
+            </tr>
+        {% endfor %}
+        </table>
         {% else %}
-            <p>No invitations found.</p>
+            <p class="text=large">No invitations found.</p>
         {% endif %}
+</section>
 {% endblock %}

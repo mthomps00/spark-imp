@@ -1,26 +1,28 @@
 {% extends "base.html" %}
 
 {% block content %}
+<section class="content">
 
 {% if camps %}
-<h3>Upcoming camps</h3>
+<div class="overline-alt">Upcoming camps</div>
 
-        <table class="table table-striped table-bordered">
-            <thead>
-                <tr>
-                    <th>Theme</th>
-                    <th>Dates</th>
-                </tr>
-            </thead>
-            {% for camp in camps %}
+    <table class="table table-basic">
+        <thead>
             <tr>
-                <td><a href="/camps/{{ camp.theme|lower }}">Spark Camp {{ camp.theme }}</a></td>
-                <td>{{ camp.start_date|date:"l, F j" }} to {{ camp.end_date|date:"l, F j, Y" }}</td>
+                <th>Theme</th>
+                <th>Dates</th>
             </tr>
-            {% endfor %}
-        </table>
+        </thead>
+        {% for camp in camps %}
+        <tr>
+            <td><a href="/camps/{{ camp.theme|lower }}">Spark Camp {{ camp.theme }}</a></td>
+            <td>{{ camp.start_date|date:"l, F j" }} to {{ camp.end_date|date:"l, F j, Y" }}</td>
+        </tr>
+        {% endfor %}
+    </table>
 {% else %}
-    <p>No camps found.</p>
+    <p class="text-large">There aren't any upcoming camps listed in the system. You can <a href="/admin/rsvp/camp/add/">add a new camp to the list in the admin, or <a href="/camps">see the full list of camps</a>, including ones that have already past.</p>
 {% endif %}
+</section>
 
 {% endblock %}

@@ -16,9 +16,15 @@ class SessionInline(admin.TabularInline):
     model = Session
 
 class InvitationAdmin(admin.ModelAdmin):
-    list_display = ('user', 'camp', 'status', 'expires', 'rand_id')
+    list_display = ('name', 'camp', 'status', 'expires', 'rand_id')
     list_filter = ('camp',)
-    search_fields = ('user',)
+    search_fields = ('user__username', 'user__first_name', 'user__last_name',)
+    ordering = ('user__last_name',)
+    
+    def name(self, obj):
+        return ('%s %s' % (obj.user.first_name, obj.user.last_name))
+    name.short_description = 'Name'
+    name.admin_order_field = 'user__last_name'
     
     inlines = [
         StipendInline,
@@ -31,7 +37,7 @@ class InvitationInline(admin.TabularInline):
     model = Invitation
     fields = ('user', 'status', 'type', 'expires')
     extra = 20
-
+    
 class CampAdmin(admin.ModelAdmin):
     inlines = [
         InvitationInline,

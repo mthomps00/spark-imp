@@ -17,34 +17,34 @@
 {% block breadcrumb %}Session proposals{% endblock %}
 
 {% block form %}
-        {% if sessions %}
-                    <table class="table table-bordered table-striped" id="invites-table">
-                        <thead>
-                            <tr id="invites-header" title="Click header to sort. Hold shift to sort on multiple columns.">
-                                <th>First name</th>
-                                <th>Last name</th>
-                                <th>Title</th>
-                                <th>Description</th>
-                            </tr>
-                        </thead>                        
-                    {% for session in sessions %}
-                        <tr>
-                            <td>{{ session.first_name }}</td>
-                            <td>{{ session.last_name }}</td>
-                            <td>{{ session.title }}</td>
-                            <td>{{ session.description }}</td>
-                        </tr>
-                    {% endfor %}
-                    </table>
+    {% if sessions %}
+        <table class="table-basic" id="invites-table">
+            <thead>
+                <tr id="invites-header" title="Click header to sort. Hold shift to sort on multiple columns.">
+                    <th>First name</th>
+                    <th>Last name</th>
+                    <th>Title</th>
+                    <th>Description</th>
+                </tr>
+            </thead>                        
+        {% for session in sessions %}
+            <tr>
+                <td>{{ session.first_name }}</td>
+                <td>{{ session.last_name }}</td>
+                <td>{{ session.title }}</td>
+                <td>{{ session.description }}</td>
+            </tr>
+        {% endfor %}
+        </table>
             
         {% else %}
-            <p>No session proposals found.</p>
+            <p class="text-large">No session proposals found.</p>
         {% endif %}
 {% endblock %}
 
 {% block scripts %}
-<script src="{{ STATIC_URL }}js/jquery.tablesorter.min.js"></script>
-<script src="{{ STATIC_URL }}js/bootstrap-tooltip.js"></script>
+<script src="{{ STATIC_URL }}_js/jquery.tablesorter.min.js"></script>
+<script src="{{ STATIC_URL }}_js/bootstrap-tooltip.js"></script>
 
 <script type="text/javascript">
  $(document).ready(function() {

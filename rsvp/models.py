@@ -162,8 +162,10 @@ class SparkProfile(models.Model):
     twitter = models.CharField(max_length=20, blank=True, help_text='What\'s your Twitter username?')
     url = models.URLField(blank=True, help_text='Link to your personal site or profile.')
     email = models.EmailField(blank=True, help_text='Preferred email address.')
+    secondary_email = models.EmailField(blank=True, help_text='Alternate (or admin assistant) email address.')
     job_title = models.CharField(max_length=140, blank=True, help_text='Your job title.')
     phone = models.CharField(max_length=30, blank=True, help_text='Preferred phone number for us to reach you.')
+    dietary = models.CharField(max_length=140, blank=True, default='None', help_text='Please note any dietary preferences here.', verbose_name='Dietary needs')
     
     # User details for admins.
     poc = models.BooleanField(blank=True, default=False, verbose_name='Person of color')

@@ -5,9 +5,9 @@
 {% block pageheader %}Invitations for {{ username }}{% endblock %}
 
 {% block content %}
-
+<section class="content">
     {% if invitations %}
-        <table class="table table-bordered table-striped">
+        <table class="table table-basic">
             <thead>
                 <tr>
                     <th>Name</th>
@@ -24,7 +24,7 @@
             {% endfor %}
         </table>
     {% else %}
-        <p>No invitations found.</p>
+        <p class="text-large">No invitations found.</p>
     {% endif %}
-
+</section>
 {% endblock %}

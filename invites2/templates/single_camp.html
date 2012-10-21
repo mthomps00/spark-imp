@@ -15,75 +15,85 @@
 {% block pageheader %}Invitations for Spark Camp {{ camp.theme }}{% endblock %}
 
 {% block content %}
+<section class="content">
         {% if invitations %}
-            <div class="row">
-                <div class="span2 offset2">
-                    <h3>{{ confirmed|length }}</h3>
-                    <p>confirmed</p>
+            <div class="tile-mod-4">
+                <div class="media-block">
+                    <h3 class="h3 orange">{{ confirmed|length }}</h3>
+                    <p class="text-med">confirmed</p>
                 </div>
-                <div class="span2">
-                    <h3>{{ percent_women }}%</h3>
-                    <p>women</p>
+                <div class="media-block">
+                    <h3 class="h3 orange">{{ percent_women }}%</h3>
+                    <p class="text-med">women</p>
                 </div>
-                <div class="span2">
-                    <h3>{{ percent_poc }}%</h3>
-                    <p>people of color</p>
+                <div class="media-block">
+                    <h3 class="h3 orange">{{ percent_poc }}%</h3>
+                    <p class="text-med">people of color</p>
                 </div>
-                <div class="span2">
-                    <h3>{{ percent_journos }}%</h3>
-                    <p>journalists</p>
-                </div>
-            </div>
-            <hr />
-            <div class="row">
-                <div class="span12">
-                    <table class="table table-bordered table-striped" id="invites-table">
-                        <thead>
-                            <tr id="invites-header" title="Click header to sort. Hold shift to sort on multiple columns.">
-                                <th>Invite No.</th>
-                                <th>First name</th>
-                                <th>Last name</th>
-                                <th>Status</th>
-                                <th>Stipend</th>
-                                <th>Roommate</th>
-                                <th>Ignite</th>
-                                <th>Expires</th>
-                            </tr>
-                        </thead>                        
-                    {% for invite in invitations %}
-                        <tr>
-                            <td><a href="{% url invitation invite.rand_id %}">{{ invite.rand_id }}</a></td>
-                            <td>{{ invite.user.first_name }}</td>
-                            <td>{{ invite.user.last_name }}</td>
-                            <td>{{ invite.status }}</td>
-                            <td>{% if invite.stipend %}<a href="{% url invite_related rand_id=invite.rand_id main_object='Stipend' %}">Yes</a>{% endif %}</td>
-                            <td>{% if invite.roommate %}<a href="{% url invite_related rand_id=invite.rand_id main_object='Roommate' %}">Yes</a>{% endif %}</td>
-                            <td>{% if invite.ignite %}<a href="{% url invite_related rand_id=invite.rand_id main_object='Ignite' %}">Yes</a>{% endif %}</td>
-                            <td>{{ invite.expires }}</td>
-                        </tr>
-                    {% endfor %}
-                    </table>
-                    {% if camp.spreadsheet_url %}
-                    <form class="form-inline" action="{% url google_sync camptheme=camp.theme %}" method="get">
-                        <p><strong>Sync this with Google Spreadsheet.</strong></p>
-                        <label for="deadline">Number of days till expiration: </label>
-                        <div class="input-append">
-                            <input type="text" class="input-mini" value="14" name="deadline"><input class="btn" type="submit" value="Submit" />
-                        </div>
-                    </form>
-                    {% endif %}
-                    <p><a href="{% url dietary camptheme=camp.theme %}">Dietary preferences</a> | <a href="{% url stipends camptheme=camp.theme %}">Stipend requests</a> | <a href="{% url sessions camptheme=camp.theme %}">Session proposals</a></p>
+                <div class="media-block">
+                    <h3 class="h3 orange">{{ percent_journos }}%</h3>
+                    <p class="text-med">journalists</p>
                 </div>
             </div>
-            
+            <table class="table table-basic" id="invites-table">
+                <thead>
+                    <tr id="invites-header" title="Click header to sort. Hold shift to sort on multiple columns.">
+                        <th>Invite No.</th>
+                        <th>First name</th>
+                        <th>Last name</th>
+                        <th>Status</th>
+                        <th>Stipend</th>
+                        <th>Roommate</th>
+                        <th>Ignite</th>
+                        <th>Expires</th>
+                    </tr>
+                </thead>                        
+            {% for invite in invitations %}
+                <tr>
+                    <td><a href="{% url invitation invite.rand_id %}">{{ invite.rand_id }}</a></td>
+                    <td>{{ invite.user.first_name }}</td>
+                    <td>{{ invite.user.last_name }}</td>
+                    <td>{{ invite.status }}</td>
+                    <td>{% if invite.stipend %}<a href="{% url invite_related rand_id=invite.rand_id main_object='Stipend' %}">Yes</a>{% endif %}</td>
+                    <td>{% if invite.roommate %}<a href="{% url invite_related rand_id=invite.rand_id main_object='Roommate' %}">Yes</a>{% endif %}</td>
+                    <td>{% if invite.ignite %}<a href="{% url invite_related rand_id=invite.rand_id main_object='Ignite' %}">Yes</a>{% endif %}</td>
+                    <td>{{ invite.expires }}</td>
+                </tr>
+            {% endfor %}
+            </table>
         {% else %}
-            <p>No invitations found.</p>
+            <p class="text-large">No invitations for this camp have been entered yet. <a href="/admin/rsvp/invitation/add/">Add some invitations from the admin.</a></p>
         {% endif %}
+</section>
+{% endblock %}
+
+{% block extranav %}
+<section class="content">
+
+{% if camp.spreadsheet_url %}
+<div class="sidebar-mod">
+<form class="form-basic comment-form" action="{% url google_sync camptheme=camp.theme %}" method="get">
+<h4 class="h5">Google Spreadsheet sync</h4>
+<fieldset class="inputs">
+    <label for="deadline">Days till deadline:</label>
+    <input type="text" class="input" value="14" name="deadline"><input class="btn" type="submit" value="Submit" />
+</fieldset>
+</form>
+</div>
+{% endif %}
+</section>
+{% endblock %}
+
+{% block adminnav %}
+    <li><a href="{% url single_camp camptheme=camp.theme %}">&nbsp;- Spark Camp {{ camp.theme }}</a></li>
+    <li><a href="{% url dietary camptheme=camp.theme %}">&nbsp;&nbsp;&nbsp;- Dietary preferences</a></li>
+    <li><a href="{% url stipends camptheme=camp.theme %}">&nbsp;&nbsp;&nbsp;- Stipend requests</a></li>
+    <li><a href="{% url sessions camptheme=camp.theme %}">&nbsp;&nbsp;&nbsp;- Session proposals</a></li>
 {% endblock %}
 
 {% block scripts %}
-<script src="{{ STATIC_URL }}js/jquery.tablesorter.min.js"></script>
-<script src="{{ STATIC_URL }}js/bootstrap-tooltip.js"></script>
+<script src="{{ STATIC_URL }}_js/jquery.tablesorter.min.js"></script>
+<script src="{{ STATIC_URL }}_js/bootstrap-tooltip.js"></script>
 
 <script type="text/javascript">
  $(document).ready(function() {

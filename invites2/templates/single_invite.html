@@ -4,231 +4,243 @@
 
 {% block title %}{% if invitation.user.first_name %}{{ invitation.user.first_name }}'s {% endif %}Spark Camp {{ invitation.camp.theme }} Dashboard{% endblock %}
 
-{% block pageheader %}Hi{% if invitation.user.first_name %}, {{ invitation.user.first_name }}{% endif %}.
-<small>Manage your information for Spark Camp {{ invitation.camp.theme }} here.</small>
-{% endblock %}
+{% block pageheader %}Hi{% if invitation.user.first_name %}, {{ invitation.user.first_name }}{% endif %}.{% endblock %}
+{% block text-med %}<em class="post-script">Manage your information for Spark Camp {{ invitation.camp.theme }} here.</em>{% endblock %}
 
 {% block content %}
+<section class="content">
+            
+    {% block update %}{% if update %}
+    
+        <p class="text-med"><em class="orange">{{ update }}</em></p>
 
-        <div class="row">
-            <div class="span4">
-            
-            {% block update %}{% if update %}
-            
-                <div class="alert alert-success">{{ update }}</div>
+    {% endif %}{% endblock %}
+    
+    {% if invitation %}
 
-            {% endif %}{% endblock %}
-            
-            {% if invitation %}
-            
-                <p>{{ message }}</p>
+        <p class="text-med">This is the place to manage your RSVP and information about Spark Camp {{ invitation.camp.theme }}. <span class="orange">Please keep the URL of this page secret.</span> We didn't want to hassle you to log in, but that means anyone who has this link can change your RSVP, then edit your bio to say you rose to fame as a cast member on "Jersey Shore."</p>
+    
+    {% else %}
 
-                <form class="form-inline" action="{% url invitation invitation.rand_id %}" method="post">{% csrf_token %}
-                <strong>Current RSVP:</strong><br />{{ form.status }}
-                <input class="btn" type="submit" value="Update" />
-                </form>
+        <p class="text-med">No invitation found.</p>
 
-            {% else %}
+    {% endif %}
+</section>
 
-                <p>No invitation found.</p>
+    {% if invitation %}
+    
+        <section class="content">
+            <div class="overline-alt">About Spark Camp {{ invitation.camp.theme }}</div>
+            <div class="page-h2">{{ invitation.camp.start_date|date:"l, F j" }} to {{ invitation.camp.end_date|date:"l, F j, Y" }}</div>
+            <p class="text">{{ invitation.camp.description }}</p>
+            <div class="section-h3">Venue:</div>
+            <p class="text">{{ invitation.camp.venue }}{% if invitation.camp.venue_address %} ({{ invitation.camp.venue_address }}){% endif %}</p>
+            <div class="section-h3">Official hotel:</div>
+            <p class="text">{{ invitation.camp.hotel }}{% if invitation.camp.hotel_url %} | <a href="{{ invitation.camp.hotel_url }}">Reservation link</a>{% endif %}{% if invitation.camp.hotel_code %} | Group code: {{ invitation.camp.hotel_code }}{% endif %}</p>
+            
+        <div class="page-h2">Your RSVP Status: <span class="orange">{{ invitation.pretty_status }}</span></div>
+        <p class="text">{{ message }}</p>
 
-            {% endif %}
-
-            </div>
-            
-            <div class="span8">
-            
-            {% if invitation %}
-            
-                <div class="well">
-                    <h2>Information about Spark Camp {{ invitation.camp.theme }}</h2>
-                    
-                    <p><strong>Dates:</strong> {{ invitation.camp.start_date|date:"l, F j" }} to {{ invitation.camp.end_date|date:"l, F j, Y" }}</p>
-                    <p><strong>Description:</strong> {{ invitation.camp.description }}</p>
-                </div>
-                    
-            {% endif %}
-            
-            </div>
+        <form class="form-basic" action="{% url invitation invitation.rand_id %}" method="post">{% csrf_token %}
+        <div class="form-row">
+            {{ form.status }}
+            <input class="submit btn" type="submit" value="Update" />
         </div>
-        
-        {% if invitation.status == 'Y' %}
+        </form>
+        </section>
             
-            {% if user %}
-                <div class="row">
-                    <div class="span12">
-                        <div class="alert alert-block">
-                        <h4 class="alert-heading">A word of warning.</h4>
-                        Keep the URL of this page secret. We didn't want to hassle you to log in, but that means anyone who has this link can change your bio to say you rose to fame as a cast member on "Jersey Shore."</h4>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="span12">
-                        <div class="page-header">
-                        <h1>Contact and bio info</h1>
-                        </div>
-                    </div>
-                    <div class="span8 offset4">
-                        <h3>Tell us more about you.</h3>
-                            <dl class="dl-horizontal">
-                                <dt><strong>Bio:</strong></dt>
-                                <dd>{% if sparkprofile.bio %}{{ sparkprofile.bio }}{% else %}<span class="muted">Submit a bio.</span>{% endif %}</dd>
-                                <dt><strong>Email:</strong></dt>
-                                <dd>{% if user.email %}{{ user.email }}{% else %}<span class="muted">No preferred email address given.</span>{% endif %}</dd>
-                                <dt><strong>Phone:</strong></td>
-                                <dd>{% if sparkprofile.phone %}{{ sparkprofile.phone }}{% else %}<span class="muted">No phone number given.</span>{% endif %}</dd>
-                                <dt><strong>URL:</strong></dt>
-                                <dd>{% if sparkprofile.url %}<a href="{{ sparkprofile.url }}">{{ sparkprofile.url }}</a>{% else %}<span class="muted">No website given.</span>{% endif %}</dd>
-                                <dt><strong>Twitter:</strong></td>
-                                <dd>{% if sparkprofile.twitter %}<a href="http://twitter.com/{{ sparkprofile.twitter }}">@{{ sparkprofile.twitter }}</a>{% else %}<span class="muted">No Twitter handle given.</span>{% endif %}</dd>
-                                <dt><strong>Job title:</strong></td>
-                                <dd>{% if sparkprofile.job_title %}{{ sparkprofile.job_title }}{% else %}<span class="muted">No job title given.</span>{% endif %}</dd>
-                                <dt><strong>Employer:</strong></td>
-                                <dd>{% if sparkprofile.employer %}{{ sparkprofile.employer }}{% else %}<span class="muted">No employer given.</span>{% endif %}</dd>
-                            </dl>
-                            <a class="btn btn-small" href="{% url profile invitation.rand_id %}">Update contact info</a>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="span12">
-                        <div class="page-header">
-                        <h1>Spark Camp logistics</h1>
-                        </div>
-                    </div>
-                    <div class="span8 offset4">
-                        <h3>Vital info.</h3>
-                            <p><strong>Venue:</strong> {{ invitation.camp.venue }}{% if invitation.camp.venue_address %} ({{ invitation.camp.venue_address }}){% endif %}</p>
-                            <p><strong>Official hotel:</strong> {{ invitation.camp.hotel }}{% if invitation.camp.hotel_url %} | <a href="{{ invitation.camp.hotel_url }}">Reservation link</a>{% endif %}{% if invitation.camp.hotel_code %} | Group code: {{ invitation.camp.hotel_code }}{% endif %}</p>
-                            {% if invitation.camp.logistics %}<p>{{ invitation.camp.logistics|safe }}</p>{% endif %}
-                             <dl class="dl-horizontal">
-                                <dt><strong>Dietary&nbsp;needs:</strong></dt>
-                                <dd>{% if invitation.dietary %}{{ invitation.dietary }}{% else %}<span class="muted">Please specify any dietary preferences.</span>{% endif %}</dd>
-                                <dt><strong>Arrival time:</strong></dt><dd>{% if invitation.arrival_time %}{{ invitation.arrival_time }}{% else %}<span class="muted">Please let us know when you'll be getting to Spark Camp.</span>{% endif %}</dd>
-                                <dt><strong>Departure time:</strong></dt><dd>{% if invitation.departure_time %}{{ invitation.departure_time }}{% else %}<span class="muted">Please let us know when you'll be leaving Spark Camp.</span>{% endif %}</dd>
-                                <dt><strong>Hotel is booked:</strong></dt><dd>{% if invitation.hotel_booked %}Yep.{% else %}<span class="muted">Please tell us when you've booked your hotel.</span>{% endif %}</dd>
-                            </dl>
-                            <a class="btn btn-small" href="{% url invite_logistics invitation.rand_id %}">Update these details</a>
-                        <hr />
-                        {% if stipend %}
-                            <h3>You've requested a travel stipend.</h3><p>We hope to be able to accommodate your request. We'll get back to you as soon as we've finalized our attendee list.</p>
-                            <dl class="dl-horizontal">
-                                <dt><strong>Cost estimate:</strong></dt>
-                                <dd>
-                                {% if stipend.cost_estimate %}
-                                {{ stipend.cost_estimate }}
-                                {% else %}
-                                <span class="muted">
-                                Please specify the estimated cost for travel.
-                                </span>
-                                {% endif %}</dd>
-                                <dt><strong>Employer&nbsp;subsidy:</strong></dt>
-                                <dd>
-                                {% if stipend.employer_percentage %}
-                                {{ stipend.employer_percentage }}%
-                                {% else %}
-                                <span class="muted">
-                                Not specified.
-                                </span>
-                                {% endif %}
-                                </dd>
-                                <dt><strong>Your contribution:</strong></dt>
-                                <dd>
-                                {% if stipend.invitee_percentage %}
-                                {{ stipend.invitee_percentage }}%
-                                {% else %}
-                                <span class="muted">
-                                Not specified.
-                                </span>
-                                {% endif %}
-                                </dd>
-                                <dt><strong>Details:</strong></dt>
-                                <dd>
-                                {% if stipend.details %}
-                                {{ stipend.details }}
-                                {% else %}
-                                <span class="muted">
-                                No more information given.
-                                </span>
-                                {% endif %}
-                                </dd>
-                            </dl>
-                            <div class="btn-group"><a class="btn btn-small" href="{% url invite_related rand_id=invitation.rand_id main_object='Stipend' %}">Edit this request</a>
-                            <a class="btn btn-small btn-danger" href="{% url invite_related_delete main_object='Stipend' rand_id=invitation.rand_id %}">Cancel this request</a>
-                            </div>
-                            {% else %}
-                            <h3>Request a travel stipend.</h3> 
-                            <p>A limited number of partial travel stipends are available to ensure campers can attend regardless of financial situation.</p>
-                            <p><a class="btn btn-small" href="{% url invite_related rand_id=invitation.rand_id main_object='Stipend' %}">Request a stipend</a></p>
-                        {% endif %}
-                        <hr />
+    {% endif %}
+    
         
-                        {% if roommate %}
-                            <h3>You've requested a roommate.</h3>
-                            <dl class="dl-horizontal">
-                                <dt><strong>Your sex:</strong></dt>
-                                <dd>
-                                {% if roommate.sex %}
-                                {{ roommate.sex }}
-                                {% else %}
-                                <span class="muted">
-                                Please specify your sex.
-                                </span>
-                                {% endif %}</dd>
-                                <dt><strong>Will&nbsp;room&nbsp;with:</strong></dt>
-                                <dd>
-                                {% if roommate.roommate %}
-                                {{ roommate.roommate }}
-                                {% else %}
-                                <span class="muted">
-                                Not specified.
-                                </span>
-                                {% endif %}
-                                </dd>
-                                <dt><strong>More info:</strong></dt>
-                                <dd>
-                                {% if roommate.more %}
-                                {{ roommate.more }}
-                                {% else %}
-                                <span class="muted">
-                                Not specified.
-                                </span>
-                                {% endif %}
-                                </dd>
-                            </dl>
-                        {% if roommate.potentials %}
-                                <p>We may have found some potential roommates for you. Click on a name below to email the Camper.</p><ul>
-                            {% for potential in roommate.potentials %}
-                                <li><a href="mailto:{{ potential.invitation.user.email }}?subject=Sharing a room at Spark Camp">{{ potential.invitation.user.first_name }} {{ potential.invitation.user.last_name }}</strong></a>{% if potential.invitation.user.sparkprofile.employer %} ({{ potential.invitation.user.sparkprofile.employer }}){% endif %}{% if potential.invitation.user.sparkprofile.bio %}: {{ potential.invitation.user.sparkprofile.bio }}{% endif %}</li>
-                            {% endfor %}
-                                </ul>
-                        {% endif %}
-                            <p>Found a match? <a href="{% url invite_related_delete rand_id=invitation.rand_id main_object='Roommate' %}">Cancel your roommate request.</a></p>
-                            <div class="btn-group"><a class="btn btn-small" href="{% url invite_related rand_id=invitation.rand_id main_object='Roommate' %}">Edit this request</a>
-                            <a class="btn btn-small btn-danger" href="{% url invite_related_delete main_object='Roommate' rand_id=invitation.rand_id %}">Cancel this request</a>
-                            </div>
+    {% if invitation.status == 'Y' %}
+        
+        {% if user %}
+            <section class="content">
+                <div class="overline-alt">Contact and bio info</div>
+                <div class="page-h2">Tell us more about you</div>
+                <div class="section-h3"><strong>Bio:</strong></div>
+                <p class="text">{% if sparkprofile.bio %}{{ sparkprofile.bio }}{% else %}<span class="muted">Submit a brief bio for yourself, no more than tweet-length.</span>{% endif %}</p>
+                <div class="section-h3">Dietary&nbsp;needs:</strong></div>
+                <p class="text">{% if sparkprofile.dietary %}{{ sparkprofile.dietary }}{% else %}<span class="muted">Please let us know of any dietary needs or preferences.</span>{% endif %}</p>
+
+                <ul class="list-mod">
+                    <li class="list-item">
+                        <div class="section-h3">Email:</div>
+                        <p class="text">{% if user.email %}{{ user.email }}{% else %}<span class="muted">No preferred email address given.</span>{% endif %}</p>
+                    </li>
+                    <li class="list-item">
+                        <div class="section-h3">Phone:</div>
+                        <p class="text">{% if sparkprofile.phone %}{{ sparkprofile.phone }}{% else %}<span class="muted">No phone number given.</span>{% endif %}</p>
+                    </li>
+                    <li class="list-item">
+                        <div class="section-h3">URL:</strong></div>
+                        <p class="text">{% if sparkprofile.url %}<a href="{{ sparkprofile.url }}">{{ sparkprofile.url }}</a>{% else %}<span class="muted">No website given.</span>{% endif %}</p>
+                    </li>
+                    <li class="list-item">
+                        <div class="section-h3">Twitter:</div>
+                        <p class="text">{% if sparkprofile.twitter %}<a href="http://twitter.com/{{ sparkprofile.twitter }}">@{{ sparkprofile.twitter }}</a>{% else %}<span class="muted">No Twitter handle given.</span>{% endif %}</p>
+                    </li>
+                    <li class="list-item">
+                        <div class="section-h3">Job title:</div>
+                        <p class="text">{% if sparkprofile.job_title %}{{ sparkprofile.job_title }}{% else %}<span class="muted">No job title given.</span>{% endif %}</p>
+                    </li>
+                    <li class="list-item">
+                        <div class="section-h3">Employer:</div>
+                        <p class="text">{% if sparkprofile.employer %}{{ sparkprofile.employer }}{% else %}<span class="muted">No employer given.</span>{% endif %}</p>
+                    </li>
+                </ul>
+                        <a class="submit btn-large" href="{% url profile invitation.rand_id %}">Update your info</a>
+            </section>
+
+            <section class="content">
+            
+                 <div class="overline-alt">Make Spark Camp more awesome</div>
+                 <p class="text-med">Here, you can apply for a travel stipend, sign up to give an Ignite talk, request roommates, or propose sessions.</p>
+                 <div class="page-h2">Travel stipends</div>
+                    {% if stipend %}
+                    <p class="text">You've requested a travel stipend, and we hope to be able to accommodate your request. We'll get back to you as soon as we've finalized our attendee list. Meanwhile, be sure the information below is correct.</p>
+                        <ul class="list-mod">
+                            <li class="list-item">
+                            <div class="section-h3">Cost estimate:</div>
+                            <p class="text">
+                            {% if stipend.cost_estimate %}
+                            {{ stipend.cost_estimate }}
                             {% else %}
-                            <h3>Request a roommate.</h3> 
-                            <p>Tell us a few details about the rooming situation you're comfortable with, and we'll try to match you up with another Camper.</p>
-                            <p><a class="btn btn-small" href="{% url invite_related rand_id=invitation.rand_id main_object='Roommate' %}">Request a roommate</a></p>
+                            <span class="muted">
+                            Please specify the estimated cost for travel.
+                            </span>
+                            {% endif %}</p>
+                            </li>
+                            <li class="list-item">
+                            <div class="section-h3">Employer&nbsp;subsidy:</strong></div>
+                            <p class="text">
+                            {% if stipend.employer_percentage %}
+                            {{ stipend.employer_percentage }}%
+                            {% else %}
+                            <span class="muted">
+                            Not specified.
+                            </span>
+                            {% endif %}
+                            </p>
+                            <li class="list-item">
+                            <div class="section-h3">Your contribution:</div>
+                            <p class="text">
+                            {% if stipend.invitee_percentage %}
+                            {{ stipend.invitee_percentage }}%
+                            {% else %}
+                            <span class="muted">
+                            Not specified.
+                            </span>
+                            {% endif %}
+                            </p>
+                            <li class="list-item">
+                            <div class="section-h3">Details:</div>
+                            <p class="text">
+                            {% if stipend.details %}
+                            {{ stipend.details }}
+                            {% else %}
+                            <span class="muted">
+                            No more information given.
+                            </span>
+                            {% endif %}
+                            </p>
+                        </ul>
+                        <a class="submit btn" href="{% url invite_related rand_id=invitation.rand_id main_object='Stipend' %}">Edit this request</a>
+                        <a class="submit btn" href="{% url invite_related_delete main_object='Stipend' rand_id=invitation.rand_id %}">Cancel this request</a>
+                        {% else %}
+                        <p class="text">A limited number of partial travel stipends are available to ensure campers can attend regardless of financial situation.<br /><a class="submit btn" href="{% url invite_related rand_id=invitation.rand_id main_object='Stipend' %}">Request a stipend</a></p>
+                    {% endif %}
+                    <hr />
+                    <div class="page-h2">Roommates</div>
+                    {% if roommate %}
+                    {# if the user has requested a roommate #}
+                        <p class="text">You've requested a roommate.</p>
+
+                        {% if roommate.potentials %}
+                        {# if we have matches for the roommate request #}
+                        <p class="text">We may have found some potential roommates for you. Click on a name below to email the Camper:
+
+                        <table class="table-basic">
+                        <tr>
+                            <th>Name</th>
+                            <th>Employer</th>
+                            <th>Bio</th>
+                        </tr>
+                        {% for potential in roommate.potentials %}
+                        <tr>
+                            <td><a href="mailto:{{ potential.invitation.user.email }}?subject=Sharing a room at Spark Camp"><strong>{{ potential.invitation.user.first_name }} {{ potential.invitation.user.last_name }}</strong></a></td>
+                            <td>{% if potential.invitation.user.sparkprofile.employer %}{{ potential.invitation.user.sparkprofile.employer }}{% endif %}</td>
+                            <td>{% if potential.invitation.user.sparkprofile.bio %}{{ potential.invitation.user.sparkprofile.bio }}{% endif %}</td>
+                        </tr>
+                        {% endfor %}
+                        </table>
+                        {% else %}
+                        {# if there are no matches #}
+                         <p class="text">We haven't found any matches for you yet, but check back soon to see if anyone's available.</p>
                         {% endif %}
-                        <hr />
-                        
-                        {% if ignite %}
-                            <h3>You've proposed an Ignite talk.</h3>
-                            <p>Start preparing your talk! We'll be in touch to confirm your participation.</p>
-                            <dl class="dl-horizontal">
-                                <dt><strong>Title:</strong></dt>
-                                <dd>
+                                             
+                    <p class="text">Make sure all the information below is correct:</p>
+
+                        <ul class="list-mod">
+                            <li class="list-item">
+                            <div class="section-h3">Your sex:</div>
+                            <p class="text"> {% if roommate.sex %}
+                            {{ roommate.sex }}
+                            {% else %}
+                            <span class="muted">
+                            Please specify your sex.
+                            </span>
+                            {% endif %}
+                            </p>
+                            </li>
+                            <li class="list-item">
+                            <div class="section-h3">Will&nbsp;room&nbsp;with:</div>
+                            <p class="text">
+                            {% if roommate.roommate %}
+                            {{ roommate.roommate }}
+                            {% else %}
+                            <span class="muted">
+                            Not specified.
+                            </span>
+                            {% endif %}
+                            </p>
+                        </ul>
+                        <div class="section-h3">More info:</div> 
+                        <p class="text">
+                            {% if roommate.more %}
+                            {{ roommate.more }}
+                            {% else %}
+                            <span class="muted">
+                            Not specified.
+                            </span>
+                            {% endif %}
+                            </li>
+                        </p>
+                        <p class="text">Found a match? <a href="{% url invite_related_delete rand_id=invitation.rand_id main_object='Roommate' %}">Cancel your roommate request.</a> <br /><a class="submit btn" href="{% url invite_related rand_id=invitation.rand_id main_object='Roommate' %}">Edit this request</a>
+                        <a class="submit btn" href="{% url invite_related_delete main_object='Roommate' rand_id=invitation.rand_id %}">Cancel this request</a>
+                        </p>
+                        {% else %}
+                        <p class="text">If you'd be willing to room with someone at Spark Camp, tell us a few details about the rooming situation you're comfortable with, and we'll try to match you up with another Camper. <br /><a class="submit btn" href="{% url invite_related rand_id=invitation.rand_id main_object='Roommate' %}">Request a roommate</a></p>
+                    {% endif %}
+                    <hr />
+                    <div class="page-h2">Ignite talks</div>           
+                    {% if ignite %}
+                    <p class="text">You've proposed an Ignite talk. Start preparing your talk! We'll be in touch to confirm your participation.</p>
+                        <ul class="list-mod">
+                            <li class="list-item">
+                                <div class="section-h3">Title:</div>
+                                <p class="text">
                                 {% if ignite.title %}
                                 {{ ignite.title }}
                                 {% else %}
                                 <span class="muted">
                                 Please specify a title.
                                 </span>
-                                {% endif %}</dd>
-                                <dt><strong>Experience:</strong></dt>
-                                <dd>
+                                {% endif %}</p>
+                            </li>
+                            <li class="list-item">
+                                <div class="section-h3">Experience:</div>
+                                <p class="text">
                                 {% if ignite.experience %}
                                 {{ ignite.experience }}
                                 {% else %}
@@ -236,9 +248,11 @@
                                 Not specified.
                                 </span>
                                 {% endif %}
-                                </dd>
-                                <dt><strong>More info:</strong></dt>
-                                <dd>
+                                </p>
+                            </li>
+                            <li class="list-item">
+                                <div class="section-h3">More info:</div>
+                                <p class="text">
                                 {% if ignite.description %}
                                 {{ ignite.description }}
                                 {% else %}
@@ -246,90 +260,76 @@
                                 Not specified.
                                 </span>
                                 {% endif %}
-                                </dd>
-                            </dl>
-                            <div class="btn-group">
-                            <a class="btn btn-small" href="{% url invite_related rand_id=invitation.rand_id main_object='Ignite' %}">Edit this proposal</a>
-                            <a class="btn btn-small btn-danger" href="{% url invite_related_delete main_object='Ignite' rand_id=invitation.rand_id %}">Cancel this proposal</a>
-                            </div>
-                            {% else %}
-                            <h3>Sign up for Ignite</h3> 
-                            <p>An Ignite talk is a 5-minute presentation with an auto-advancing deck of PowerPoint slides that tick forward every 15 seconds. <a href="http://igniteshow.com/" target="_blank">You can learn more about the format here.</a></p>
-                            <p><a class="btn btn-small" href="{% url invite_related rand_id=invitation.rand_id main_object='Ignite' %}">Ignite sign-up</a></p>
-                        {% endif %}
-                        <hr />
-
-                        {% if session %}
-                            <h3>You've proposed a session.</h3>
-                            <dl class="dl-horizontal">
-                                <dt><strong>Title:</strong></dt>
-                                <dd>
-                                {% if session.title %}
-                                {{ session.title }}
-                                {% else %}
-                                <span class="muted">
-                                Please specify a title.
-                                </span>
-                                {% endif %}</dd>
-                                <dt><strong>Description:</strong></dt>
-                                <dd>
-                                {% if session.description %}
-                                {{ session.description }}
-                                {% else %}
-                                <span class="muted">
-                                Not specified.
-                                </span>
-                                {% endif %}
-                                </dd>
-                            </dl>
-                            <div class="btn-group"><a class="btn btn-small" href="{% url invite_related rand_id=invitation.rand_id main_object='Session' %}">Edit this proposal</a>
-                            <a class="btn btn-small btn-danger" href="{% url invite_related_delete main_object='Session' rand_id=invitation.rand_id %}">Cancel this proposal</a>
-                            </div>
-                            {% else %}
-                            <h3>Propose a session</h3> 
-                            <p>Spark Camp is an unconference, which means the attendees set the agenda. Give us an idea for a topic you'd like to discuss at the event.</p>
-                            <p><a class="btn btn-small" href="{% url invite_related rand_id=invitation.rand_id main_object='Session' %}">Propose a session</a></p>
-                        {% endif %}
-
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="span12">
-                        <div class="page-header">
-                        <h1>More information</h1>
+                                </p>
+                        </ul>
+                        <div class="btn-group">
+                        <a class="btn btn-small" href="{% url invite_related rand_id=invitation.rand_id main_object='Ignite' %}">Edit this proposal</a>
+                        <a class="btn btn-small btn-danger" href="{% url invite_related_delete main_object='Ignite' rand_id=invitation.rand_id %}">Cancel this proposal</a>
                         </div>
-                    </div>
-                    <div class="span8 offset4">
-                        <h3>Confirmed Campers.</h3>
-                        {% if confirmed|length > 20 %}
-                        <dl>
-                        {% for camper in confirmed %}
-                            <dt>{{ camper.user.first_name }} {{ camper.user.last_name }}</dt>
-                        <dd>{% if camper.user.sparkprofile.employer or camper.user.sparkprofile.job_title %}<span class="muted">{{ camper.user.sparkprofile.job_title }}{% if camper.user.sparkprofile.employer and camper.user.sparkprofile.job_title %}, {% endif %}<em>{{ camper.user.sparkprofile.employer }}</em>.</span>{% endif %}{% if camper.user.sparkprofile.bio %} {{ camper.user.sparkprofile.bio }}{% endif %}</dd>
-                        {% endfor %}
-                        </dl>
                         {% else %}
-                        <p>Check back soon for a full list of confirmed attendees.</p>
-                        {% endif %}
-                        <hr />
-                        
-                        <h3>Session ideas.</h3>
-                        <p><a href="{% url sessions_related rand_id=invitation.rand_id %}">Go here to see session ideas</a> that other Campers have submitted.</p>
-                    </div>
-                </div>
-                
-                <div class="row">
-                    <div class="span12">
+                        <p class="text">An Ignite talk is a 5-minute presentation with an auto-advancing deck of PowerPoint slides that tick forward every 15 seconds. <a href="http://igniteshow.com/" target="_blank">You can learn more about the format here.</a> <br /><a class="submit btn" href="{% url invite_related rand_id=invitation.rand_id main_object='Ignite' %}">Apply to give a talk</a></p>
+                    {% endif %}
                     <hr />
-                        <h3>See you {{ invitation.camp.start_date|date:"F j" }}!</h3>
-                    </div>
-                </div>
+                    <div class="page-h2">Session proposals</div>
+                    {% if session %}
+                        <p class="text"><a href="{% url sessions_related rand_id=invitation.rand_id %}">Go here to see session ideas</a> that other Campers have submitted. You've proposed a session. Make sure this accurately captures your session proposal:</p>
+                        <ul class="list-mod">
+                            <li class="list-item">
+                            <div class="section-h3">Title:</div>
+                            <p class="text">
+                            {% if session.title %}
+                            {{ session.title }}
+                            {% else %}
+                            <span class="muted">
+                            Please specify a title.
+                            </span>
+                            {% endif %}</p>
+                            </li>
+                            <li class="list-item">
+                            <div class="section-h3">Description:</div>
+                            <p class="text">
+                            {% if session.description %}
+                            {{ session.description }}
+                            {% else %}
+                            <span class="muted">
+                            Not specified.
+                            </span>
+                            {% endif %}
+                            </p>
+                            </li>
+                        </ul>
+                        <div class="btn-group"><a class="submit btn" href="{% url invite_related rand_id=invitation.rand_id main_object='Session' %}">Edit this proposal</a>
+                        <a class="submit btn" href="{% url invite_related_delete main_object='Session' rand_id=invitation.rand_id %}">Cancel this proposal</a>
+                        </div>
+                        {% else %}
+                        <p class="text">Spark Camp is an unconference, which means the attendees set the agenda. Give us an idea for a topic you'd like to discuss at the event.<br /><a class="submit btn" href="{% url invite_related rand_id=invitation.rand_id main_object='Session' %}">Propose a session</a></p>
+                    {% endif %}
 
-            {% else %}
-                <p>No user found.</p>
-            {% endif %}        
+            </section>
+
+            <section class="content">
+                <div class="overline-alt">More information</div>
+                <div class="page-h2">Confirmed Campers.</div>
+                    {% if confirmed|length > 20 %}
+                    <ul class="camper-list-mod">
+                    {% for camper in confirmed %}
+                        <li class="camper-list-item">
+                            <div class="section-h3">{{ camper.user.first_name }} {{ camper.user.last_name }}</div>
+                            <div class="camper-title">{% if camper.user.sparkprofile.employer or camper.user.sparkprofile.job_title %}<span class="muted">{{ camper.user.sparkprofile.job_title }}{% if camper.user.sparkprofile.employer and camper.user.sparkprofile.job_title %}{% endif %}<div>
+                            <p class="text">{{ camper.user.sparkprofile.employer }}</em>.</span>{% endif %}{% if camper.user.sparkprofile.bio %} {{ camper.user.sparkprofile.bio }}{% endif %}</p>
+                        </li>
+                    {% endfor %}
+                    </ul>
+                    {% else %}
+                    <p class="text">We just sent out invites, so our attendee list is just getting started. Check back soon for more confirmed attendees.</p>
+                    {% endif %}
+                <h1 class="h1">See you <span class="orange">{{ invitation.camp.start_date|date:"F j" }}</span>!</h1>
+            </section>
+            
+
+        {% else %}
+            <p>No user found.</p>
+        {% endif %}        
 
         {% endif %}
-        
 {% endblock %}

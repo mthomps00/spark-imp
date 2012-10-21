@@ -5,31 +5,28 @@
 {% block pageheader %}Dietary preferences for <a href="{% url single_camp camptheme=camp.theme %}">Spark Camp {{ camp.theme }}</a>{% endblock %}
 
 {% block content %}
-        {% if invitations %}
-            <div class="row">
-                <div class="span12">
-                    <table class="table table-bordered table-striped" id="invites-table">
-                        <thead>
-                            <tr>
-                                <th>Invite No.</th>
-                                <th>First name</th>
-                                <th>Last name</th>
-                                <th>Dietary preference</th>
-                            </tr>
-                        </thead>                        
-                    {% for invite in invitations %}
-                        <tr>
-                            <td><a href="{% url invitation invite.rand_id %}">{{ invite.rand_id }}</a></td>
-                            <td>{{ invite.user.first_name }}</td>
-                            <td>{{ invite.user.last_name }}</td>
-                            <td>{{ invite.dietary }}</td>
-                        </tr>
-                    {% endfor %}
-                    </table>
-                </div>
-            </div>
-            
-        {% else %}
-            <p>No invitations found.</p>
-        {% endif %}
+<section class="content">
+    {% if invitations %}
+        <table class="table table-basic">
+            <thead>
+                <tr>
+                    <th>Invite No.</th>
+                    <th>First name</th>
+                    <th>Last name</th>
+                    <th>Dietary preference</th>
+                </tr>
+            </thead>                        
+        {% for invite in invitations %}
+            <tr>
+                <td><a href="{% url invitation invite.rand_id %}">{{ invite.rand_id }}</a></td>
+                <td>{{ invite.user.first_name }}</td>
+                <td>{{ invite.user.last_name }}</td>
+                <td>{{ invite.user.sparkprofile.dietary }}</td>
+            </tr>
+        {% endfor %}
+        </table>
+    {% else %}
+        <p class="text-large">No invitations found.</p>
+    {% endif %}
+</section>
 {% endblock %}

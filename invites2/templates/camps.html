@@ -6,8 +6,9 @@
 
 {% block content %}
 
+<section class="content">
     {% if camps %}
-        <table class="table table-striped table-bordered">
+        <table class="table table-basic">
             <thead>
                 <tr>
                     <th>Theme</th>
@@ -24,5 +25,6 @@
     {% else %}
         <p>No camps found.</p>
     {% endif %}
+</section>
 
 {% endblock %}

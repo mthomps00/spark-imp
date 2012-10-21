@@ -246,8 +246,7 @@ def guest_invite(request, rand_id):
     update = False
     formvars = False
     detailform = InviteDetailForm()
-    user = invitation.user
-    sparkprofile = SparkProfile.objects.get(user=user)
+    sparkprofile = SparkProfile.objects.get(user=invitation.user)
     confirmed = Invitation.objects.filter(camp=invitation.camp).filter(status='Y')
     
     def decideform(formvars={}):
@@ -320,6 +319,8 @@ def guest_invite(request, rand_id):
         session = sessions[0]
     else:
         session = False
+    
+    invitation.pretty_status = invitation.get_status_display()
 
     variables = {
         'invitation': invitation,
@@ -329,7 +330,6 @@ def guest_invite(request, rand_id):
         'detailform': detailform,
         'update': update,
         'message': message,
-        'user': user,
         'roommate': roommate,
         'stipend': stipend,
         'ignite': ignite,
@@ -405,10 +405,7 @@ def confirm_delete(request, main_object, object_id):
     return HttpResponseRedirect(url)
     
 def invite_logistics(request, rand_id):
-    try:
-        invitation = Invitation.objects.get(rand_id=rand_id)
-    except Invitation.DoesNotExist:
-        raise Http404(u'Could not find this Invitation.')
+    invitation = get_object_or_404(Invitation, rand_id=rand_id)
 
     if request.method == 'POST':
         form = InviteDetailForm(request.POST, instance=invitation)
@@ -444,6 +441,7 @@ def profile(request, rand_id):
             profile.twitter = form.cleaned_data['twitter']
             profile.phone = form.cleaned_data['phone']
             profile.email = form.cleaned_data['email']
+            profile.dietary = form.cleaned_data['dietary']
             user.email = form.cleaned_data['email']
             profile.save()
             user.save()
@@ -453,7 +451,6 @@ def profile(request, rand_id):
     
     variables = {
         'invitation': invitation,
-        'user': user,
         'profile': profile,
         'form': form,
     }
