@@ -12,7 +12,8 @@
     }
 {% endblock %}   
 
-{% block pageheader %}Invitations for Spark Camp {{ camp.theme }}{% endblock %}
+{% block overline %}<div class="overline-alt">Spark Camp {{ camp.theme }}</div>{% endblock %}
+{% block pageheader %}{{ invitations|length }} invitation{{ invitations|length|pluralize }} found{% endblock %}
 
 {% block content %}
 <section class="content">
@@ -79,6 +80,11 @@
     <input type="text" class="input" value="14" name="deadline"><input class="btn" type="submit" value="Submit" />
 </fieldset>
 </form>
+</div>
+{% endif %}
+{% if camp.mailchimp_list %}
+<div class="sidebar-mod">
+<h4 class="h5"><a href="{% url mailsync camptheme=camp.theme %}">Sync with MailChimp</a></h4>
 </div>
 {% endif %}
 </section>

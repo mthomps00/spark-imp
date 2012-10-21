@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.http import HttpResponse, Http404, HttpResponseRedirect
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
@@ -7,6 +8,7 @@ from django.template.loader import get_template
 from django.shortcuts import get_object_or_404, render_to_response
 from rsvp.models import *
 from rsvp.forms import *
+from rsvp.mailsnake import MailSnake
 import random, csv, datetime
 from datetime import date, timedelta
 from urllib import urlopen
@@ -237,6 +239,51 @@ def google_sync(request, camptheme, deadline=14):
         'camp': camp,
     }
     return render_to_response('google_sync.html', variables, context_instance=RequestContext(request))
+
+@login_required
+def mailsync(request, camptheme):
+    # Set variables for sync
+    ms = MailSnake(settings.MAILCHIMP_API_KEY)
+    subscribers = []
+    
+    # Get relevant Django objects
+    camp = get_object_or_404(Camp, theme__iexact=camptheme)
+    list_name = camp.mailchimp_list
+    invitations = Invitation.objects.filter(camp=camp)
+    
+    # Adjust Django objects for export
+    for invitation in invitations:
+        subscribers.append({
+            'EMAIL': invitation.user.email,
+            'FNAME': invitation.user.first_name,
+            'LNAME': invitation.user.last_name,
+            'STATUS': invitation.get_status_display(),
+            'INVITE': 'http://apps.sparkcamp.com/rsvp/%s' % invitation.rand_id,
+            'EXPIRES': invitation.expires.strftime('%B %d, %Y'),
+            })
+    
+    # Get relevant MailSnake objects
+    lists = ms.lists()
+    
+    # MailSnake options
+    # No confirmation email to subscribers after adding them to the list
+    double_optin = False
+    # If members are already found on the list, update their status instead of adding a duplicate subscriber
+    update_existing = True
+    
+    def find_needle(haystack, needle):
+        for list in haystack:
+                if list['name'] == needle:
+                        return list['id']
+    
+    list_id = find_needle(lists['data'], list_name)
+    ms_response = ms.listBatchSubscribe(id=list_id, batch=subscribers, double_optin=double_optin, update_existing=update_existing)
+    
+    variables = {
+        'ms_response': ms_response,
+        'camp': camp,
+    }
+    return render_to_response('mailsync.html', variables, context_instance=RequestContext(request))
 
 def guest_invite(request, rand_id):
     invitation = get_object_or_404(Invitation, rand_id=rand_id)

@@ -1,0 +1,47 @@
+{% extends "single_camp.html" %}
+
+{% block title %}MailChimp Sync for Spark Camp {{ camp.theme }}{% endblock %}
+
+{% block pageheader %}MailChimp Sync for Spark Camp {{ camp.theme }}{% endblock %}
+
+{% block content %}
+
+<section class="content">
+    {% if ms_response %}
+            <div class="tile-mod-3">
+                <div class="media-block">
+                    <h3 class="h3 orange">{{ ms_response.add_count }}</h3>
+                    <p class="text-med">added</p>
+                </div>
+                <div class="media-block">
+                    <h3 class="h3 orange">{{ ms_response.update_count }}</h3>
+                    <p class="text-med">updated</p>
+                </div>
+                <div class="media-block">
+                    <h3 class="h3 orange">{{ ms_response.error_count }}</h3>
+                    <p class="text-med">errors</p>
+                </div>
+            </div>
+
+        <table class="table table-basic">
+            <thead>
+                <tr>
+                    <th>Email</th>
+                    <th>Error Code</th>
+                    <th>Message</th>
+                </tr>
+            </thead>
+            {% for error in ms_response.errors %}
+            <tr>
+                <td>{{ error.email }}</td>
+                <td>{{ error.code }}</td>
+                <td>{{ error.message }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    {% else %}
+        <p class="text">MailChimp sync unsuccessful.</p>
+    {% endif %}
+</section>
+
+{% endblock %}

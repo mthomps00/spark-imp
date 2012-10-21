@@ -2,7 +2,7 @@
 
 {% block title %}Stipend requests for Spark Camp {{ camp.theme }}{% endblock %}
 
-{% block pageheader %}Stipend requests for <a href="{% url single_camp camptheme=camp.theme %}">Spark Camp {{ camp.theme }}</a>{% endblock %}
+{% block pageheader %}{{ stipends|length }} stipend request{{ stipends|length|pluralize }} found{% endblock %}
 
 {% block content %}
 <section class="content">

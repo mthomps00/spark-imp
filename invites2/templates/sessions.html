@@ -2,7 +2,7 @@
 
 {% block title %}Session proposals for Spark Camp {{ camp.theme }}{% endblock %}
 
-{% block pageheader %}Session proposals for <a href="{% url single_camp camptheme=camp.theme %}">Spark Camp {{ camp.theme }}</a>{% endblock %}
+{% block pageheader %}{{ sessions|length }} session proposal{{ sessions|length|pluralize }} found{% endblock %}
 
 {% block content %}
 <section class="content">
