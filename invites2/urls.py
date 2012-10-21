@@ -1,7 +1,6 @@
 from django.conf.urls import patterns, include, url
 from django.contrib.auth.views import login, logout_then_login
 from rsvp.views import *
-# from nominations.views import *
 
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
