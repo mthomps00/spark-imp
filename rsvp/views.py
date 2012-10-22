@@ -330,7 +330,7 @@ def guest_invite(request, rand_id):
             # Send an email confirming their change
             subject = 'Confirming your Spark Camp RSVP [%s %s]' % (invitation.user.first_name, invitation.user.last_name)
             body = message + ' Remember, the URL to update or change your RSVP is http://apps.sparkcamp.com%s.' % invitation.get_absolute_url()
-            send_mail(subject, body, 'rsvp@sparkcamp.com', ['rsvp@sparkcamp.com', invitation.user.email], fail_silently=False)
+            send_mail(subject, body, 'rsvp@sparkcamp.com', ['rsvp@sparkcamp.com', invitation.user.email], fail_silently=True)
     else:
         message, form = decideform()
         
