@@ -32,11 +32,7 @@
         <section class="content">
             <div class="overline-alt">About Spark Camp {{ invitation.camp.theme }}</div>
             <div class="page-h2">{{ invitation.camp.start_date|date:"l, F j" }} to {{ invitation.camp.end_date|date:"l, F j, Y" }}</div>
-            <p class="text">{{ invitation.camp.description }}</p>
-            <div class="section-h3">Venue:</div>
-            <p class="text">{{ invitation.camp.venue }}{% if invitation.camp.venue_address %} ({{ invitation.camp.venue_address }}){% endif %}</p>
-            <div class="section-h3">Official hotel:</div>
-            <p class="text">{{ invitation.camp.hotel }}{% if invitation.camp.hotel_url %} | <a href="{{ invitation.camp.hotel_url }}">Reservation link</a>{% endif %}{% if invitation.camp.hotel_code %} | Group code: {{ invitation.camp.hotel_code }}{% endif %}</p>
+            <p class="text">{{ invitation.camp.description|safe }}</p>
             
         <div class="page-h2">Your RSVP Status: <span class="orange">{{ invitation.pretty_status }}</span></div>
         <p class="text">{{ message }}</p>
@@ -50,7 +46,6 @@
         </section>
             
     {% endif %}
-    
         
     {% if invitation.status == 'Y' %}
         
@@ -93,9 +88,22 @@
             </section>
 
             <section class="content">
+                <div class="overline-alt">Logistics</div>
+                <div class="page-h2">Booking your flight and hotel</div>
+                <p class="text-med">Remember, we ask our attendees to be present for the entire weekend. When booking your flight, please choose an itinerary that gets you to our Spark Camp venue by {{ invitation.camp.start_date|date:"l, F j," }} at {{ invitation.camp.start_date|date:"P" }}, and allows you to stay until {{ invitation.camp.end_date|date:"l, F j," }} at {{ invitation.camp.end_date|date:"P" }}.</p>
+               {% if invitation.camp.logistics %}
+                <p class="text">{{ invitation.camp.logistics|safe }}</p>
+                {% endif %}
+                     <div class="section-h3">Venue:</div>
+                    <p class="text">{{ invitation.camp.venue }}{% if invitation.camp.venue_address %} ({{ invitation.camp.venue_address }}){% endif %}</p>
+                    <div class="section-h3">Official hotel:</div>
+                    <p class="text">{{ invitation.camp.hotel }}{% if invitation.camp.hotel_url %} | <a href="{{ invitation.camp.hotel_url }}">Reservation link</a>{% endif %}{% if invitation.camp.hotel_code %} | Group code: {{ invitation.camp.hotel_code }}{% endif %}</p>
+            </section>
+            {% endif %}
             
+            <section class="content">
                  <div class="overline-alt">Make Spark Camp more awesome</div>
-                 <p class="text-med">Here, you can apply for a travel stipend, sign up to give an Ignite talk, request roommates, or propose sessions.</p>
+                 <p class="text-med">Here, you can {% if invitation.camp.stipends %}apply for a travel stipend, {% endif %}{% if invitation.camp.ignite %}sign up to give an Ignite talk, {% endif %}request roommates or propose sessions.</p>
                  <div class="page-h2">Travel stipends</div>
                     {% if stipend %}
                     <p class="text">You've requested a travel stipend, and we hope to be able to accommodate your request. We'll get back to you as soon as we've finalized our attendee list. Meanwhile, be sure the information below is correct.</p>
@@ -331,5 +339,4 @@
             <p>No user found.</p>
         {% endif %}        
 
-        {% endif %}
 {% endblock %}
