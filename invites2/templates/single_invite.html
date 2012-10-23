@@ -90,7 +90,7 @@
             <section class="content">
                 <div class="overline-alt">Logistics</div>
                 <div class="page-h2">Booking your flight and hotel</div>
-                <p class="text-med">Remember, we ask our attendees to be present for the entire weekend. When booking your flight, please choose an itinerary that gets you to our Spark Camp venue by {{ invitation.camp.start_date|date:"l, F j," }} at {{ invitation.camp.start_date|date:"P" }}, and allows you to stay until {{ invitation.camp.end_date|date:"l, F j," }} at {{ invitation.camp.end_date|date:"P" }}.</p>
+                <p class="text-med">Remember, we ask our attendees to be present for the entire weekend. When booking your flight, please choose an itinerary that gets you to our Spark Camp venue by {{ invitation.camp.start_date|date:"P" }} on {{ invitation.camp.start_date|date:"l, F j," }}, and allows you to stay until {{ invitation.camp.end_date|date:"P" }} on {{ invitation.camp.end_date|date:"l, F j," }}.</p>
                {% if invitation.camp.logistics %}
                 <p class="text">{{ invitation.camp.logistics|safe }}</p>
                 {% endif %}
