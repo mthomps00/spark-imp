@@ -198,7 +198,7 @@ def google_sync(request, camptheme, deadline=14):
         if row['E-mail'] != '' and row['Invite?'] == 'YES':
              combinedname = row['First Name'] + row['Last Name']
              username = slugify(combinedname)
-             user, usercreated = User.objects.get_or_create(username)
+             user, usercreated = User.objects.get_or_create(username=username)
              if usercreated == True:
                  user.email = row['E-mail']
                  user.first_name = row['First Name']
