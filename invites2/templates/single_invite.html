@@ -35,7 +35,7 @@
             <p class="text">{{ invitation.camp.description|safe }}</p>
             
         <div class="page-h2">Your RSVP Status: <span class="orange">{{ invitation.pretty_status }}</span></div>
-        <p class="text">{{ message }}</p>
+        <p class="text">{{ message|safe }}</p>
 
         <form class="form-basic" action="{% url invitation invitation.rand_id %}" method="post">{% csrf_token %}
         <div class="form-row">
@@ -90,7 +90,7 @@
             <section class="content">
                 <div class="overline-alt">Logistics</div>
                 <div class="page-h2">Booking your flight and hotel</div>
-                <p class="text-med">Remember, we ask our attendees to be present for the entire weekend. When booking your flight, please choose an itinerary that gets you to our Spark Camp venue by {{ invitation.camp.start_date|date:"P" }} on {{ invitation.camp.start_date|date:"l, F j," }}, and allows you to stay until {{ invitation.camp.end_date|date:"P" }} on {{ invitation.camp.end_date|date:"l, F j," }}.</p>
+                <p class="text-med">Remember, we ask our attendees to be present for the entire weekend. When booking your flight, please choose an itinerary that gets you to Spark Camp by {{ invitation.camp.start_date|date:"P" }} on {{ invitation.camp.start_date|date:"l, F j" }}, and allows you to stay until {{ invitation.camp.end_date|date:"P" }} on {{ invitation.camp.end_date|date:"l, F j" }}.</p>
                {% if invitation.camp.logistics %}
                 <p class="text">{{ invitation.camp.logistics|safe }}</p>
                 {% endif %}
@@ -318,7 +318,7 @@
             <section class="content">
                 <div class="overline-alt">More information</div>
                 <div class="page-h2">Confirmed Campers.</div>
-                    {% if confirmed|length > 20 %}
+                    {% if confirmed|length > 10 %}
                     <ul class="camper-list-mod">
                     {% for camper in confirmed %}
                         <li class="camper-list-item">
