@@ -325,7 +325,7 @@ def guest_invite(request, rand_id):
             message = 'We have you on the waitlist for Spark Camp, and will update you shortly on whether we can accommodate you. Please let us know if it turns out you can\'t make it.'
             form = WaitlistForm(formvars)
         else:
-            message = 'We very much hope you can make it to Spark Camp. Please update your RSVP by %s.' % (invitation.cancel_by.strftime("%B %e"))
+            message = 'We very much hope you can make it to Spark Camp. Please update your RSVP by %s.' % (invitation.expires.strftime("%B %e"))
             form = ResponseForm(formvars)
         return message, form
 
