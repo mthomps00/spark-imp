@@ -256,8 +256,10 @@ def mailsync(request, camptheme):
     
     # Adjust Django objects for export
     for invitation in invitations:
+        profile = SparkProfile.objects.get(user=invitation.user)
         subscribers.append({
             'EMAIL': invitation.user.email,
+            'EMAIL2': profile.secondary_email,
             'FNAME': invitation.user.first_name,
             'LNAME': invitation.user.last_name,
             'STATUS': invitation.get_status_display(),

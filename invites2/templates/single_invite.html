@@ -61,7 +61,7 @@
                 <ul class="list-mod">
                     <li class="list-item">
                         <div class="section-h3">Email:</div>
-                        <p class="text">{% if user.email %}{{ user.email }}{% else %}<span class="muted">No preferred email address given.</span>{% endif %}</p>
+                        <p class="text">{% if invitation.user.email %}{{ invitation.user.email }}{% else %}<span class="muted">No preferred email address given.</span>{% endif %}</p>
                     </li>
                     <li class="list-item">
                         <div class="section-h3">Phone:</div>
