@@ -17,7 +17,6 @@
                     <th>Subsidized?</th>
                     <th>Employer %</th>
                     <th>Invitee %</th>
-                    <th>Details</th>
                 </tr>
             </thead>                        
         {% for stipend in stipends %}
@@ -29,7 +28,10 @@
                 <td>{{ stipend.employer_subsidized }}</td>
                 <td>{{ stipend.employer_percentage }}</td>
                 <td>{{ stipend.invitee_percentage }}</td>
-                <td>{{ stipend.details }}</td>
+            </tr>
+            <tr class="expand-child">
+                <td>&nbsp;</td>
+                <td colspan="6">{{ stipend.details }}</td>
             </tr>
         {% endfor %}
         </table>

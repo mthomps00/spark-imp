@@ -265,6 +265,8 @@ def mailsync(request, camptheme):
             'STATUS': invitation.get_status_display(),
             'INVITE': 'http://apps.sparkcamp.com/rsvp/%s' % invitation.rand_id,
             'EXPIRES': invitation.expires.strftime('%B %e, %Y'),
+            'BIO': profile.bio,
+            'TWITTER': profile.twitter,
             })
     
     # Get relevant MailSnake objects
