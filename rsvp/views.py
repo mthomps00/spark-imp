@@ -198,33 +198,33 @@ def google_sync(request, camptheme, deadline=14):
     
     for row in myreader:
         if row['E-mail'] != '' and row['Invite?'] == 'YES':
-             combinedname = row['First Name'] + row['Last Name']
-             username = slugify(combinedname)
-             user, usercreated = User.objects.get_or_create(username=username)
-             if usercreated == True:
-                 user.email = row['E-mail']
-                 user.first_name = row['First Name']
-                 user.last_name = row['Last Name']
-                 password = User.objects.make_random_password(length=10)
-                 user.set_password(password)
-                 user.save()
-             profile, profilecreated = SparkProfile.objects.get_or_create(user=user)
-             if profilecreated == True:
-                 profile.email = row['E-mail']
-                 profile.employer = row['Organization']
-                 if row['POC'] != '0':
-                         profile.poc = True
-                 if row['W'] != '0':
-                         profile.woman = True
-                 if row['Journ?'] != '0':
-                         profile.journo = True
-                 profile.save()
-             invitation, invitecreated = Invitation.objects.get_or_create(user=user,camp=camp)
-             if invitecreated == True:
-                 invitation.expires = expiration_date
-                 invitation.status = 'P'
-                 invitation.save()
-             rows.append({
+            combinedname = row['First Name'] + row['Last Name']
+            username = slugify(combinedname)
+            user, usercreated = User.objects.get_or_create(username=username)
+            if usercreated == True:
+                user.email = row['E-mail']
+                user.first_name = row['First Name']
+                user.last_name = row['Last Name']
+                password = User.objects.make_random_password(length=10)
+                user.set_password(password)
+                user.save()
+            profile, profilecreated = SparkProfile.objects.get_or_create(user=user)
+            if profilecreated == True:
+                profile.email = row['E-mail']
+                profile.employer = row['Organization']
+                if row['POC'] != '0':
+                    profile.poc = True
+                if row['W'] != '0':
+                    profile.woman = True
+                if row['Journ?'] != '0':
+                    profile.journo = True
+                profile.save()
+            invitation, invitecreated = Invitation.objects.get_or_create(user=user,camp=camp)
+            if invitecreated == True:
+                invitation.expires = expiration_date
+                invitation.status = 'P'
+                invitation.save()
+            rows.append({
                 'username': user.username,
                 'email': row['E-mail'],
                 'first_name': row['First Name'],
