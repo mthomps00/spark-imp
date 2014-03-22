@@ -17,7 +17,7 @@
 {% endif %}
 {% endblock %}
 {% block adminnav %}
-    <li><a href="{% url single_camp camptheme=invitation.camp.theme %}">&nbsp;- Spark Camp {{ invitation.camp.theme }}</li>
+    <li><a href="{% url single_camp camptheme=invitation.camp.theme %}">&nbsp;- {{ invitation.camp.theme }}</li>
     <li><a href="{% url dietary camptheme=invitation.camp.theme %}">&nbsp;&nbsp;&nbsp;- Dietary preferences</li>
     <li><a href="{% url stipends camptheme=invitation.camp.theme %}">&nbsp;&nbsp;&nbsp;- Stipend requests</li>
     <li><a href="{% url sessions camptheme=invitation.camp.theme %}">&nbsp;&nbsp;&nbsp;- Session proposals</li>

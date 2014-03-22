@@ -216,7 +216,7 @@ def google_sync(request, camptheme, deadline=14):
                          profile.poc = True
                  if row['W'] != '0':
                          profile.woman = True
-                 if row['JOURN?'] != '0':
+                 if row['Journ?'] != '0':
                          profile.journo = True
                  profile.save()
              invitation, invitecreated = Invitation.objects.get_or_create(user=user,camp=camp)
@@ -305,7 +305,7 @@ def guest_invite(request, rand_id):
     formvars = False
     detailform = InviteDetailForm()
     sparkprofile = SparkProfile.objects.get(user=invitation.user)
-    confirmed = Invitation.objects.filter(camp=invitation.camp).filter(status='Y')
+    confirmed = Invitation.objects.filter(camp=invitation.camp).filter(status='Y').order_by('user__last_name')
     
     def decideform(formvars={}):
         if invitation.status == 'Y':
