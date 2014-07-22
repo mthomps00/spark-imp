@@ -310,9 +310,9 @@ def guest_invite(request, rand_id):
     def decideform(formvars={}):
         if invitation.status == 'Y':
             message = '''
-            We're looking forward to your attendance at Spark Camp. We happily have you confirmed as coming. Book your hotel and flight soon using the information below.<br /><br />
+            We're looking forward to your attendance. We happily have you confirmed as coming. Book your hotel and flight soon using the information below.<br /><br />
              
-            If for any reason you should have to cancel your attendance, please do so no later than %s, so that we can offer your spot to someone else. We cover the costs of your attendance at Spark Camp, with the support of our generous sponsors. For any cancellations after %s, those costs are unrecoverable, and we'll ask you to repay us a portion of them.
+            If for any reason you should have to cancel your attendance, please do so no later than %s, so that we can offer your spot to someone else. We cover the costs of your attendance at this event, with the support of our generous sponsors. For any cancellations after %s, those costs are unrecoverable, and we'll ask you to repay us a portion of them.
             ''' % (invitation.cancel_by.strftime("%B %e"), invitation.late_cancellation.strftime("%B %e"))
             form = UpdateForm(formvars)
         elif invitation.expires < today:
@@ -320,16 +320,16 @@ def guest_invite(request, rand_id):
             if invitation.status == 'W':
                 message = message + 'we have you on the waitlist, and will update you shortly on whether we can accommodate you. Please let us know if it turns out you can\'t make it after all.'
             else:
-                message = message + 'if it turns out you can make it to Spark Camp, we may still be able to accommodate you. If so, please let us know whether we should put you on the waitlist, and we\'ll be in touch very soon with an update.'
+                message = message + 'if it turns out you can make it to the event, we may still be able to accommodate you. If so, please let us know whether we should put you on the waitlist, and we\'ll be in touch very soon with an update.'
             form = WaitlistForm(formvars)
         elif invitation.status == 'N' or invitation.status == 'C':
-            message = 'We\'re sorry to hear you can\'t make it to Spark Camp. Please let us know (by %s at the latest) if your plans change in our favor.' % (invitation.cancel_by.strftime("%B %e"))
+            message = 'We\'re sorry to hear you can\'t make it to the event. Please let us know (by %s at the latest) if your plans change in our favor.' % (invitation.cancel_by.strftime("%B %e"))
             form = ResurrectForm(formvars)  
         elif invitation.status == 'W':
-            message = 'We have you on the waitlist for Spark Camp, and will update you shortly on whether we can accommodate you. Please let us know if it turns out you can\'t make it.'
+            message = 'We have you on the waitlist for the event, and will update you shortly on whether we can accommodate you. Please let us know if it turns out you can\'t make it.'
             form = WaitlistForm(formvars)
         else:
-            message = 'We very much hope you can make it to Spark Camp. Please update your RSVP by %s.' % (invitation.expires.strftime("%B %e"))
+            message = 'We very much hope you can make it to the event. Please update your RSVP by %s.' % (invitation.expires.strftime("%B %e"))
             form = ResponseForm(formvars)
         return message, form
 
@@ -342,15 +342,15 @@ def guest_invite(request, rand_id):
             update = 'Thank you for updating your status.'
 
             # Send an email confirming their change
-            subject = 'Confirming Spark Camp RSVP for %s %s' % (invitation.user.first_name, invitation.user.last_name)
+            subject = 'Confirming RSVP for %s %s' % (invitation.user.first_name, invitation.user.last_name)
             if invitation.status == 'Y':
                 starts = invitation.camp.start_date.strftime("%l:%M %P") + ' on ' + invitation.camp.start_date.strftime("%A, %B %d")
                 ends = invitation.camp.end_date.strftime("%l:%M %P") + ' on ' + invitation.camp.end_date.strftime("%A, %B %d")
                 url = invitation.get_absolute_url()
                 body = '''
-This e-mail (happily) confirms your attendance at Spark Camp %s.
+This e-mail (happily) confirms your attendance at Spark %s.
 
-Just in case you RSVP'd without reading the full invitation: spaces are only guaranteed to campers who can attend the full camp. It begins at %s, and will end at %s. If you have any questions or concerns, please contact us immediately at team@sparkcamp.com.
+Just in case you RSVP'd without reading the full invitation: spaces are only guaranteed to attendees who can attend the full weekend. It begins at %s, and will end at %s. If you have any questions or concerns, please contact us immediately at team@sparkcamp.com.
 
 As soon as you can, update your bio and contact info, tell us your dietary preferences, and book your flight and hotel. Instructions for doing all of the above are at your personal invitation dashboard: http://apps.sparkcamp.com%s.
 
