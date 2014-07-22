@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}Invitations for Spark Camp {{ camp.theme }}{% endblock %}
+{% block title %}Invitations for {{ camp.theme }}{% endblock %}
 
 {% block pagestyles %}
     th.headerSortUp {
@@ -12,7 +12,7 @@
     }
 {% endblock %}   
 
-{% block overline %}<div class="overline-alt">Spark Camp {{ camp.theme }}</div>{% endblock %}
+{% block overline %}<div class="overline-alt">Spark {{ camp.theme }}</div>{% endblock %}
 {% block pageheader %}{{ invitations|length }} invitation{{ invitations|length|pluralize }} found{% endblock %}
 
 {% block content %}

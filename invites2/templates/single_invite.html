@@ -2,10 +2,10 @@
 
 {% block dashboardnav %} class="active"{% endblock %}
 
-{% block title %}{% if invitation.user.first_name %}{{ invitation.user.first_name }}'s {% endif %}Spark Camp {{ invitation.camp.theme }} Dashboard{% endblock %}
+{% block title %}{% if invitation.user.first_name %}{{ invitation.user.first_name }}'s {% endif %}Spark {{ invitation.camp.theme }} Dashboard{% endblock %}
 
 {% block pageheader %}Hi{% if invitation.user.first_name %}, {{ invitation.user.first_name }}{% endif %}.{% endblock %}
-{% block text-med %}<em class="post-script">Manage your information for Spark Camp {{ invitation.camp.theme }} here.</em>{% endblock %}
+{% block text-med %}<em class="post-script">Manage your information for Spark {{ invitation.camp.theme }} here.</em>{% endblock %}
 
 {% block content %}
 <section class="content">
@@ -18,7 +18,7 @@
     
     {% if invitation %}
 
-        <p class="text-med">This is the place to manage your RSVP and information about Spark Camp {{ invitation.camp.theme }}. <span class="orange">Please keep the URL of this page secret.</span> We didn't want to hassle you to log in, but that means anyone who has this link can change your RSVP, then edit your bio to say you rose to fame as a cast member on "Jersey Shore."</p>
+        <p class="text-med">This is the place to manage your RSVP and information about Spark {{ invitation.camp.theme }}. <span class="orange">Please keep the URL of this page secret.</span> We didn't want to hassle you to log in, but that means anyone who has this link can change your RSVP, then edit your bio to say you rose to fame as a cast member on "Jersey Shore."</p>
     
     {% else %}
 
@@ -30,7 +30,7 @@
     {% if invitation %}
     
         <section class="content">
-            <div class="overline-alt">About Spark Camp {{ invitation.camp.theme }}</div>
+            <div class="overline-alt">About Spark {{ invitation.camp.theme }}</div>
             <div class="page-h2">{{ invitation.camp.start_date|date:"l, F j" }} to {{ invitation.camp.end_date|date:"l, F j, Y" }}</div>
             <p class="text">{{ invitation.camp.description|safe }}</p>
             
@@ -89,20 +89,20 @@
 
             <section class="content">
                 <div class="overline-alt">Logistics</div>
-                <div class="page-h2">Booking your flight and hotel</div>
-                <p class="text-med">Remember, we ask our attendees to be present for the entire weekend. When booking your flight, please choose an itinerary that gets you to Spark Camp by {{ invitation.camp.start_date|date:"P" }} on {{ invitation.camp.start_date|date:"l, F j" }}, and allows you to stay until {{ invitation.camp.end_date|date:"P" }} on {{ invitation.camp.end_date|date:"l, F j" }}.</p>
+                <div class="page-h2">Flight and hotel</div>
+                <p class="text-med">Remember, we ask our attendees to be present for the entire weekend. If you're booking a flight, please choose an itinerary that gets you to the event by {{ invitation.camp.start_date|date:"P" }} on {{ invitation.camp.start_date|date:"l, F j" }}, and allows you to stay until {{ invitation.camp.end_date|date:"P" }} on {{ invitation.camp.end_date|date:"l, F j" }}.</p>
                {% if invitation.camp.logistics %}
                 <p class="text">{{ invitation.camp.logistics|safe }}</p>
                 {% endif %}
                      <div class="section-h3">Venue:</div>
                     <p class="text">{{ invitation.camp.venue }}{% if invitation.camp.venue_address %} ({{ invitation.camp.venue_address }}){% endif %}</p>
-                    <div class="section-h3">Official hotel:</div>
+                    <div class="section-h3">Recommended hotel:</div>
                     <p class="text">{{ invitation.camp.hotel }}{% if invitation.camp.hotel_url %} | <a href="{{ invitation.camp.hotel_url }}">Reservation link</a>{% endif %}{% if invitation.camp.hotel_code %} | Group code: {{ invitation.camp.hotel_code }}{% endif %}</p>
             </section>
             {% endif %}
             
             <section class="content">
-                 <div class="overline-alt">Make Spark Camp more awesome</div>
+                 <div class="overline-alt">Make the weekend more awesome</div>
               <p class="text-med">Here, you can {% if invitation.camp.stipends %}apply for a travel stipend{% endif %}{% if invitation.camp.ignite %}, sign up to give an Ignite talk, {% endif %} or request roommates.</p>
               {% if invitation.camp.stipends %}
                  <div class="page-h2">Travel stipends</div>
@@ -229,7 +229,7 @@
                         <a class="submit btn" href="{% url invite_related_delete main_object='Roommate' rand_id=invitation.rand_id %}">Cancel this request</a>
                         </p>
                         {% else %}
-                        <p class="text">If you'd be willing to room with someone at Spark Camp, tell us a few details about the rooming situation you're comfortable with, and we'll try to match you up with another Camper. <br /><a class="submit btn" href="{% url invite_related rand_id=invitation.rand_id main_object='Roommate' %}">Request a roommate</a></p>
+                        <p class="text">If you'd be willing to room with someone during the weekend, tell us a few details about the rooming situation you're comfortable with, and we'll try to match you up with another Camper. <br /><a class="submit btn" href="{% url invite_related rand_id=invitation.rand_id main_object='Roommate' %}">Request a roommate</a></p>
                     {% endif %}
                     {% if invitation.camp.ignite %}
                     <hr />
@@ -319,7 +319,7 @@
 
             <section class="content">
                 <div class="overline-alt">More information</div>
-                <div class="page-h2">Confirmed Campers.</div>
+                <div class="page-h2">Confirmed Attendees.</div>
                     {% if confirmed|length > 10 %}
                     <ul class="camper-list-mod">
                     {% for camper in confirmed %}
