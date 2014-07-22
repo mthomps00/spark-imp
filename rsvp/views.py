@@ -216,7 +216,7 @@ def google_sync(request, camptheme, deadline=14):
                     profile.poc = True
                 if row['W'] != '0':
                     profile.woman = True
-                if row['Journ?'] != '0':
+                if row['Media'] != '0':
                     profile.journo = True
                 profile.save()
             invitation, invitecreated = Invitation.objects.get_or_create(user=user,camp=camp)
