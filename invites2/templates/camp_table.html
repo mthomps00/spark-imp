@@ -1,0 +1,39 @@
+<htmL>
+<body>
+<h1>Confirmed Attendees</h1>
+<table class="table table-basic">
+    <thead>
+        <tr>
+            <th>First name</th>
+            <th>Last name</th>
+            <th>Email</th>
+            <th>Email 2</th>
+            <th>Organization</th>
+            <th>Title</th>
+            <th>Bio</th>
+            <th>W</th>
+            <th>POC</th>
+            <th>J</th>
+            <th>Dietary</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for attendee in confirmed %}
+        <tr>
+            <td>{{ attendee.user.first_name }}</td>
+            <td>{{ attendee.user.last_name }}</td>
+            <td>{{ attendee.user.email }}</td>
+            <td>{{ attendee.user.sparkprofile.secondary_email }}</td>
+            <td>{{ attendee.user.sparkprofile.organization }}</td>
+            <td>{{ attendee.user.sparkprofile.job_title }}</td>
+            <td>{{ attendee.user.sparkprofile.bio }}</td>
+            <td>{{ attendee.user.sparkprofile.woman }}</td>
+            <td>{{ attendee.user.sparkprofile.poc }}</td>
+            <td>{{ attendee.user.sparkprofile.journo }}</td>
+            <td>{{ attendee.user.sparkprofile.dietary }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+    </body>
+    </html>

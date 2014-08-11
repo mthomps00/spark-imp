@@ -543,3 +543,17 @@ def profile(request, rand_id):
     }
     
     return render_to_response('profile.html', variables, context_instance=RequestContext(request))
+
+@login_required
+def camp_table(request, camptheme):
+    camp = get_object_or_404(Camp, theme__iexact=camptheme)
+    invitations = Invitation.objects.filter(camp=camp)
+
+    confirmed = invitations.filter(status='Y')
+        
+    variables = {
+        'camp': camp,
+        'invitations': invitations,
+        'confirmed': confirmed,
+    }
+    return render_to_response('camp_table.html', variables, context_instance=RequestContext(request))
