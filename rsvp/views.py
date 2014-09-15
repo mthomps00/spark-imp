@@ -12,7 +12,7 @@ from django.shortcuts import get_object_or_404, render_to_response
 from rsvp.models import *
 from rsvp.forms import *
 from rsvp.mailsnake import MailSnake
-import random, csv, datetime
+import random, csv, datetime, unicodecsv
 from datetime import date, timedelta
 from urllib import urlopen
 
@@ -209,16 +209,16 @@ def google_sync(request, camptheme, deadline=14):
                 user.set_password(password)
                 user.save()
             profile, profilecreated = SparkProfile.objects.get_or_create(user=user)
-            if profilecreated == True:
+            if usercreated == True:
                 profile.email = row['E-mail']
-                profile.employer = row['Organization']
-                if row['POC'] != '0':
-                    profile.poc = True
-                if row['W'] != '0':
-                    profile.woman = True
-                if row['Media'] != '0':
-                    profile.journo = True
-                profile.save()
+            profile.employer = row['Organization']
+            if row['POC'] == '1':
+                profile.poc = True
+            if row['W'] == '1':
+                profile.woman = True
+            if row['Journ?'] == '1':
+                profile.journo = True
+            profile.save()
             invitation, invitecreated = Invitation.objects.get_or_create(user=user,camp=camp)
             if invitecreated == True:
                 invitation.expires = expiration_date
@@ -299,8 +299,8 @@ def guest_invite(request, rand_id):
     today = date.today()
     twoweeks = datetime.timedelta(days=14)
     month = datetime.timedelta(days=30)
-    invitation.cancel_by = invitation.camp.start_date - month
-    invitation.late_cancellation = invitation.camp.start_date - twoweeks
+    # invitation.cancel_by = invitation.camp.start_date - month
+    # invitation.late_cancellation = invitation.camp.start_date - twoweeks
     update = False
     formvars = False
     detailform = InviteDetailForm()
@@ -313,7 +313,7 @@ def guest_invite(request, rand_id):
             We're looking forward to your attendance. We happily have you confirmed as coming. Book your hotel and flight soon using the information below.<br /><br />
              
             If for any reason you should have to cancel your attendance, please do so no later than %s, so that we can offer your spot to someone else. We cover the costs of your attendance at this event, with the support of our generous sponsors. For any cancellations after %s, those costs are unrecoverable, and we'll ask you to repay us a portion of them.
-            ''' % (invitation.cancel_by.strftime("%B %e"), invitation.late_cancellation.strftime("%B %e"))
+            ''' % (invitation.expires.strftime("%B %e"), invitation.expires.strftime("%B %e"))
             form = UpdateForm(formvars)
         elif invitation.expires < today:
             message = 'It\'s after the deadline (%s) for your invitation, but ' % (invitation.expires.strftime("%B %e"))
@@ -557,3 +557,19 @@ def camp_table(request, camptheme):
         'confirmed': confirmed,
     }
     return render_to_response('camp_table.html', variables, context_instance=RequestContext(request))
+
+@login_required
+def user_table(request):
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="campers.csv"'
+    writer = unicodecsv.writer(response)
+    users = User.objects.all()
+    
+    writer.writerow(['Username', 'First name', 'Last name', 'Email address', 'Job title', 'Organization', 'Camps attended', 'Camps invited to', 'Camps nominated for'])
+    
+    for user in users:
+        invitations = Invitation.objects.filter(user=user)
+        profile = SparkProfile.objects.get(user=user)
+        writer.writerow([user.username, user.first_name, user.last_name, user.email, profile.job_title, profile.employer, '', '', ''])
+        
+    return response

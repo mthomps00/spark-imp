@@ -5,22 +5,22 @@
 <div class="sidebar-mod">
 <h4 class="h5">Manage your info</h4>
 <ul>
-    <li{% block dashboardnav %}{% endblock %}><a name="dashboard" href="{% url invitation invitation.rand_id %}">Dashboard</a></li>
-    <li{% block profilenav %}{% endblock %}><a name="profile" href="{% url profile invitation.rand_id %}">Profile</a></li>
-    <li><a name="stipend" href="{% url invitation invitation.rand_id %}Stipend">Travel stipend request</a></li>
-    <li><a name="roommate" href="{% url invitation invitation.rand_id %}Roommate">Roommate match</a></li>
-    <li><a name="ignite" href="{% url invitation invitation.rand_id %}Ignite">Ignite sign-up</a></li>
-    <li><a name="session" href="{% url invitation invitation.rand_id %}Session"}">Session proposal</a></li>
+    <li{% block dashboardnav %}{% endblock %}><a name="dashboard" href="{% url 'invitation' invitation.rand_id %}">Dashboard</a></li>
+    <li{% block profilenav %}{% endblock %}><a name="profile" href="{% url 'profile' invitation.rand_id %}">Profile</a></li>
+    <li><a name="stipend" href="{% url 'invitation' invitation.rand_id %}Stipend">Travel stipend request</a></li>
+    <li><a name="roommate" href="{% url 'invitation' invitation.rand_id %}Roommate">Roommate match</a></li>
+    <li><a name="ignite" href="{% url 'invitation' invitation.rand_id %}Ignite">Ignite sign-up</a></li>
+    <li><a name="session" href="{% url 'invitation' invitation.rand_id %}Session"}">Session proposal</a></li>
     <li><a name="email" href="mailto:rsvp@sparkcamp.com">Email us</a></li>
 </ul>
 </div>
 {% endif %}
 {% endblock %}
 {% block adminnav %}
-    <li><a href="{% url single_camp camptheme=invitation.camp.theme %}">&nbsp;- {{ invitation.camp.theme }}</li>
-    <li><a href="{% url dietary camptheme=invitation.camp.theme %}">&nbsp;&nbsp;&nbsp;- Dietary preferences</li>
-    <li><a href="{% url stipends camptheme=invitation.camp.theme %}">&nbsp;&nbsp;&nbsp;- Stipend requests</li>
-    <li><a href="{% url sessions camptheme=invitation.camp.theme %}">&nbsp;&nbsp;&nbsp;- Session proposals</li>
+    <li><a href="{% url 'single_camp' camptheme=invitation.camp.theme %}">&nbsp;- {{ invitation.camp.theme }}</li>
+    <li><a href="{% url 'dietary' camptheme=invitation.camp.theme %}">&nbsp;&nbsp;&nbsp;- Dietary preferences</li>
+    <li><a href="{% url 'stipends' camptheme=invitation.camp.theme %}">&nbsp;&nbsp;&nbsp;- Stipend requests</li>
+    <li><a href="{% url 'sessions' camptheme=invitation.camp.theme %}">&nbsp;&nbsp;&nbsp;- Session proposals</li>
 {% endblock %}
 
 

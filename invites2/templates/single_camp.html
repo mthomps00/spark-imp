@@ -51,13 +51,13 @@
                 </thead>                        
             {% for invite in invitations %}
                 <tr>
-                    <td><a href="{% url invitation invite.rand_id %}">{{ invite.rand_id }}</a></td>
+                    <td><a href="{% url 'invitation' invite.rand_id %}">{{ invite.rand_id }}</a></td>
                     <td>{{ invite.user.first_name }}</td>
                     <td>{{ invite.user.last_name }}</td>
                     <td>{{ invite.status }}</td>
-                    <td>{% if invite.stipend %}<a href="{% url invite_related rand_id=invite.rand_id main_object='Stipend' %}">Yes</a>{% endif %}</td>
-                    <td>{% if invite.roommate %}<a href="{% url invite_related rand_id=invite.rand_id main_object='Roommate' %}">Yes</a>{% endif %}</td>
-                    <td>{% if invite.ignite %}<a href="{% url invite_related rand_id=invite.rand_id main_object='Ignite' %}">Yes</a>{% endif %}</td>
+                    <td>{% if invite.stipend %}<a href="{% url 'invite_related' rand_id=invite.rand_id main_object='Stipend' %}">Yes</a>{% endif %}</td>
+                    <td>{% if invite.roommate %}<a href="{% url 'invite_related' rand_id=invite.rand_id main_object='Roommate' %}">Yes</a>{% endif %}</td>
+                    <td>{% if invite.ignite %}<a href="{% url 'invite_related' rand_id=invite.rand_id main_object='Ignite' %}">Yes</a>{% endif %}</td>
                     <td>{{ invite.expires }}</td>
                 </tr>
             {% endfor %}
@@ -73,7 +73,7 @@
 
 {% if camp.spreadsheet_url %}
 <div class="sidebar-mod">
-<form class="form-basic comment-form" action="{% url google_sync camptheme=camp.theme %}" method="get">
+<form class="form-basic comment-form" action="{% url 'google_sync' camptheme=camp.theme %}" method="get">
 <h4 class="h5">Google Spreadsheet sync</h4>
 <fieldset class="inputs">
     <label for="deadline">Days till deadline:</label>
@@ -84,18 +84,18 @@
 {% endif %}
 {% if camp.mailchimp_list %}
 <div class="sidebar-mod">
-<h4 class="h5"><a href="{% url mailsync camptheme=camp.theme %}">Sync with MailChimp</a></h4>
+<h4 class="h5"><a href="{% url 'mailsync' camptheme=camp.theme %}">Sync with MailChimp</a></h4>
 </div>
 {% endif %}
 </section>
 {% endblock %}
 
 {% block adminnav %}
-    <li><a href="{% url single_camp camptheme=camp.theme %}">&nbsp;- {{ camp.theme }}</a></li>
-    <li><a href="{% url dietary camptheme=camp.theme %}">&nbsp;&nbsp;&nbsp;- Dietary preferences</a></li>
-    <li><a href="{% url stipends camptheme=camp.theme %}">&nbsp;&nbsp;&nbsp;- Stipend requests</a></li>
-    <li><a href="{% url sessions camptheme=camp.theme %}">&nbsp;&nbsp;&nbsp;- Session proposals</a></li>
-    <li><a href="{% url camp_table camptheme=camp.theme %}">&nbsp;&nbsp;&nbsp;- Data table</a></li>
+    <li><a href="{% url 'single_camp' camptheme=camp.theme %}">&nbsp;- {{ camp.theme }}</a></li>
+    <li><a href="{% url 'dietary' camptheme=camp.theme %}">&nbsp;&nbsp;&nbsp;- Dietary preferences</a></li>
+    <li><a href="{% url 'stipends' camptheme=camp.theme %}">&nbsp;&nbsp;&nbsp;- Stipend requests</a></li>
+    <li><a href="{% url 'sessions' camptheme=camp.theme %}">&nbsp;&nbsp;&nbsp;- Session proposals</a></li>
+    <li><a href="{% url 'camp_table' camptheme=camp.theme %}">&nbsp;&nbsp;&nbsp;- Data table</a></li>
 {% endblock %}
 
 {% block scripts %}

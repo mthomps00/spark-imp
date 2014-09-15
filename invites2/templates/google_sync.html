@@ -23,7 +23,7 @@
             </thead>                        
         {% for row in rows %}
             <tr>
-                <td><a href="{% url invitation row.rand_id %}">{{ row.username }}</a></td>
+                <td><a href="{% url 'invitation' row.rand_id %}">{{ row.username }}</a></td>
                 <td>{{ row.first_name }}</td>
                 <td>{{ row.last_name }}</td>
                 <td>{{ row.employer }}</td>

@@ -10,7 +10,7 @@
 {% block logisticsnav %} class="active"{% endblock %}
 
 {% block form %}
-<form class="well form form-inline" action="{% url invite_logistics invitation.rand_id %}" method="post">
+<form class="well form form-inline" action="{% url 'invite_logistics' invitation.rand_id %}" method="post">
     <h3>Logistics for {{ invitation.user.first_name }} {{ invitation.user.last_name }}</h3><br />
     <table class="table table-basic">
     {% csrf_token %}

@@ -37,7 +37,7 @@
         <div class="page-h2">Your RSVP Status: <span class="orange">{{ invitation.pretty_status }}</span></div>
         <p class="text">{{ message|safe }}</p>
 
-        <form class="form-basic" action="{% url invitation invitation.rand_id %}" method="post">{% csrf_token %}
+        <form class="form-basic" action="{% url 'invitation' invitation.rand_id %}" method="post">{% csrf_token %}
         <div class="form-row">
             {{ form.status }}
             <input class="submit btn" type="submit" value="Update" />
@@ -84,7 +84,7 @@
                         <p class="text">{% if sparkprofile.employer %}{{ sparkprofile.employer }}{% else %}<span class="muted">No employer given.</span>{% endif %}</p>
                     </li>
                 </ul>
-                        <a class="submit btn-large" href="{% url profile invitation.rand_id %}">Update your info</a>
+                        <a class="submit btn-large" href="{% url 'profile' invitation.rand_id %}">Update your info</a>
             </section>
 
             <section class="content">
@@ -154,10 +154,10 @@
                             {% endif %}
                             </p>
                         </ul>
-                        <a class="submit btn" href="{% url invite_related rand_id=invitation.rand_id main_object='Stipend' %}">Edit this request</a>
-                        <a class="submit btn" href="{% url invite_related_delete main_object='Stipend' rand_id=invitation.rand_id %}">Cancel this request</a>
+                        <a class="submit btn" href="{% url 'invite_related' rand_id=invitation.rand_id main_object='Stipend' %}">Edit this request</a>
+                        <a class="submit btn" href="{% url 'invite_related_delete' main_object='Stipend' rand_id=invitation.rand_id %}">Cancel this request</a>
                         {% else %}
-                        <p class="text">A limited number of partial travel stipends are available to ensure campers can attend regardless of financial situation.<br /><a class="submit btn" href="{% url invite_related rand_id=invitation.rand_id main_object='Stipend' %}">Request a stipend</a></p>
+                        <p class="text">A limited number of partial travel stipends are available to ensure campers can attend regardless of financial situation.<br /><a class="submit btn" href="{% url 'invite_related' rand_id=invitation.rand_id main_object='Stipend' %}">Request a stipend</a></p>
                     {% endif %}{% endif %}
                     <hr />
                     <div class="page-h2">Roommates</div>
@@ -225,11 +225,11 @@
                             {% endif %}
                             </li>
                         </p>
-                        <p class="text">Found a match? <a href="{% url invite_related_delete rand_id=invitation.rand_id main_object='Roommate' %}">Cancel your roommate request.</a> <br /><a class="submit btn" href="{% url invite_related rand_id=invitation.rand_id main_object='Roommate' %}">Edit this request</a>
-                        <a class="submit btn" href="{% url invite_related_delete main_object='Roommate' rand_id=invitation.rand_id %}">Cancel this request</a>
+                        <p class="text">Found a match? <a href="{% url 'invite_related_delete' rand_id=invitation.rand_id main_object='Roommate' %}">Cancel your roommate request.</a> <br /><a class="submit btn" href="{% url 'invite_related' rand_id=invitation.rand_id main_object='Roommate' %}">Edit this request</a>
+                        <a class="submit btn" href="{% url 'invite_related_delete' main_object='Roommate' rand_id=invitation.rand_id %}">Cancel this request</a>
                         </p>
                         {% else %}
-                        <p class="text">If you'd be willing to room with someone during the weekend, tell us a few details about the rooming situation you're comfortable with, and we'll try to match you up with another Camper. <br /><a class="submit btn" href="{% url invite_related rand_id=invitation.rand_id main_object='Roommate' %}">Request a roommate</a></p>
+                        <p class="text">If you'd be willing to room with someone during the weekend, tell us a few details about the rooming situation you're comfortable with, and we'll try to match you up with another Camper. <br /><a class="submit btn" href="{% url 'invite_related' rand_id=invitation.rand_id main_object='Roommate' %}">Request a roommate</a></p>
                     {% endif %}
                     {% if invitation.camp.ignite %}
                     <hr />
@@ -277,12 +277,12 @@
                         <a class="btn btn-small btn-danger" href="{% url invite_related_delete main_object='Ignite' rand_id=invitation.rand_id %}">Cancel this proposal</a>
                         </div>
                         {% else %}
-                        <p class="text">An Ignite talk is a 5-minute presentation with an auto-advancing deck of PowerPoint slides that tick forward every 15 seconds. <a href="http://igniteshow.com/" target="_blank">You can learn more about the format here.</a> <br /><a class="submit btn" href="{% url invite_related rand_id=invitation.rand_id main_object='Ignite' %}">Apply to give a talk</a></p>
+                        <p class="text">An Ignite talk is a 5-minute presentation with an auto-advancing deck of PowerPoint slides that tick forward every 15 seconds. <a href="http://igniteshow.com/" target="_blank">You can learn more about the format here.</a> <br /><a class="submit btn" href="{% url 'invite_related' rand_id=invitation.rand_id main_object='Ignite' %}">Apply to give a talk</a></p>
                     {% endif %}{% endif %}
 {% comment %} <hr />
                     <div class="page-h2">Session proposals</div>
                     {% if session %}
-                        <p class="text"><a href="{% url sessions_related rand_id=invitation.rand_id %}">Go here to see session ideas</a> that other Campers have submitted. You've proposed a session. Make sure this accurately captures your session proposal:</p>
+                        <p class="text"><a href="{% url 'sessions_related' rand_id=invitation.rand_id %}">Go here to see session ideas</a> that other Campers have submitted. You've proposed a session. Make sure this accurately captures your session proposal:</p>
                         <ul class="list-mod">
                             <li class="list-item">
                             <div class="section-h3">Title:</div>
@@ -308,11 +308,11 @@
                             </p>
                             </li>
                         </ul>
-                        <div class="btn-group"><a class="submit btn" href="{% url invite_related rand_id=invitation.rand_id main_object='Session' %}">Edit this proposal</a>
-                        <a class="submit btn" href="{% url invite_related_delete main_object='Session' rand_id=invitation.rand_id %}">Cancel this proposal</a>
+                        <div class="btn-group"><a class="submit btn" href="{% url 'invite_related' rand_id=invitation.rand_id main_object='Session' %}">Edit this proposal</a>
+                        <a class="submit btn" href="{% url 'invite_related_delete' main_object='Session' rand_id=invitation.rand_id %}">Cancel this proposal</a>
                         </div>
                         {% else %}
-                        <p class="text">At Spark Camp, our attendees help us set the agenda. Give us an idea for a topic you'd like to discuss at the event.<br /><a class="submit btn" href="{% url invite_related rand_id=invitation.rand_id main_object='Session' %}">Propose a session</a></p>
+                        <p class="text">At Spark Camp, our attendees help us set the agenda. Give us an idea for a topic you'd like to discuss at the event.<br /><a class="submit btn" href="{% url 'invite_related' rand_id=invitation.rand_id main_object='Session' %}">Propose a session</a></p>
 {% endif %}{% endcomment %}
 
             </section>

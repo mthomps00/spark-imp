@@ -5,7 +5,7 @@
 {% block breadcrumb %}{{ invitation.user.first_name }} {{ invitation.user.last_name }}{% endblock %}
 
 {% block form %}
-        <form class="comment-form form-basic" action="{% url profile invitation.rand_id %}" method="post">
+        <form class="comment-form form-basic" action="{% url 'profile' invitation.rand_id %}" method="post">
         <h3 class="h3">Profile for {{ invitation.user.first_name }} {{ invitation.user.last_name }}</h3><br />
         <table class="table table-basic">
         {% csrf_token %}

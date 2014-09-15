@@ -78,6 +78,8 @@ admin.site.register(Invitation, InvitationAdmin)
 # SparkProfile-specific commands. Leave these last, 'cause the order matters.
 class SparkProfileInline(admin.StackedInline):
     model = SparkProfile
+    max_num = 1
+    can_delete = False
 
 class SparkProfileAdmin(admin.ModelAdmin):
     list_display = ('name', 'poc', 'woman', 'journo',)
@@ -116,9 +118,13 @@ class SparkProfileAdmin(admin.ModelAdmin):
 admin.site.register(SparkProfile, SparkProfileAdmin)
 
 class UserProfileAdmin(UserAdmin):
-    inlines = [
-        SparkProfileInline,
-    ]
+   def add_view(self, *args, **kwargs):
+      self.inlines = []
+      return super(UserAdmin, self).add_view(*args, **kwargs)
+
+   def change_view(self, *args, **kwargs):
+      self.inlines = [SparkProfileInline]
+      return super(UserAdmin, self).change_view(*args, **kwargs)
 
 admin.site.unregister(User)
 admin.site.register(User, UserProfileAdmin)

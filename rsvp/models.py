@@ -23,6 +23,7 @@ class Camp(models.Model):
     # Sub-events
     ignite = models.BooleanField(blank=True, default=False)
     stipends = models.BooleanField(blank=True, default=False)
+    talk = models.BooleanField(blank=True, default=False)
     
     # Google Spreadsheet with invitee information
     spreadsheet_url = models.URLField(blank=True)
