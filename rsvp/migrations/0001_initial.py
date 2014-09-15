@@ -29,7 +29,6 @@ class Migration(migrations.Migration):
                 ('venue_address', models.CharField(max_length=140, blank=True)),
                 ('ignite', models.BooleanField(default=False)),
                 ('stipends', models.BooleanField(default=False)),
-                ('talk', models.BooleanField(default=False)),
                 ('spreadsheet_url', models.URLField(blank=True)),
                 ('mailchimp_list', models.CharField(max_length=140, blank=True)),
             ],
