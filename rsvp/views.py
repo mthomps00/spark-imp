@@ -12,7 +12,7 @@ from django.shortcuts import get_object_or_404, render_to_response
 from rsvp.models import *
 from rsvp.forms import *
 from rsvp.mailsnake import MailSnake
-import random, csv, datetime
+import random, csv, datetime, unicodecsv
 from datetime import date, timedelta
 from urllib import urlopen
 
@@ -557,3 +557,25 @@ def camp_table(request, camptheme):
         'confirmed': confirmed,
     }
     return render_to_response('camp_table.html', variables, context_instance=RequestContext(request))
+
+@login_required
+def user_table(request):
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="campers.csv"'
+    writer = unicodecsv.writer(response)
+    users = User.objects.all()
+    
+    writer.writerow(['Username', 'First name', 'Last name', 'Email address', 'Job title', 'Organization', 'Camps attended', 'Camps invited to', 'Camps nominated for'])
+    
+    for user in users:
+        invitations = Invitation.objects.filter(user=user)
+        profile = SparkProfile.objects.get(user=user)
+        invitelist = []
+        attendlist = []
+        for invitation in invitations:
+            invitelist.append(invitation.camp.theme)
+            if invitation.status == 'Y':
+                attendlist.append(invitation.camp.theme)
+        writer.writerow([user.username, user.first_name, user.last_name, user.email, profile.job_title, profile.employer, '|'.join(attendlist), '|'.join(invitelist), ''])
+        
+    return response
