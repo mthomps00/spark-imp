@@ -565,7 +565,7 @@ def user_table(request):
     writer = unicodecsv.writer(response)
     users = User.objects.all()
     
-    writer.writerow(['Username', 'First name', 'Last name', 'Email address', 'Job title', 'Organization', 'Camps attended', 'Camps invited to', 'Camps nominated for'])
+    writer.writerow(['Username', 'First name', 'Last name', 'Email address', 'Secondary email', 'Twitter', 'URL', 'POC', 'Woman', 'Journo', 'Dietary preferences', 'Job title', 'Phone', 'Organization', 'Camps attended', 'Camps invited to', 'Camps nominated for'])
     
     for user in users:
         invitations = Invitation.objects.filter(user=user)
@@ -576,6 +576,6 @@ def user_table(request):
             invitelist.append(invitation.camp.theme)
             if invitation.status == 'Y':
                 attendlist.append(invitation.camp.theme)
-        writer.writerow([user.username, user.first_name, user.last_name, user.email, profile.job_title, profile.employer, '|'.join(attendlist), '|'.join(invitelist), ''])
+        writer.writerow([user.username, user.first_name, user.last_name, user.email, profile.secondary_email, profile.twitter, profile.url, profile.poc, profile.woman, profile.journo, profile.dietary, profile.job_title, profile.phone, profile.employer, '|'.join(attendlist), '|'.join(invitelist), ''])
         
     return response
