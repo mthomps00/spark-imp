@@ -292,6 +292,42 @@ def mailsync(request, camptheme):
     }
     return render_to_response('mailsync.html', variables, context_instance=RequestContext(request))
 
+def reserve(request, rand_id):
+    invitation = get_object_or_404(Invitation, rand_id=rand_id)
+    
+    variables = {
+        'invitation': invitation,
+    }
+    return render_to_response('reserve.html', variables, context_instance=RequestContext(request))
+
+def receive_charge(request, rand_id):
+    import stripe
+    from invites2.settings import STRIPE_SECRET_KEY
+    stripe.api_key = STRIPE_SECRET_KEY
+    
+    invitation = get_object_or_404(Invitation, rand_id=rand_id)
+    token = request.POST['stripeToken']
+    email = request.POST['stripeEmail']
+        
+    # Create the charge on Stripe's servers - this will charge the user's card
+    try:
+        charge = stripe.Charge.create(
+          amount=30000, # amount in cents, again
+          currency="usd",
+          card=token,
+          description="test!"
+        )
+    except stripe.CardError, e:
+    # The card has been declined
+        pass
+        
+    variables = {
+        'invitation': invitation,
+        'token': token,
+        'email': email,
+    }
+    return render_to_response('receive_charge.html', variables, context_instance=RequestContext(request))
+
 def guest_invite(request, rand_id):
     invitation = get_object_or_404(Invitation, rand_id=rand_id)
     

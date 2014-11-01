@@ -101,35 +101,43 @@
 
 
         <div id="main" role="main" class="main-page">
+            {% block columns %}
+            
             <div class="page-mod-6535">
+                {% block leftcolumn %}
                 <div class="ui-block-1">
-                    {% block overline %}{% endblock %}
-                    <h1 class="h1">{% block pageheader %}Spark Camp Invitation Management{% endblock %}</h1>
+                    {% block overline %}{% endblock overline %}
+                    <h1 class="h1">{% block pageheader %}Spark Camp Invitation Management{% endblock pageheader %}</h1>
                     
                     {% block content %}
                       
                           <p class="text-med">Here you'll find all the information you need to get ready for Spark Camp.</p>
                       
-                    {% endblock %}
+                    {% endblock content %}
 
 
-                </div> <!-- /.ui-block-1 -->	
+                </div> <!-- /.ui-block-1 -->
+                {% endblock leftcolumn %}
+
+                {% block rightcolumn %}
                 <div class="ui-block-2">
                     {% if user.is_authenticated %}
                     <div class="sidebar-mod">
                     <h4 class="h5">Admin functions</h4>
                     <ul>
                       <li><a href="/camps"{% block campnav %} {% endblock %}>All camps</a></li>
-                      {% block adminnav %}{% endblock %}
+                      {% block adminnav %}{% endblock adminnav %}
                       <li><a href="/admin">Admin</a></li>
                       <li><a href="/logout">Log out</a></li>
                     </ul>
                     </div>
                     {% endif %}
-                    {% block extranav %}{% endblock %}
-                    {% block anonnav %}{% endblock %}
+                    {% block extranav %}{% endblock extranav %}
+                    {% block anonnav %}{% endblock anonnav %}
                 </div> <!-- /.ui-block-2 -->
+                {% endblock rightcolumn %}
             </div> <!-- /.page-mod -->
+        {% endblock columns %}
         </div> <!-- /#main -->	
 
 				
@@ -187,7 +195,7 @@
 		<!-- Placeholder Polyfill -->
 		<script src="{{ STATIC_URL }}_js/libs/jquery.pjax.js"></script>
 		<script src="{{ STATIC_URL }}_js/libs/jquery.placeholder.min.js"></script>
-        {% block scripts %}{% endblock %}
+        {% block scripts %}{% endblock scripts %}
 		<!-- end scripts-->
 		
 		<script type="text/javascript" src="{{ STATIC_URL }}_js/script.js"></script>

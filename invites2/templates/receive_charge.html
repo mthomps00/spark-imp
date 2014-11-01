@@ -1,0 +1,17 @@
+{% extends "single_column.html" %}
+
+{% block title %}Spark Camp: Reserve a spot{% endblock %}
+{% block pageheader %}Reserve your spot at Spark Camp{% endblock %}
+
+
+{% block content %}
+
+<p class="text">{{ invitation.camp.welcome }}</p>
+
+<p>The Stripe token is {{ token }}.</p>
+<p>The email the user entered is {{ email }}.</p>
+
+<p class="text">&nbsp;</p>
+<p class="text">&nbsp;</p>
+<p class="text">&nbsp;</p>
+{% endblock %}
