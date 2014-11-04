@@ -8,13 +8,17 @@ from django.core.mail import send_mail
 from django.template import Context, RequestContext
 from django.template.defaultfilters import slugify
 from django.template.loader import get_template
-from django.shortcuts import get_object_or_404, render_to_response
+from django.shortcuts import get_object_or_404, render_to_response, redirect
 from rsvp.models import *
 from rsvp.forms import *
 from rsvp.mailsnake import MailSnake
 import random, csv, datetime, unicodecsv
 from datetime import date, timedelta
 from urllib import urlopen
+
+##########
+# Admin views
+##########
 
 @login_required
 def main_page(request):
@@ -156,33 +160,6 @@ def sessions(request, camptheme):
     
     return render_to_response('sessions.html', variables, context_instance=RequestContext(request))
 
-def sessions_related(request, rand_id):
-    invitation = get_object_or_404(Invitation, rand_id=rand_id)
-    camp = invitation.camp    
-    invitations = Invitation.objects.filter(camp=camp)
-    sessions = []
-
-    for invite in invitations:
-        proposals = invite.session_set.all()
-        for proposal in proposals:
-            sessions.append({
-                'user': proposal.invitation.user,
-                'first_name': proposal.invitation.user.first_name,
-                'last_name': proposal.invitation.user.last_name,
-                'title': proposal.title,
-                'description': proposal.description,
-            })       
-    
-    variables = {
-        'camp': camp,
-        'invitation': invitation,
-        'invitations': invitations,
-        'sessions': sessions,
-    }
-    
-    return render_to_response('sessions_related.html', variables, context_instance=RequestContext(request))
-    
-
 @login_required
 def google_sync(request, camptheme, deadline=14):
     camp = get_object_or_404(Camp, theme__iexact=camptheme)
@@ -292,41 +269,105 @@ def mailsync(request, camptheme):
     }
     return render_to_response('mailsync.html', variables, context_instance=RequestContext(request))
 
-def reserve(request, rand_id):
+##########
+# RSVP views
+##########
+
+def route_registration(request, rand_id):
     invitation = get_object_or_404(Invitation, rand_id=rand_id)
+    
+    if invitation.status == 'P' or invitation.status == 'Q':
+        return redirect('register', rand_id=rand_id)
+    if invitation.status == 'I':
+        return redirect('registration_confirm', rand_id=rand_id)
+    if invitation.status == 'N' or invitation.status == 'C':
+        return redirect('registration_resurrect', rand_id=rand_id)
+    if invitation.status == 'Y':
+        return redirect('registration_update', rand_id=rand_id)
+    else:
+        return redirect('register', rand_id=rand_id)
+
+def register(request, rand_id):
+    invitation = get_object_or_404(Invitation, rand_id=rand_id)
+    
+    if invitation.camp.paid:
+        import stripe
+        from invites2.settings import STRIPE_PUBLIC_KEY
+        invitation.key = STRIPE_PUBLIC_KEY
+        invitation.cost = invitation.price() * 100
     
     variables = {
         'invitation': invitation,
     }
-    return render_to_response('reserve.html', variables, context_instance=RequestContext(request))
+    return render_to_response('register.html', variables, context_instance=RequestContext(request))
 
-def receive_charge(request, rand_id):
-    import stripe
-    from invites2.settings import STRIPE_SECRET_KEY
-    stripe.api_key = STRIPE_SECRET_KEY
-    
+def receive_payment(request, rand_id):
     invitation = get_object_or_404(Invitation, rand_id=rand_id)
-    token = request.POST['stripeToken']
-    email = request.POST['stripeEmail']
+
+    if request.method == 'POST':
+        import stripe
+        from invites2.settings import STRIPE_SECRET_KEY
+        stripe.api_key = STRIPE_SECRET_KEY    
+        token = request.POST['stripeToken']
+        email = request.POST['stripeEmail']
+
+        invitation.cost = invitation.price()
         
-    # Create the charge on Stripe's servers - this will charge the user's card
-    try:
-        charge = stripe.Charge.create(
-          amount=30000, # amount in cents, again
-          currency="usd",
-          card=token,
-          description="test!"
-        )
-    except stripe.CardError, e:
-    # The card has been declined
-        pass
+        # Create the charge on Stripe's servers - this will charge the user's card
+        try:
+            charge = stripe.Charge.create(
+              amount=invitation.cost * 100, # amount in cents, again
+              currency="usd",
+              card=token,
+              description=invitation.user.username
+            )
+        except stripe.CardError, e:
+        # The card has been declined
+            pass
+        
+        invitation.has_paid = True
+        if (invitation.has_paid == True) and (invitation.user.sparkprofile.bio != '') and (invitation.user.sparkprofile.has_headshot == True):
+            invitation.status = 'Y'
+        else:
+            invitation.status = 'I'
+        
+        invitation.save()
         
     variables = {
         'invitation': invitation,
+        'cost': invitation.cost,
         'token': token,
         'email': email,
     }
-    return render_to_response('receive_charge.html', variables, context_instance=RequestContext(request))
+    return render_to_response('receive_payment.html', variables, context_instance=RequestContext(request))
+
+def registration_confirm(request, rand_id):
+    invitation = get_object_or_404(Invitation, rand_id=rand_id)
+        
+    variables = {
+        'invitation': invitation,
+    }
+    return render_to_response('registration_confirm.html', variables, context_instance=RequestContext(request))
+
+def registration_update(request, rand_id):
+    invitation = get_object_or_404(Invitation, rand_id=rand_id)
+    
+    variables = {
+        'invitation': invitation,
+    }
+    return render_to_response('registration_update.html', variables, context_instance=RequestContext(request))
+
+def registration_resurrect(request, rand_id):
+    invitation = get_object_or_404(Invitation, rand_id=rand_id)
+    
+    variables = {
+        'invitation': invitation,
+    }
+    return render_to_response('registration_resurrect.html', variables, context_instance=RequestContext(request))
+
+##########
+# Deprecated invitation views
+##########
 
 def guest_invite(request, rand_id):
     invitation = get_object_or_404(Invitation, rand_id=rand_id)
@@ -461,6 +502,32 @@ Team Spark
 
     return render_to_response('single_invite.html', variables, context_instance=RequestContext(request))
 
+def sessions_related(request, rand_id):
+    invitation = get_object_or_404(Invitation, rand_id=rand_id)
+    camp = invitation.camp    
+    invitations = Invitation.objects.filter(camp=camp)
+    sessions = []
+
+    for invite in invitations:
+        proposals = invite.session_set.all()
+        for proposal in proposals:
+            sessions.append({
+                'user': proposal.invitation.user,
+                'first_name': proposal.invitation.user.first_name,
+                'last_name': proposal.invitation.user.last_name,
+                'title': proposal.title,
+                'description': proposal.description,
+            })       
+    
+    variables = {
+        'camp': camp,
+        'invitation': invitation,
+        'invitations': invitations,
+        'sessions': sessions,
+    }
+    
+    return render_to_response('sessions_related.html', variables, context_instance=RequestContext(request))
+    
 def invite_related(request, rand_id, main_object):
     invitation = get_object_or_404(Invitation, rand_id=rand_id)
     url = invitation.get_absolute_url()

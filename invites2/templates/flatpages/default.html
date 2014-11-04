@@ -1,0 +1,177 @@
+<!doctype html>
+<!--[if lt IE 7]> <html class="no-js ie6 lt-ie9 lt-ie8 lt-ie7 oldie" lang="en"> <![endif]-->
+<!--[if IE 7]>    <html class="no-js ie7 lt-ie9 lt-ie8 oldie" lang="en"> <![endif]-->
+<!--[if IE 8]>    <html class="no-js ie8 lt-ie9 oldie " lang="en"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
+	<title>{% block title %}Spark Camp Invitation Management{% endblock %}</title>
+	<meta name="description" content="">
+	<meta name="author" content="">
+
+	<meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, initial-scale=1.0">
+	
+	<!-- Icons -->
+	<link rel="shortcut icon" href="favicon.ico">
+
+	<!-- Stylesheets -->
+	<link rel="stylesheet" href="{{ STATIC_URL }}_css/screen.css?v=2">
+    <style>
+    .muted { color: #999; }
+    .errorlist { color: red; font-weight: bold; }
+    </style>
+
+	<!-- Scripts -->
+	<!--[if IE 8 ]>
+	<script type="text/javascript" src="{{ STATIC_URL }}_js/libs/respond.js"></script>
+	<![endif]-->  
+	<script type="text/javascript" src="{{ STATIC_URL }}_js/libs/modernizr-2.6.1.min.js"></script>
+	<script type="text/javascript">
+	  WebFontConfig = {
+	  	typekit: { id: 'pgf7xqn' },
+	  };
+	  (function() {
+	    var wf = document.createElement('script');
+	    wf.src = ('https:' == document.location.protocol ? 'https' : 'http') +
+	        '://ajax.googleapis.com/ajax/libs/webfont/1/webfont.js';
+	    wf.type = 'text/javascript';
+	    wf.async = 'true';
+	    var s = document.getElementsByTagName('script')[0];
+	    s.parentNode.insertBefore(wf, s);
+	  })();
+	</script>
+</head>
+<body>
+	<section id="mod">
+		<div class="mod-inner page">
+			<header class="header-main">
+				<div class="nav-mod">
+					<div class="nav-content-mod">
+						<div class="nav-section-1">
+							<ul class="nav-link-mod">
+								<li class="nav-link">
+									<a href="http://sparkcamp.com/camps">Camps</a>	
+								</li>	
+								<li class="nav-link">
+									<a href="http://sparkcamp.com/about">About</a>
+								</li>	
+							</ul>	
+						</div> <!-- /.nav-section-1 -->	
+						<a href="http://sparkcamp.com/"><img class="nav-logo-m" src="{{ STATIC_URL }}_img/nav-logo-m@2x.png"/ rel="nav-logo"></a>
+						<a href="http://sparkcamp.com/" class="nav-logo-mod">
+							<div class="nav-logo-img"></div>
+						</a>
+				
+						<div class="nav-section-2">
+							<ul class="nav-link-mod">
+								<li class="nav-link">
+									<a href="http://sparkcamp.com/team">Team</a>	
+								</li>	
+								<li class="nav-link">
+									<a href="http://sparkcamp.com/news">News</a>
+								</li>	
+							</ul>	
+						</div> <!-- /.nav-section-2 -->				
+					</div> <!-- /.nav-content-mod -->	
+				</div> <!-- /.nav-mod -->		
+			</header>
+	
+			<header class="m-nav">
+				<div class="m-nav-mod">
+					<ul class="m-nav-list">
+						<li class="m-nav-item">
+							<a href="http://sparkcamp.com/camps">Camps</a>	
+						</li>
+						<li class="m-nav-item">
+							<a href="http://sparkcamp.com/about">About</a>
+						</li>
+						<li class="m-nav-item">
+							<a href="http://sparkcamp.com/team">Team</a>	
+						</li>
+						<li class="m-nav-item">
+							<a href="http://sparkcamp.com/news">News</a>	
+						</li>																					   					</ul>	
+				</div> <!-- /.m-nav-mod -->
+			</header> <!-- /.m-nav -->
+
+
+        <div id="main" role="main" class="main-page">
+            <div class="page-mod">
+                <section class="content">
+                    <h1 class="h1">{{ flatpage.title }}</h1>
+                    {{ flatpage.content }}
+                </section> <!-- /.content -->
+            </div> <!-- /.page-mod -->
+        </div> <!-- /#main -->	
+
+				
+		<div class="footer-scene-mod">
+			<img class="camp-scene-inside" src="{{ STATIC_URL }}_img/camp-scene@2x.png">
+			<img class="camp-scene-m footer-scene" src="{{ STATIC_URL }}_img/camp-scene-mobile@2x.png">
+			<div class="the-moon-mod footer-scene"></div>
+			<div class="bg-mountains-mod footer-scene"></div>
+		</div>
+
+		<footer class="footer footer-info">
+			<section class="ftr-nav-mod">
+				<div class="ftr-nav-wrap">
+					<article class="ftr-section past-camps media-block">
+						<h4 class="ftr-section-h">Past Camps</h4>
+						<ul class="ftr-nav-list">
+							<li class="ftr-nav-item">Camp #4 "Design" - Palo Alto, CA</li>	
+							<li class="ftr-nav-item">Camp #3 "Money" - Boston, MA</li>	
+							<li class="ftr-nav-item">Camp #2 "Data" - Austin, TX</li>	
+							<li class="ftr-nav-item">Camp #1 "Real Time" - New York, NY</li>	
+						</ul>	
+					</article> <!-- /.past-camps -->
+
+					<article class="ftr-section contact media-block">
+						<h4 class="ftr-section-h">Contact</h4>
+						<ul class="ftr-nav-list">
+							<li class="ftr-nav-item"><a href="mailto:info@sparkcamp.com">info@sparkcamp.com</a></li>		
+						</ul>	
+					</article> <!-- /.past-camps -->
+
+					<article class="ftr-section sponsors media-block">
+						<h4 class="ftr-section-h">Sponsors</h4>
+						<ul class="ftr-nav-list">
+							<li class="ftr-nav-item"><a href="http://www.google.com"><img class="ftr-logo" src="{{ STATIC_URL }}_img/googlelogogrey-resized.png"></a></li>
+							<li class="ftr-nav-item"><a href="http://www.gatesfoundation.org/"><img class="ftr-logo" src="{{ STATIC_URL }}_img/gates_foundation_logo-grayscale.png"></a></li>
+							<li class="ftr-nav-item"><a href="http://www.knightfoundation.org/"><img class="ftr-logo" src="{{ STATIC_URL }}_img/knight-logo.png"></a></li>
+                            <li class="ftr-nav-item"><a href="http://www.opensocietyfoundations.org/"><img class="ftr-logo" src="{{ STATIC_URL }}_img/OSF_logo-grayscale.png"></a></li>
+							<li class="ftr-nav-item"><a href="http://www.webbmediagroup.com/"><img class="ftr-logo" src="{{ STATIC_URL }}_img/webbmedia-group-logo-grayscale.png"></a></li>
+						</ul>	
+					</article> <!-- /.past-camps -->
+				</div> <!-- /.ftr-nav-wrap -->						
+			</section> <!-- /.footer-link-mod -->						
+
+	<section class="scripts">
+		<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+		<!-- Scripts					-->
+		<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+		<script>window.jQuery || document.write('<script src="{{ STATIC_URL }}_js/libs/jquery-1.7.2.min.js"><\/script>')</script>  	
+
+	  	<!-- Project-Specific stuff, start with up-base and go into script.js for your code --> 
+		<!--<script type="text/javascript" src="{{ STATIC_URL }}_js/up-base.js"></script>-->
+		
+
+		<!-- Placeholder Polyfill -->
+		<script src="{{ STATIC_URL }}_js/libs/jquery.pjax.js"></script>
+		<script src="{{ STATIC_URL }}_js/libs/jquery.placeholder.min.js"></script>
+        {% block scripts %}{% endblock scripts %}
+		<!-- end scripts-->
+		
+		<script type="text/javascript" src="{{ STATIC_URL }}_js/script.js"></script>
+
+		<!-- Prompt IE 6 users to install Chrome Frame. Remove this if you want to support IE 6.
+	       chromium.org/developers/how-tos/chrome-frame-getting-started -->
+		<!--[if lt IE 7 ]>
+	    	<script src="//ajax.googleapis.com/ajax/libs/chrome-frame/1.0.3/CFInstall.min.js"></script>
+			<script>window.attachEvent('onload',function(){CFInstall.check({mode:'overlay'})})</script>
+		<![endif]-->
+	</section>
+</body>
+</html>

@@ -1,4 +1,4 @@
-from django.conf.urls import patterns, include, url
+from django.conf.urls import patterns, include, url, static
 from django.contrib.auth.views import login, logout_then_login
 from rsvp.views import *
 
@@ -34,9 +34,13 @@ urlpatterns = patterns('',
     url(r'^rsvp/(?P<rand_id>\d{8})/sessions/$', sessions_related, name="sessions_related"),
     url(r'^rsvp/(?P<rand_id>\d{8})/(?P<main_object>\w+)/$', invite_related, name="invite_related"),
     url(r'^rsvp/(?P<rand_id>\d{8})/(?P<main_object>\w+)/delete/$', invite_related_delete, name="invite_related_delete"),
-    url(r'^reserve/(?P<rand_id>\d{8})/$', reserve, name="reserve"),
-    url(r'^reserve/(?P<rand_id>\d{8})/charge/$', receive_charge, name="receive_charge"),
+    url(r'^register/(?P<rand_id>\d{8})/$', route_registration, name="route_registration"),
+    url(r'^register/(?P<rand_id>\d{8})/attend/$', register, name="register"),
+    url(r'^register/(?P<rand_id>\d{8})/confirm/$', registration_confirm, name="registration_confirm"),
+    url(r'^register/(?P<rand_id>\d{8})/update/$', registration_update, name="registration_update"),
+    url(r'^register/(?P<rand_id>\d{8})/pay/$', receive_payment, name="receive_payment"),
     url(r'^(?P<main_object>\w+)/(?P<object_id>\d+)/confirmdelete/$', confirm_delete, name="confirm_delete"),
     url(r'^login/$', login, {'template_name': 'login.html'}),
     url(r'^logout/$', logout_then_login),
+    url(r'^pages/', include('django.contrib.flatpages.urls')),
 )

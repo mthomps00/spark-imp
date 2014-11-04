@@ -1,0 +1,1236 @@
+/* ## Bring in all Compass Helpers */ 
+@import "partials/base";
+
+/* ## Base CSS */
+// @import "project/type";
+@import "project/forms";
+@import "project/tables";
+// @import "project/lists";
+
+/* ## Components */
+@import "project/buttons";
+// @import "project/dropdowns";
+// @import "project/tabs";
+@import "project/modals";
+// @import "project/tooltips";
+
+
+
+
+
+
+
+/* ============================================= */
+/*	Universal						   			 */ 
+/* ============================================= */
+
+a 		{ 	text-decoration: none; color: inherit; }
+strong	{	font-weight: bold;	}
+em   	{	font-style: italic;	}
+
+body {
+	background-color:#212221;
+	@include background-image(linear-gradient(#212221 55%, #DD4D2B 100%));
+	background-color: #212221;
+}
+
+.star-wrap {
+	background-image:url('../_img/bg-stars-full.png');
+	.no-touch & {
+		background-attachment:fixed;
+	}
+	z-index: -500;
+}
+
+#main {
+	@include pie-clearfix;
+
+	max-width: 1200px;	
+	margin: 35px;
+	text-align: center;
+	margin: 0 auto;
+	padding: 0px;
+	margin-bottom: -20px;
+
+	@media (min-width: 500px) {
+		padding: 20px 20px 0px 20px;
+	}
+
+	@media (min-width: 768px) {
+		padding: 260px 30px 0px 30px;
+	}
+
+}
+
+#main.main-page {
+	padding-top: 0px;
+
+		@media (min-width: 768px) {
+		padding-top: 75px;
+	}
+}
+
+/* ============================================= */
+/*	Image Styles						   		 */ 
+/* ============================================= */
+
+//Apply this class to img tags you want to be responsive
+.size-full {
+	width: 100%;
+	height: auto;
+}
+
+//Put a little margin on images if you want to use them as thumbs
+.thumb {
+	margin: 0 0 10px 0;
+}
+
+/* ============================================= */
+/*	Type Styles						   			 */ 
+/* ============================================= */
+
+.h1, .h2, .h3, .h4, .h5, .h6 {
+	font: bold 16px/100% $serif-display;
+	margin: 0 0 10px 0;
+
+	a:hover {
+		color: $orange;
+	}
+}
+
+.h1 {
+	font-size: 36px;
+}
+
+.h2 {
+	font-size: 30px;
+}
+
+.h3 {
+	font-size: 26px;
+}
+.h4 {
+	font-size: 23px;
+}
+
+.h5 {
+	font-size: 18px;
+}
+
+.h6 {
+	font-size: 16px;
+}
+
+.page-h1 {
+	font: bold 36px/100% $serif-display;
+	color: #000;
+}
+
+.page-h2 {
+	font: 700 22px/135% $serif-display;
+	margin-bottom: 8px;	
+
+	@media (min-width: 500px) {
+		font: 700 24px/135% $serif-display;
+	}	
+}
+
+.section-h1 {
+	font: 700 23px/140% $serif-display;
+	color: $orange;
+	margin-top: -7px;
+
+	@media (min-width: 500px) {
+		font: 700 38px/140% $serif-display;
+	}
+}
+
+.section-h2 {
+	font: 700 23px/140% $serif-display;
+	color: #222;
+	margin-top: -7px;
+	text-shadow: 0px 2px 3px #fff;
+
+
+	@media (min-width: 500px) {
+		font: 700 34px/120% $serif-display;
+	}
+}
+
+.section-h3 {
+	font: 700 14px/155% $sans-display;
+	text-transform: uppercase;
+	letter-spacing: .15em;
+}
+
+.default-link {
+	@include trans;
+	color: $link;
+	&:hover {
+		color: $orange;
+	}
+}
+
+//span for using orange sometimes
+.orange {
+	color: $orange;
+}
+
+.text-large {
+	font: 400 19px/162% $serif-body;	
+	color: $black-90;
+	margin-bottom: 20px;
+
+	@media (min-width: 500px) {
+		font: 400 22px/168% $serif-body;	
+	}
+}
+
+.text-med {
+	font: 400 18px/162% $serif-display;	
+	color: #000;
+	margin-bottom: 20px;
+}
+
+.text {
+	font: 400 15px/170% $serif-body;
+	color: #222;
+	margin: 0 0 20px 0;	
+
+	@media (min-width: 550px) {
+		font: 400 17px/170% $serif-body;
+		.touch &  {
+			font: 400 18px/180% $serif-body;
+		}
+	}
+}
+
+.text-italic {
+	font: normal 16px/150% $serif-body;
+	color: #666;
+	font-style: italic;
+}
+
+.text-small {
+	font: normal 13px/150% $serif;
+	color: #222;
+}
+
+.overline {
+	font: 700 16px/140% $sans-display;
+	color: $orange;
+	text-transform: uppercase;
+	letter-spacing: .15em;
+	margin-bottom: 10px;
+
+	@media (min-width: 500px) {
+		font: 700 19px/140% $sans-display;
+	}
+}
+
+.overline-alt {
+	font: 700 15px/140% $sans-display;
+	color: $orange;
+	text-transform: uppercase;
+	letter-spacing: .15em;
+	margin-bottom: 4px;
+}
+
+.caption {
+	font: 400 12px/150% $sans;
+	color: #222;
+}
+
+.camper-title {
+	@extend .text-italic;
+	margin-bottom: 0px;
+}
+
+.badge-txt {
+	font: 400 15px/160% $serif-body;
+	color: $tan;
+	margin-top: 10px;
+
+	.touch & {
+		@media (min-width: 768px) {
+			font: 400 16px/160% $serif-body;
+		}
+	}
+}
+
+.home-intro {
+	@extend .text-large;
+	color: $tan;
+}
+
+.intro-graf {
+	@extend .text-large;
+}
+
+.drop-cap {
+	@extend .serif-display;
+	font-size: 64px;
+	color: $orange;
+	float: left;
+	margin-right: 8px;
+	padding-top: 19px;
+	text-shadow: 0px 2px 3px #fff;	
+	line-height: 40%;
+}
+
+.block-quote {
+	@extend .text-small;
+	color: #666;
+	font-weight: 400;
+	font-size: 15px;
+	line-height: 160%;
+	margin-bottom: 20px;
+}
+
+.pull-quote {
+	@extend .text-large;
+	font-size: 21px;
+
+	@media (min-width: 500px) {
+		font-size: 25px;
+	}
+}
+
+.post-script {
+	@extend .text-italic;
+	line-height: 170%;
+	color: #222;
+	font-size: 14px;
+}
+
+.table-basic {
+	thead {
+		th {
+			@extend .h6;
+		}
+	}
+}
+
+
+/* ============================================= */
+/*	Button Styles 						   		*/ 
+/* ============================================= */
+
+
+.btn-sign-up {
+	margin: 0 auto;
+	padding: 10px 24px;
+	display: block;
+	margin-top: 20px;
+	@extend .overline-alt;
+	color: $tan;
+	max-width: 150px;
+	text-shadow: none;
+	font-size: 12px;
+
+	@media (min-width: 500px) {
+		max-width: 230px;
+		padding: 16px 30px;
+		font-size: 15px;
+	}
+}
+
+/* ============================================= */
+/*	Header   						   			 */ 
+/* ============================================= */
+
+.header-main {
+	position: fixed;
+	width: 100%;
+	top: 0px;
+	z-index: 4000;
+}
+
+.header-logo {
+	width:132px;
+	margin:auto;
+}
+
+.nav-mod {
+	background-image:url('../_img/bg-wood@2x.png');
+	height: 45px;
+	width: 100%;
+	background-size: contain;
+	@include box-shadow(rgba(0, 0, 0, 0.5) 0px 4px 25px);	
+	margin: 0 auto;
+	text-align: center;
+	margin-bottom: 20px;
+	@include pie-clearfix;	
+
+	@media (min-width: 500px) {
+		height: 75px;
+	}
+}
+
+.nav-content-mod {
+	padding-top: 0px;
+	text-align: center;
+	@include pie-clearfix;
+	width: 100%;
+
+	@media (min-width: 768px) {
+		width: 424px;	
+		margin: 0 auto;	
+		padding-top: 23px;
+
+		// IE fixes
+		.oldie & {
+			width:420px;
+		}				
+	}
+}
+
+.nav-link-mod {
+	float: left;
+	font: 700 14px/140% $sans-display;
+	color: $orange;
+	text-transform: uppercase;
+	letter-spacing: .15em;
+}
+
+.nav-link {
+	display: inline;
+	margin-right: 10px;
+
+	&:last-child {
+		margin-right: 0px;
+	}
+
+	a {
+		&:hover {
+			@include trans;
+			color: #FFF ;
+		}
+	}
+
+}
+
+
+.nav-logo {
+	display: none;
+	position:absolute;
+	z-index:9999;
+	@media (min-width: 768px) {
+		display: block;
+		margin-top: -55px;	
+		position: fixed;
+		.animateable & {
+			position:absolute;
+			margin-top:95px;
+		}
+	}
+	&.fixed {
+		margin-top:-55px;
+		position:fixed;
+	}
+}
+
+.nav-logo-img {
+	width:131px;
+	height:91px;
+	background-image:url('../_img/nav-logo@2x.png');
+	margin:auto;
+	background-size: contain;
+	background-repeat: no-repeat;
+	.index & {
+		background-image:url('../_img/nav-logo-alt@2x.png');
+		@include trans;
+	
+		&.down-page {
+			background-image:url('../_img/nav-logo@2x.png');
+		}
+	}
+}
+
+.nav-logo-m {
+	display: block;
+	margin: 0 auto;
+	text-align: center;
+	padding-top: 9px;
+	width: 100%;
+	max-width: 197px;
+	max-height: 49px;	
+	height: auto;
+
+	.oldie & {
+		width: auto;
+	}
+
+	@media (min-width: 500px) {
+		padding-top: 24px;
+
+	}
+
+	@media (min-width: 768px) {
+		display: none;
+	}
+}
+
+.nav-logo-mod {
+	float: left;
+	width:154px;
+	height:auto;
+	min-height:10px;
+	margin-top: -23px;
+	display: none;
+
+	@media (min-width: 768px) {
+		display: block;
+	}
+}
+
+.nav-section-1 {
+	display: none;
+
+	@media (min-width: 768px) {
+		display: block;
+	}
+}
+
+.nav-section-2 {
+	display: none;
+
+	@media (min-width: 768px) {
+		display: block;
+	}
+}
+
+.m-nav {
+	padding: 60px 15px 15px 15px;
+	background-color: $orange;
+	display: block;
+
+	@media (min-width: 500px) {
+		padding: 87px 15px 15px 15px;
+	}
+
+	@media (min-width: 768px) {
+		display: none;
+	}
+}
+
+.m-nav-list {
+	margin: 0 auto;
+	text-align: center;	
+}
+
+.m-nav-item {
+	color: $tan;
+	display: inline;
+	margin-right: 20px;
+	font: 700 14px/180% $sans-display;
+	text-transform: uppercase;
+	letter-spacing: .15em;	
+
+	a {
+		&:hover {
+			@include trans;
+			color: #222 ;
+		}
+	}
+}
+
+/* ============================================= */
+/*	Homepage 						   			 */ 
+/* ============================================= */
+
+#main-homepage {
+	@include pie-clearfix;
+	max-width: 900px;	
+	margin: 35px;
+	text-align: center;
+	margin: 0 auto;
+	position:relative;
+	padding: 45px 20px 0px 20px;
+
+	@media (min-width: 500px) {
+		padding-top: 60px;
+	}
+
+	@media (min-width: 768px) {
+		padding: 170px 30px 0px 30px;
+	}
+}
+
+.intro-logo {
+	margin-bottom: 85px;
+	max-width: 175px;
+	width: 100%;
+
+	@media (min-width: 500px) {
+		max-width: 275px;
+		max-height:302px;
+	}
+}
+
+// The date module on the homepage
+.camp-mod {
+	margin: 0 auto;
+	text-align: center;
+	margin-bottom: 80px;
+
+	@media (min-width: 500px) {
+		margin-bottom: 150px;
+	}
+}
+
+// The badge module onthe homepage
+.badge-mod {
+	margin: 0 auto;
+	text-align: center;
+	margin-bottom: 150px;
+	@include pie-clearfix;
+
+// Applying outside margin on the mod between these widths.
+	@media (min-width: 550px) and (max-width: 800px) {
+		margin: 0 40px;
+	}
+}
+
+.badge-list {
+	@media (min-width: 550px) and (max-width: 800px) {
+		@include media-grid(2, 95px, badge-item);
+	}
+
+	@media (min-width: 801px) {
+		@include media-grid(3, 95px, badge-item);
+	}
+}
+
+.badge-item {
+	margin: 0 auto 55px;
+	width: 80%;
+
+// Arranging the bottom two badges in the center
+	&.fourth {
+		@media (min-width: 801px) {
+			margin-left: 16.66666%;
+		}	
+	}
+// Arranging the fifth badge in the center
+	&.fifth {
+		@media (min-width: 550px) and (max-width: 800px) {
+			margin-left: 25%;
+			margin-bottom: 0;
+		}	
+	}
+}
+
+.badge-img {
+	margin-bottom: 12px;
+	max-width: 122px;
+
+	@media (min-width: 500px) {
+		max-width: 168px;
+	}
+}
+
+
+.about-sc-mod {
+	margin-bottom: 80px;
+
+	@media (min-width: 500px) {
+		margin-bottom: 150px;
+	}
+}
+
+
+.footer-mod {
+}
+
+/* ============================================= */
+/*	Page     						   			 */ 
+/* ============================================= */
+
+.mod-inner.page {
+	background-color: #eee;
+	background-image:url('../_img/bg-page-3.png');	
+}
+
+.main-page {
+	max-width: 975px;
+	padding-top: 0px;
+}
+
+.page-wrap {
+	background-color: #FFF ;
+}
+
+.page-mod {
+	background-color: #FFF ;
+	text-align: left;
+	padding: 25px 20px 0 20px;
+	width: 100%;
+	max-width: 1100px;
+	margin: 0 auto;
+	background-image:url('../_img/bg-page-3.png');
+	@include box-shadow(rgba(0, 0, 0, 0.1) 0px 0px 20px);	
+
+
+	@media (min-width: 401px) {
+		padding: 35px 35px 0 35px;
+	}
+
+	@media (min-width: 767px) {
+		padding: 50px 90px 20px 90px;
+	}	
+
+	@media (min-width: 850px) {
+		padding: 50px 15% 20px 15%;
+	}		
+}
+
+.page-mod-6535 {
+	@extend .page-mod;
+	@include box-shadow(rgba(0, 0, 0, 0.1) 0px 0px 20px);	
+
+
+	@media (min-width: 768px){
+		@include ui-grid-lr(75%, 25%, 4%);
+		padding: 50px 5% 20px 5%;
+	}	
+}
+
+.page-mod-3565 {
+	@extend .page-mod;
+	@include box-shadow(rgba(0, 0, 0, 0.1) 0px 0px 20px);	
+
+
+	@media (min-width: 768px){
+		@include ui-grid-rl(75%, 25%, 4%);
+		padding: 50px 5% 20px 5%;
+	}	
+}
+
+.page-mod-article {
+	@extend .page-mod;
+		@include box-shadow(rgba(0, 0, 0, 0.1) 0px 0px 20px);	
+
+
+	@media (min-width: 768px){
+		padding: 50px 0 50px 0;
+	}		
+
+}
+
+.sidebar-mod {
+	border-bottom: 1px dotted darken($tan, 5%);
+	padding: 20px 0;
+}
+
+.content {
+	margin-bottom: 20px;
+		
+	@media (min-width: 401px) {
+		margin-bottom: 30px;
+	}
+}
+
+.content:after{
+	content: '\0020';
+	background: url(../_img/content-rule@2x.png) 50% 60%;
+	background-repeat: no-repeat;	
+	background-size: 960px 58px;
+	display: block;
+	height: 67px;
+	width: 100%;
+	bottom: 0px;
+	margin-top: 25px;	
+	margin-bottom: 30px;
+}
+
+.content:last-child:after {
+	background-image: none;
+}
+
+.article-h {
+	margin-bottom: 20px;
+}
+
+.article-intro-mod{
+	margin-bottom: 25px;
+}
+
+.img-mod-half {
+	margin-bottom: 25px;
+
+	@media (min-width: 1050px) {
+		max-width: 323px;
+		float: right;
+		margin-left: 25px;
+	}
+}
+
+.img-full {
+	max-width: 655px;
+	width: 100%;
+	margin-bottom: 10px;
+}
+
+.img-half {
+	width: 100%;
+	margin-bottom: 10px;
+
+	@media (min-width: 1050px) {
+		max-width: 323px;
+	}
+}
+
+.article-wrapper {
+
+	@media (min-width: 768px) {
+		max-width: 600px;
+		min-width: 600px;
+		margin: 0 auto;
+	}
+}
+
+.block-quote-mod {
+	padding: 0% 0% 0% 6%;
+	border-left: 1px solid;
+	border-color: $orange;
+	margin-left: 4%;	
+}
+
+.pull-quote-mod {
+	background-image:url('../_img/pull-quote@2x.png');
+	background-size: 45px 32px;
+	background-repeat:no-repeat;
+	min-height: 52px;	
+	padding-left: 22%;
+	margin-bottom: 50px;
+	margin-top: 50px;
+
+	@media (min-width: 500px) {
+
+	}
+
+	@media (min-width: 600px) {
+		padding-left: 14%;
+	}
+}
+
+.list-mod {
+
+	@media (min-width: 600px) {
+		@include media-grid(2,20px);
+		.list-item {
+			@extend .media-block;
+		}
+	}
+}
+
+
+/* ============================================= */
+/*	Comment styles				   			 */ 
+/* ============================================= */
+
+//article around each comment
+.comment {
+	border-bottom: 2px dotted $tan;
+	padding: 15px 0;
+
+	//container for avatars
+	.comment-author {
+		float: left;
+		margin: 0 10px 0 0;
+	}
+
+	//styling for avatar tile
+	.avatar {
+		width: 50px;
+		height: 50px;
+		@include box-shadow(2px 2px 5px $tan);
+		padding: 3px;
+		@include border-radius(3px);
+		border: 1px solid $tan;
+	}
+
+	//Byline and date link
+	.comment-meta {
+		color: $khaki;
+		@extend .text-small;
+		text-align: right;
+		a {
+			color: $orange;
+		}
+	}
+}
+
+//pingbacks (if you have them)
+.pingback {
+	p {
+		@extend .text-small;
+		font-style: italic;
+		color: $khaki;
+	}
+	border-bottom: 2px dotted $tan;
+	padding: 10px 0;
+}
+
+//styling for <ol>
+.comment-list {
+	color: $khaki;
+	li:last-child {
+		.comment {
+			border: 0px;
+		}
+	}
+}
+
+//Comment reply form
+.comment-form {
+	textarea {
+		width: 100%;
+		padding: 15px;
+		margin: 0;
+		height: 60px;
+		@extend .text;
+		@include trans;
+
+		&:focus {
+			min-height: 200px;
+		}
+	}
+
+	//fieldset for name & email
+	.inputs {
+		padding-top: 10px;
+		margin-bottom: 10px;
+
+		//display next to each other above 480px
+		@media (min-width: 480px){
+			width: 49%;
+			margin: 0 10px 0 0;
+			float: left;
+
+			&:nth-child(2n-1){
+				margin: 0;
+			}
+		}
+		label {
+			display: block;
+			@extend .overline-alt;
+		}
+	}
+
+	//styles for text inputs
+	.input {
+		padding: 10px;
+		width: 100%;
+		margin: 0 0 10px 0;
+		display: block;
+	}
+
+	//submit button
+	.submit {
+		float: right;
+	}
+}
+
+
+
+/* ============================================= */
+/*	Layout options					   			 */ 
+/* ============================================= */
+
+//These should get you started with some layout options and
+//the ui-grid mixin. Check out /partials/_layout.scss for more
+.col-mod-5050 {
+	@media (min-width: 600px){
+		@include ui-grid-lr(50,50);
+	}
+}
+
+.col-mod-3565 {
+	@media (min-width: 600px){
+		@include ui-grid-lr(35,65);
+	}
+}
+
+.col-mod-6535 {
+	@media (min-width: 600px){
+		@include ui-grid-lr(65,35);
+	}
+}
+
+.col-mod-333 {
+	@media (min-width: 600px){
+		@include ui-grid-3;
+	}
+}
+
+//These are the media-grid styles, for unlimited numbers 
+//of tiles appearing next to each other in a grid. Unlike 
+//ui-grid you can put as many items as you want in here.
+.tile-mod-4 {
+	.media-block {
+		margin: 0 0 20px 0;
+	}
+	@media (min-width: 480px) and (max-width: 699px){
+		@include media-grid(2, 20px);
+	}
+	@media (min-width: 700px){
+		@include media-grid(4, 35px);
+	}
+}
+
+.tile-mod-3 {
+	.media-block {
+		margin: 0 0 20px 0;
+	}
+	@media (min-width: 480px) and (max-width: 699px){
+		@include media-grid(2, 20px);
+	}
+	@media (min-width: 700px){
+		@include media-grid(3, 35px);
+	}
+}
+
+.tile-mod-2 {
+	.media-block {
+		margin: 0 0 20px 0;
+	}
+	@media (min-width: 480px){
+		@include media-grid(2, 35px);
+	}
+}
+
+
+/* ============================================= */
+/*	Footer  						   			 */ 
+/* ============================================= */
+
+.footer {
+	margin: 0 auto;
+	text-align: center;
+	background-color: #222;
+	position: relative;	
+	color: $black-75;
+	padding-bottom: 40px;
+}
+
+.footer-content-mod {
+	width: 100%;
+	max-width: 960px;
+}
+
+.camp-scene-inside {
+	display:block;
+	margin: 0 auto;
+	text-align: center;
+	width: 100%;
+	position: relative;
+	bottom:0px;
+	z-index:1000;
+	max-width: 960px;
+	display: none;
+	right: 0;
+	left: 0;
+
+	@media (min-width: 600px) {
+		display: block;
+	}
+	.animateable & {
+		display:none;
+	}
+}
+
+.camp-scene {
+	display:none;
+}
+.animateable .camp-scene  {
+	margin: 0 auto;
+	text-align: center;
+	width: 100%;
+	max-width: 900px;
+	bottom: 0px;
+	position: relative;
+	z-index: 1000;
+	display: none;
+	@media (min-width: 768px) {
+		position: fixed;
+		&.camp-scene-end {
+			position:absolute;
+		}
+	}
+	@media (min-width: 600px) {
+		display: block;
+
+	}
+	right:0px;
+	@media (min-width:950px){
+		right:auto;
+	}
+}
+
+.camp-scene-m {
+	margin: 0 auto;
+	text-align: center;
+	width: 100%;
+	max-width: 600px;
+	float: left;
+	bottom: 0px;
+	position: relative;
+	z-index: 1000;
+	display: block;
+
+	@media (min-width: 500px) {
+		position: fixed;
+	}
+
+	@media (min-width: 600px) {
+		display: none;
+	}
+}
+
+.the-moon-mod {
+	display: none;
+
+	@media (min-width: 500px) {
+		background-image:url('../_img/moon-@2x.png');	
+		background-repeat:no-repeat;
+		background-size: contain;
+		pointer-events:none;
+		padding-bottom: 260px;
+		margin: 0 auto;
+		text-align: center;
+		width: 100%;
+		float: left;
+		bottom: 0px;
+		position: fixed;
+		z-index: -200;
+		display: block;
+	}
+}
+
+.footer-scene-mod {
+	position:relative;
+	pointer-events:none;
+	.footer-scene, .camp-scene-inside {
+		position:absolute;
+	}
+}
+@media (min-width:768px){
+	.animateable {
+		.footer-scene-mod {
+			position:static;	
+			.footer-scene {
+				position:fixed;
+				&.footer-scene-end {
+					position:absolute;
+				}
+			}
+		}		
+	}
+}
+
+.bg-mountains-mod {
+	background-image:url('../_img/bg-mountains-m.png');
+	padding-bottom: 260px;
+	pointer-events:none;
+	margin: 0 auto;
+	text-align: center;
+	width: 100%;
+	float: left;
+	bottom: 0px;
+	z-index: 50;
+	float: left;
+	position: relative;
+
+	@media (min-width: 500px) {
+		position: fixed;
+	}
+	/*
+	.page & {
+		float: left;
+		position: relative;
+	}*/		
+
+	@media (min-width: 500px) {
+		background-image:url('../_img/bg-mountains@2x.png');
+		background-size: 960px 260px;
+	}
+}
+  
+.camp-scene-end {
+	position:absolute;
+	z-index:1000;
+	pointer-events:none;
+
+}     
+
+.ftr-nav-mod {
+	max-width: 950px;
+	padding: 45px;
+	margin: 0 auto;
+	@include pie-clearfix;
+	text-align: left;
+}
+
+.ftr-nav-wrap {
+	max-width: 950px;
+
+	@media (min-width: 480px) and (max-width: 767px){
+		@include media-grid(2,40px);
+	}
+
+	@media (min-width: 768px){
+		@include media-grid(3,40px);
+	}
+}
+
+.ftr-section {
+	margin-bottom: 30px;
+}
+
+.ftr-section-h {
+	@extend .overline-alt;
+}
+
+.ftr-nav-item {
+	@extend .text;
+	margin-bottom: 1px;
+	color: #888;
+	font-size: 15px;
+
+	a {
+		&:hover {
+			color: $orange;
+		}
+	}
+
+}
+
+.ftr-logo {
+	max-width: 175px;
+	width: 100%;
+	margin-bottom: 10px;
+}
+
+/* =============	Footer-inside	============ */
+
+.footer-inside {
+	position: relative;
+	// @include pie-clearfix;
+	margin: 0 auto;
+	text-align: center;
+}
+
+
+
+/* ============================================= */
+/*	Print Styles							     
+	Inline to avoid required HTTP connection     */
+/* ============================================= */
+
+// Import Print Styles
+@import "project/print";
+
+
+

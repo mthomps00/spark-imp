@@ -5,21 +5,28 @@ import random
 
 class Camp(models.Model):
     theme = models.CharField(max_length=60)
+    display_name = models.CharField(max_length=60, blank=True, null=True)
+    short_name = models.CharField(max_length=20, blank=True, null=True)
     welcome = models.TextField(blank=True, default='')
     description = models.TextField(blank=True)
     start_date = models.DateTimeField(blank=True, null=True)
     end_date = models.DateTimeField(blank=True, null=True)
     logistics = models.TextField(blank=True)
+    banner_image = models.ImageField(blank=True, null=True)
+    capacity = models.IntegerField(blank=True, null=True)
+    ticket_cost = models.PositiveIntegerField(blank=True, null=True)
 
     # Hotel information
-    hotel = models.CharField(max_length=30, blank=True)
+    hotel = models.CharField(max_length=60, blank=True)
     hotel_link = models.URLField(blank=True)
-    hotel_code = models.CharField(max_length=30, blank=True, verbose_name='Hotel promotion code')
+    hotel_code = models.CharField(max_length=60, blank=True, verbose_name='Hotel promotion code')
     hotel_deadline = models.DateField(blank=True, null=True)
     
     # Venue information
-    venue = models.CharField(max_length=30, blank=True)
+    venue = models.CharField(max_length=60, blank=True)
     venue_address = models.CharField(max_length=140, blank=True)
+    city = models.CharField(max_length=60, blank=True, null=True)
+    state = models.CharField(max_length=2, blank=True, null=True)
     
     # Event components
     ignite = models.BooleanField(blank=True, default=False)
@@ -29,6 +36,7 @@ class Camp(models.Model):
 
     # Google Spreadsheet with invitee information
     spreadsheet_url = models.URLField(blank=True)
+    faq_url = models.URLField(blank=True, null=True)
     
     # MailChimp list name
     mailchimp_list = models.CharField(max_length=140, blank=True)
@@ -42,6 +50,7 @@ class Invitation(models.Model):
         ('Q', 'Invitation not yet sent'),
         ('P', 'Awaiting a response'),
         ('Y', 'Attendance confirmed'),
+        ('I', 'Registration incomplete'),
         ('N', 'Can\'t make it'),
         ('C', 'Had to cancel'),
         ('X', 'No response'),
@@ -62,7 +71,10 @@ class Invitation(models.Model):
     plus_one = models.BooleanField(default=False)
     inviter = models.ForeignKey('self', blank=True, null=True)
     expires = models.DateField(blank=True, null=True)
+    custom_message = models.TextField(blank=True, null=True)
     has_paid = models.BooleanField(default=False)
+    special_cost = models.IntegerField(blank=True, null=True)
+    nominated_by = models.CharField(max_length=60, blank=True, null=True)
     
     # User-specific metadata
     user = models.ForeignKey(User)
@@ -104,6 +116,12 @@ class Invitation(models.Model):
             return True
         else:
             return False
+    
+    def price(self):
+        if self.special_cost:
+            return self.special_cost
+        else:
+            return self.camp.ticket_cost
     
     @models.permalink
     def get_absolute_url(self):

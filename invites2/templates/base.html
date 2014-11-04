@@ -52,6 +52,7 @@
 				<div class="nav-mod">
 					<div class="nav-content-mod">
 						<div class="nav-section-1">
+                            {% block nav1 %}
 							<ul class="nav-link-mod">
 								<li class="nav-link">
 									<a href="http://sparkcamp.com/camps">Camps</a>	
@@ -60,6 +61,7 @@
 									<a href="http://sparkcamp.com/about">About</a>
 								</li>	
 							</ul>	
+                            {% endblock nav1 %}
 						</div> <!-- /.nav-section-1 -->	
 						<a href="http://sparkcamp.com/"><img class="nav-logo-m" src="{{ STATIC_URL }}_img/nav-logo-m@2x.png"/ rel="nav-logo"></a>
 						<a href="http://sparkcamp.com/" class="nav-logo-mod">
@@ -67,6 +69,7 @@
 						</a>
 				
 						<div class="nav-section-2">
+                            {% block nav2 %}
 							<ul class="nav-link-mod">
 								<li class="nav-link">
 									<a href="http://sparkcamp.com/team">Team</a>	
@@ -75,6 +78,7 @@
 									<a href="http://sparkcamp.com/news">News</a>
 								</li>	
 							</ul>	
+                            {% endblock nav2 %}
 						</div> <!-- /.nav-section-2 -->				
 					</div> <!-- /.nav-content-mod -->	
 				</div> <!-- /.nav-mod -->		
@@ -83,6 +87,7 @@
 			<header class="m-nav">
 				<div class="m-nav-mod">
 					<ul class="m-nav-list">
+                        {% block m-nav %}
 						<li class="m-nav-item">
 							<a href="http://sparkcamp.com/camps">Camps</a>	
 						</li>
@@ -94,7 +99,7 @@
 						</li>
 						<li class="m-nav-item">
 							<a href="http://sparkcamp.com/news">News</a>	
-						</li>																								
+						</li>																					                           {% endblock m-nav %}			
 					</ul>	
 				</div> <!-- /.m-nav-mod -->
 			</header> <!-- /.m-nav -->
@@ -104,8 +109,8 @@
             {% block columns %}
             
             <div class="page-mod-6535">
-                {% block leftcolumn %}
                 <div class="ui-block-1">
+                {% block leftcolumn %}
                     {% block overline %}{% endblock overline %}
                     <h1 class="h1">{% block pageheader %}Spark Camp Invitation Management{% endblock pageheader %}</h1>
                     
@@ -115,12 +120,11 @@
                       
                     {% endblock content %}
 
-
-                </div> <!-- /.ui-block-1 -->
                 {% endblock leftcolumn %}
+                </div> <!-- /.ui-block-1 -->
 
-                {% block rightcolumn %}
                 <div class="ui-block-2">
+                {% block rightcolumn %}
                     {% if user.is_authenticated %}
                     <div class="sidebar-mod">
                     <h4 class="h5">Admin functions</h4>
@@ -134,8 +138,8 @@
                     {% endif %}
                     {% block extranav %}{% endblock extranav %}
                     {% block anonnav %}{% endblock anonnav %}
-                </div> <!-- /.ui-block-2 -->
                 {% endblock rightcolumn %}
+                </div> <!-- /.ui-block-2 -->
             </div> <!-- /.page-mod -->
         {% endblock columns %}
         </div> <!-- /#main -->	

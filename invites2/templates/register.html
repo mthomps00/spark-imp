@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+
+    {% block nav1 %}
+    <ul class="nav-link-mod">
+        <li class="nav-link">
+            <a href="#">Attend</a>	
+        </li>	
+        <li class="nav-link">
+            <a href="#">About</a>
+        </li>	
+    </ul>	
+    {% endblock nav1 %}
+
+    {% block nav2 %}
+    <ul class="nav-link-mod">
+        <li class="nav-link">
+            <a href="#">FAQ</a>	
+        </li>	
+        <li class="nav-link">
+            <a href="#">Team</a>
+        </li>	
+    </ul>	
+    {% endblock nav2 %}
+
+
+{% block title %}{% if invitation.camp.display_name %}{{ invitation.camp.display_name }}{% else %}{{ invitation.camp.theme }}{% endif %}{% endblock title %}
+
+{% block leftcolumn %}
+<h1 class="h1">
+    {% if invitation.camp.display_name %}
+        {{ invitation.camp.display_name }}
+    {% else %}
+        {{ invitation.camp.theme }}
+    {% endif %}
+</h1>
+
+<em class="post-script">
+    {% if invitation.camp.start_date and invitation.camp.end_date %}{{ invitation.camp.start_date|date:"F j" }}-{{ invitation.camp.end_date|date:"j, Y" }}{% endif %}
+    {% if invitation.camp.venue %} | {{ invitation.camp.venue}} {% endif %}
+    {% if invitation.camp.city and invitation.camp.state %} | {{ invitation.camp.city }}, {{ invitation.camp.state }}{% endif %}
+</em>
+
+{% autoescape off %}
+<p class="text-med">{{ invitation.camp.welcome }}</p>
+{% endautoescape %}
+
+
+<p class="text">&nbsp;</p>
+<p class="text">&nbsp;</p>
+<p class="text">&nbsp;</p>
+{% endblock leftcolumn %}
+
+{% block rightcolumn %}
+<h4 class="h4">Attend</h4>
+<form action="{% url 'receive_payment' invitation.rand_id %}" method="POST">
+    {% csrf_token %}
+    <script
+        src="https://checkout.stripe.com/checkout.js" class="stripe-button"
+        data-key="{{ invitation.key }}"
+        data-amount="{{ invitation.cost }}"
+        data-name="{{ invitation.camp.theme }}"
+        data-description="Reserve a spot"
+        data-label="Reserve your spot"
+    </script>
+    <input type="hidden" name="rand_id" value="{{ invitation.rand_id }}" />
+</form>
+
+{% endblock rightcolumn %}
