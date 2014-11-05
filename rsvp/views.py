@@ -365,7 +365,7 @@ def registration_confirm(request, rand_id):
             profile.email = profileform.cleaned_data['email']
             profile.dietary = profileform.cleaned_data['dietary']
             user.email = profileform.cleaned_data['email']
-            invitation.status = 'C'
+            invitation.status = 'Y'
             profile.save()
             user.save()
             invitation.save()
