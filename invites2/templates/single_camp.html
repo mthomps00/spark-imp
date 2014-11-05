@@ -51,7 +51,7 @@
                 </thead>                        
             {% for invite in invitations %}
                 <tr>
-                    <td><a href="{% url 'invitation' invite.rand_id %}">{{ invite.rand_id }}</a></td>
+                    <td><a href="{% url 'route_registration' invite.rand_id %}">{{ invite.rand_id }}</a></td>
                     <td>{{ invite.user.first_name }}</td>
                     <td>{{ invite.user.last_name }}</td>
                     <td>{{ invite.status }}</td>
