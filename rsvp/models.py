@@ -82,13 +82,6 @@ class Invitation(models.Model):
     rand_id = models.CharField(max_length=8, unique=True, editable=False)
     
     # Logistical information
-    dietary = models.CharField(
-        max_length=140,
-        blank=True,
-        default='None',
-        help_text='Please note any dietary preferences here.',
-        verbose_name='Dietary needs'
-    )
     arrival_time = models.DateTimeField(
         blank=True,
         null=True,
@@ -249,7 +242,11 @@ class PlusOne(models.Model):
 
 class SparkProfile(models.Model):
     user = models.OneToOneField(User)
-    has_headshot = models.BooleanField(default=False)
+    has_headshot = models.BooleanField(
+        default=False,
+        verbose_name='Headshot sent',
+        help_text='Check this if you\'ve sent your headshot to sparkcampphotos@gmail.com.'
+    )
     bio = models.CharField(
         max_length=140,
         blank=True,

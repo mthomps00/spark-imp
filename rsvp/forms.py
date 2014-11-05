@@ -31,12 +31,12 @@ class SessionForm(ModelForm):
 class InviteDetailForm(ModelForm):
     class Meta:
         model = Invitation
-        fields = ('dietary', 'arrival_time', 'departure_time', 'hotel_booked')
+        fields = ('arrival_time', 'departure_time', 'hotel_booked')
         
 class SparkProfileForm(ModelForm):
     class Meta:
         model = SparkProfile
-        fields = ('job_title', 'employer', 'bio', 'phone', 'twitter', 'url', 'email', 'secondary_email', 'dietary')
+        fields = ('job_title', 'employer', 'bio', 'phone', 'twitter', 'url', 'email', 'secondary_email', 'dietary', 'has_headshot')
 
 # Custom forms
 class ResponseForm(forms.Form):

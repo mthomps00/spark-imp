@@ -6,9 +6,29 @@
 
 {% block content %}
 
-<h1 class="h1">We're so glad you're coming. Now, <span class="orange">complete your registration</span>.</h1>
+{% if error %}
+    <h1 class="h1">We're sorry, there was an error with your payment.</h1>
+    <p class="text-med">{{ error.message }} Please double-check your information and try again. If you experience any more trouble, email us at <a href="mailto:rsvp@sparkcamp.com" class="orange">rsvp@sparkcamp.com</a>.</p>
+<form action="{% url 'receive_payment' invitation.rand_id %}" method="POST">
+    {% csrf_token %}
+    <script
+        src="https://checkout.stripe.com/checkout.js" class="stripe-button"
+        data-key="{{ invitation.key }}"
+        data-amount="{{ invitation.cost }}"
+        data-name="{{ invitation.camp.theme }}"
+        data-description="Try again"
+        data-label="Try again"
+    </script>
+    <input type="hidden" name="rand_id" value="{{ invitation.rand_id }}" />
+</form>
+{% else %}
+    
+    <h1 class="h1">Yay, your spot is reserved!</h1>
+    <h1 class="h1 orange">Now complete your registration.</h1>
+    {% if not invitation.user.sparkprofile.has_headshot %}<p class="text-med">We don't yet have a headshot on file for you. Please email a clear, hi-res photo of yourself to <a href="mailto:sparkcampphotos@gmail.com" class="orange">sparkcampphotos@gmail.com</a>.</p>{% endif %}
+    <p class="text-med">Please make sure all the following information we have on file for you is correct:</p>
 
-<p class="text-med">Make sure all the following information we have on file for you is correct:</p>
+{% endif %}
 
 <p class="text">&nbsp;</p>
 <p class="text">&nbsp;</p>
