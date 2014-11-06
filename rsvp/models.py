@@ -15,6 +15,7 @@ class Camp(models.Model):
     banner_image = models.ImageField(blank=True, null=True)
     capacity = models.IntegerField(blank=True, null=True)
     ticket_cost = models.PositiveIntegerField(blank=True, null=True)
+    cancel_by = models.DateTimeField(blank=True, null=True)
 
     # Hotel information
     hotel = models.CharField(max_length=60, blank=True)
@@ -118,7 +119,7 @@ class Invitation(models.Model):
     
     @models.permalink
     def get_absolute_url(self):
-        return ('invitation', [str(self.rand_id)])
+        return ('route_registration', [str(self.rand_id)])
             
     class Meta:
         unique_together = ('user', 'camp')

@@ -1,17 +1,20 @@
-{% extends "single_column.html" %}
+{% extends "registration_complete.html" %}
 
-{% block title %}Spark Camp: Reserve a spot{% endblock %}
-{% block pageheader %}Reserve your spot at Spark Camp{% endblock %}
+{% block title %}{{ invitation.camp.display_name }}: Update your information{% endblock %}
 
-
-{% block content %}
-
+{% block leftcolumn %}
+<p class="text"><a href="{% url 'route_registration' rand_id=invitation.rand_id %}" class="url orange">⬅ Back to invitation</a></p>
 <h3 class="overline-alt">{{ invitation.camp.display_name }}</h3>
+
+{% if invitation.status == 'I' %}
 <h1 class="h1">Your spot is reserved.</h1>
 <h1 class="h1 orange">Now complete your registration.</h1>
+{% elif invitation.status == 'Y' %}
+<h1 class="h1">Your attendance is confirmed.</h1>
+<h1 class="h1 orange">Update your information here.</h1>
+{% endif %}
 
-    {% if not invitation.user.sparkprofile.has_headshot %}<p class="text-med">We don't yet have a headshot on file for you. Please email a clear, hi-res photo of yourself to <a href="mailto:sparkcampphotos@gmail.com" class="orange">sparkcampphotos@gmail.com</a>.</p>{% endif %}
-    <p class="text-med">Please make sure all the following information we have on file for you is correct:</p>
+    <p class="text-med">{% if not invitation.user.sparkprofile.has_headshot %}We don't yet have a headshot on file for you. Please email a clear, hi-res photo of yourself to <a href="mailto:sparkcampphotos@gmail.com" class="orange">sparkcampphotos@gmail.com</a>, and check the 'Headshot sent' box below.{% endif %}{% if invitation.user.sparkprofile.bio == '' %} We're missing a bio for you; please submit one below.{% endif %} Here's the information we have for you, please make sure it's correct:</p>
     <form class="well" action="{% url 'registration_update' rand_id=invitation.rand_id %}" method="post">{% csrf_token %}
     <table class="table table-basic">
     {{ profileform.as_table }}
@@ -23,4 +26,4 @@
 <p class="text">&nbsp;</p>
 <p class="text">&nbsp;</p>
 <p class="text">&nbsp;</p>
-{% endblock %}
+{% endblock leftcolumn %}

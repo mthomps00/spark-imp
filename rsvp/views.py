@@ -270,7 +270,7 @@ def mailsync(request, camptheme):
     return render_to_response('mailsync.html', variables, context_instance=RequestContext(request))
 
 ##########
-# RSVP views
+# Registration views
 ##########
 
 def route_registration(request, rand_id):
@@ -279,16 +279,19 @@ def route_registration(request, rand_id):
     if invitation.status == 'P' or invitation.status == 'Q':
         return redirect('register', rand_id=rand_id)
     if invitation.status == 'I':
-        return redirect('registration_confirm', rand_id=rand_id)
+        return redirect('registration_complete', rand_id=rand_id)
     if invitation.status == 'N' or invitation.status == 'C':
-        return redirect('registration_resurrect', rand_id=rand_id)
+        return redirect('registration_restore', rand_id=rand_id)
     if invitation.status == 'Y':
-        return redirect('registration_update', rand_id=rand_id)
+        return redirect('registered', rand_id=rand_id)
     else:
         return redirect('register', rand_id=rand_id)
 
 def register(request, rand_id):
     invitation = get_object_or_404(Invitation, rand_id=rand_id)
+    
+    if invitation.status == 'I' or invitation.status == 'Y':
+        return redirect('registration_complete', rand_id=rand_id)
     
     if invitation.camp.paid:
         import stripe
@@ -348,7 +351,54 @@ def receive_payment(request, rand_id):
     }
     return render_to_response('receive_payment.html', variables, context_instance=RequestContext(request))
 
-def registration_confirm(request, rand_id):
+def registration_complete(request, rand_id):
+    invitation = get_object_or_404(Invitation, rand_id=rand_id)
+    user = invitation.user
+    profile = SparkProfile.objects.get(user=user)
+    
+    if request.method == 'POST':
+        profileform = SparkProfileForm(request.POST, instance=profile)
+        if profileform.is_valid():
+            profile.bio = profileform.cleaned_data['bio']
+            profile.job_title = profileform.cleaned_data['job_title']
+            profile.employer = profileform.cleaned_data['employer']
+            profile.url = profileform.cleaned_data['url']
+            profile.twitter = profileform.cleaned_data['twitter']
+            profile.phone = profileform.cleaned_data['phone']
+            profile.email = profileform.cleaned_data['email']
+            profile.dietary = profileform.cleaned_data['dietary']
+            profile.has_headshot = profileform.cleaned_data['has_headshot']
+            user.email = profileform.cleaned_data['email']
+            if profile.bio != '' and profile.has_headshot == True:
+                invitation.status = 'Y'
+                profile.save()
+                user.save()
+                invitation.save()
+                confirmation_message = '''
+                %s, your %s registration is now complete! You will soon receive a confirmation email from us, which includes travel and hotel recommendations.
+                ''' % (user.first_name, invitation.camp.display_name)
+                variables = {
+                    'invitation': invitation,
+                    'confirmation_message': confirmation_message,
+                }
+                return render_to_response('registered.html', variables, context_instance=RequestContext(request))
+            else:
+                invitation.status = 'I'
+                profile.save()
+                user.save()
+                invitation.save()
+                
+    else:
+        profileform = SparkProfileForm(instance=profile)
+    
+    variables = {
+        'invitation': invitation,
+        'profile': profile,
+        'profileform': profileform,
+    }
+    return render_to_response('registration_complete.html', variables, context_instance=RequestContext(request))
+
+def registration_update(request, rand_id):
     invitation = get_object_or_404(Invitation, rand_id=rand_id)
     user = invitation.user
     profile = SparkProfile.objects.get(user=user)
@@ -369,39 +419,7 @@ def registration_confirm(request, rand_id):
             profile.save()
             user.save()
             invitation.save()
-            return HttpResponseRedirect('/register/%s' % invitation.rand_id)
-    else:
-        profileform = SparkProfileForm(instance=profile)
-    
-    variables = {
-        'invitation': invitation,
-        'profile': profile,
-        'profileform': profileform,
-    }
-    return render_to_response('registration_confirm.html', variables, context_instance=RequestContext(request))
-
-def registration_update(request, rand_id):
-    invitation = get_object_or_404(Invitation, rand_id=rand_id)
-    user = invitation.user
-    profile = SparkProfile.objects.get(user=user)
-    
-    if request.method == 'POST':
-        profileform = SparkProfileForm(request.POST, instance=profile)
-        if profileform.is_valid():
-            profile.bio = profileform.cleaned_data['bio']
-            profile.job_title = profileform.cleaned_data['job_title']
-            profile.employer = profileform.cleaned_data['employer']
-            profile.url = profileform.cleaned_data['url']
-            profile.twitter = profileform.cleaned_data['twitter']
-            profile.phone = profileform.cleaned_data['phone']
-            profile.email = profileform.cleaned_data['email']
-            profile.dietary = profileform.cleaned_data['dietary']
-            user.email = profileform.cleaned_data['email']
-            invitation.status = 'C'
-            profile.save()
-            user.save()
-            invitation.save()
-            return HttpResponseRedirect('/register/%s' % invitation.rand_id)
+            return redirect('registered', rand_id=invitation.rand_id)
     else:
         profileform = SparkProfileForm(instance=profile)
     
@@ -412,13 +430,79 @@ def registration_update(request, rand_id):
     }
     return render_to_response('registration_update.html', variables, context_instance=RequestContext(request))
 
-def registration_resurrect(request, rand_id):
+def registered(request, rand_id, confirmation_message=False):
     invitation = get_object_or_404(Invitation, rand_id=rand_id)
     
     variables = {
         'invitation': invitation,
+        'confirmation_message': confirmation_message,
     }
-    return render_to_response('registration_resurrect.html', variables, context_instance=RequestContext(request))
+    return render_to_response('registered.html', variables, context_instance=RequestContext(request))
+
+def registration_cancel(request, rand_id, confirm_cancel=False):
+    invitation = get_object_or_404(Invitation, rand_id=rand_id)
+    cancellation_message = False
+    
+    if request.method == 'POST':
+        if confirm_cancel == True:
+            invitation.status = 'C'
+            cancellation_message = '''
+We're sorry to hear you won't be able to make it to Spark Camp. Do let us know if your plans change.
+            '''
+            invitation.save()
+    
+    variables = {
+        'invitation': invitation,
+        'cancellation_message': cancellation_message,
+    }
+    return render_to_response('registration_cancel.html', variables, context_instance=RequestContext(request))
+
+def registration_restore(request, rand_id, confirm_restore=False):
+    invitation = get_object_or_404(Invitation, rand_id=rand_id)
+    confirmation_message = False
+    
+    if request.method == 'POST':
+        if confirm_restore == True:
+            invitation.status = 'W'
+            confirmation_message = '''
+Glad to hear you might be able to make it to Spark Camp! We've got you on the waitlist, and will update you if we can accommodate your request.            
+            '''
+            invitation.save()
+    
+    variables = {
+        'invitation': invitation,
+        'confirmation_message': confirmation_message,
+    }
+    return render_to_response('registration_restore.html', variables, context_instance=RequestContext(request))
+
+def register_stipend(request, rand_id):
+    invitation = get_object_or_404(Invitation, rand_id=rand_id)
+    url = invitation.get_absolute_url()
+    stipend, created = Stipend.objects.get_or_create(invitation=invitation)
+
+    if request.method == 'POST':
+        form = StipendForm(request.POST, instance=stipend)
+        if form.is_valid():
+            stipend.cost_estimate = form.cleaned_data['cost_estimate']
+            stipend.employer_subsidized = form.cleaned_data['employer_subsidized']
+            stipend.employer_percentage = form.cleaned_data['employer_percentage']
+            stipend.invitee_percentage = form.cleaned_data['invitee_percentage']
+            stipend.details = form.cleaned_data['details']
+            stipend.save()
+            invitation.status = 'Y'
+            invitation.user.save()
+            invitation.save()
+            return HttpResponseRedirect('/register/%s' % invitation.rand_id)
+    else:
+        form = StipendForm(instance=stipend)
+    
+    variables = {
+        'invitation': invitation,
+        'form': form,
+        'stipend': stipend,
+    }
+    
+    return render_to_response('register_stipend.html', variables, context_instance=RequestContext(request))
 
 ##########
 # Deprecated invitation views

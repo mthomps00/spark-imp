@@ -1,10 +1,10 @@
-{% extends "single_column.html" %}
+{% extends "registration_complete.html" %}
 
 {% block title %}Spark Camp: Payment confirmed{% endblock %}
 {% block pageheader %}We're so glad you're coming. Now, <span class="orange">complete your registration.</span>{% endblock %}
 
 
-{% block content %}
+{% block leftcolumn %}
 
 {% if error %}
     <h1 class="h1">We're sorry, there was an error with your payment.</h1>
@@ -33,4 +33,11 @@
 <p class="text">&nbsp;</p>
 <p class="text">&nbsp;</p>
 <p class="text">&nbsp;</p>
-{% endblock %}
+{% endblock leftcolumn %}
+
+{% block rightcolumn %}
+<h4 class="h4">Can't make it?</h4>
+<p class="text">If you won't be able to make it to Spark Camp after all, please let us know as early as possible. After XXXXX, most of the costs of your attendance have already been incurred, and we can only issue a partial refund.</p>
+<input type="submit" class="submit btn-large" value="Cancel my ticket" />
+
+{% endblock rightcolumn %}
