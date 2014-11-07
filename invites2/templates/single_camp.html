@@ -20,20 +20,20 @@
         {% if invitations %}
             <div class="tile-mod-4">
                 <div class="media-block">
-                    <h3 class="h3 orange">{{ confirmed|length }}</h3>
+                    <h3 class="h3"><span class="orange">{{ confirmed|length }}</span> / {{ invitations|length }}</h3>
                     <p class="text-med">confirmed</p>
                 </div>
                 <div class="media-block">
-                    <h3 class="h3 orange">{{ percent_women }}%</h3>
-                    <p class="text-med">women</p>
+                    <h3 class="h3"><span class="orange">{{ percent_women }}</span> / {{ percent_all_women }}</h3>
+                    <p class="text-med">% women</p>
                 </div>
                 <div class="media-block">
-                    <h3 class="h3 orange">{{ percent_poc }}%</h3>
-                    <p class="text-med">people of color</p>
+                    <h3 class="h3"><span class="orange">{{ percent_poc }}</span> / {{ percent_all_poc }}</h3>
+                    <p class="text-med">% POC</p>
                 </div>
                 <div class="media-block">
-                    <h3 class="h3 orange">{{ percent_journos }}%</h3>
-                    <p class="text-med">journalists</p>
+                    <h3 class="h3"><span class="orange">{{ percent_journos }}</span> / {{ percent_all_journos }}</h3>
+                    <p class="text-med">% journalists</p>
                 </div>
             </div>
             <table class="table table-basic" id="invites-table">

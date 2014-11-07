@@ -71,6 +71,9 @@ def single_camp(request, camptheme):
     confirmed_pocs = confirmed.filter(user__sparkprofile__poc=True)
     confirmed_women = confirmed.filter(user__sparkprofile__woman=True)
     confirmed_journos = confirmed.filter(user__sparkprofile__journo=True)
+    invitee_pocs = invitations.filter(user__sparkprofile__poc=True)
+    invitee_women = invitations.filter(user__sparkprofile__woman=True)
+    invitee_journos = invitations.filter(user__sparkprofile__journo=True)
     
     def percent(part, whole):
         denominator = float(len(whole))
@@ -82,6 +85,9 @@ def single_camp(request, camptheme):
     percent_poc = percent(confirmed_pocs, confirmed)
     percent_women = percent(confirmed_women, confirmed)
     percent_journos = percent(confirmed_journos, confirmed)
+    percent_all_poc = percent(invitee_pocs, invitations)
+    percent_all_women = percent(invitee_women, invitations)
+    percent_all_journos = percent(invitee_journos, invitations)
     
     variables = {
         'camp': camp,
@@ -90,6 +96,9 @@ def single_camp(request, camptheme):
         'percent_poc': percent_poc,
         'percent_women': percent_women,
         'percent_journos': percent_journos,
+        'percent_all_poc': percent_all_poc,
+        'percent_all_women': percent_all_women,
+        'percent_all_journos': percent_all_journos,
     }
     return render_to_response('single_camp.html', variables, context_instance=RequestContext(request))
 
@@ -306,6 +315,8 @@ def register(request, rand_id):
 
 def receive_payment(request, rand_id):
     invitation = get_object_or_404(Invitation, rand_id=rand_id)
+    profile = invitation.user.sparkprofile
+    profileform = SparkProfileForm(instance=profile)
 
     if request.method == 'POST':
         import stripe
@@ -348,6 +359,7 @@ def receive_payment(request, rand_id):
         'token': token,
         'email': email,
         'error': error,
+        'profileform': profileform,
     }
     return render_to_response('receive_payment.html', variables, context_instance=RequestContext(request))
 
@@ -402,6 +414,7 @@ def registration_update(request, rand_id):
     invitation = get_object_or_404(Invitation, rand_id=rand_id)
     user = invitation.user
     profile = SparkProfile.objects.get(user=user)
+    update = True
     
     if request.method == 'POST':
         profileform = SparkProfileForm(request.POST, instance=profile)
@@ -414,6 +427,7 @@ def registration_update(request, rand_id):
             profile.phone = profileform.cleaned_data['phone']
             profile.email = profileform.cleaned_data['email']
             profile.dietary = profileform.cleaned_data['dietary']
+            profile.has_headshot = profileform.cleaned_data['has_headshot']
             user.email = profileform.cleaned_data['email']
             invitation.status = 'Y'
             profile.save()
@@ -427,15 +441,72 @@ def registration_update(request, rand_id):
         'invitation': invitation,
         'profile': profile,
         'profileform': profileform,
+        'update': update,
     }
-    return render_to_response('registration_update.html', variables, context_instance=RequestContext(request))
+    return render_to_response('registration_complete.html', variables, context_instance=RequestContext(request))
 
 def registered(request, rand_id, confirmation_message=False):
     invitation = get_object_or_404(Invitation, rand_id=rand_id)
+    invitation.pretty_status = invitation.get_status_display()
+    user = invitation.user
+    profile = invitation.user.sparkprofile
+    confirmed = Invitation.objects.filter(camp=invitation.camp).filter(status='Y').order_by('user__last_name')
     
+    # Find roommate requests
+    if invitation.roommate_set.all():
+        roommates = invitation.roommate_set.all()
+        roommate = roommates[0]
+        
+        # Find potential roommate matches
+        roommate.potentials = []
+        
+        for potential in Roommate.objects.exclude(invitation=invitation):
+            if (potential.invitation.camp == invitation.camp):
+                if (roommate.roommate == 'A') or (potential.sex == roommate.roommate):
+                    if (potential.roommate == 'A') or (roommate.sex == potential.roommate):
+                        roommate.potentials.append(potential)
+        
+        roommate.sex = roommate.get_sex_display()
+        roommate.roommate = roommate.get_roommate_display()
+        
+    else:
+        roommate = False
+    
+    # Find stipend requests
+    if invitation.stipend_set.all():
+        stipends = invitation.stipend_set.all()
+        stipend = stipends[0]
+        stipend.jobhelp = stipend.get_employer_subsidized_display()
+    else:
+        stipend = False
+        
+    # Find Ignite sign-ups
+    if invitation.ignite_set.all():
+        ignites = invitation.ignite_set.all()
+        ignite = ignites[0]
+        ignite.experience = ignite.get_experience_display()
+    else:
+        ignite = False
+    
+    # Find session proposals
+    if invitation.session_set.all():
+        sessions = invitation.session_set.all()
+        session = sessions[0]
+    else:
+        session = False
+    
+    invitation.pretty_status = invitation.get_status_display()
+
     variables = {
         'invitation': invitation,
+        'confirmed': confirmed,
+        'roommate': roommate,
+        'stipend': stipend,
+        'ignite': ignite,
+        'session': session,
         'confirmation_message': confirmation_message,
+        'profile': profile,
+        'user': user,
     }
     return render_to_response('registered.html', variables, context_instance=RequestContext(request))
 
@@ -503,6 +574,71 @@ def register_stipend(request, rand_id):
     }
     
     return render_to_response('register_stipend.html', variables, context_instance=RequestContext(request))
+
+def register_related(request, rand_id, main_object):
+    invitation = get_object_or_404(Invitation, rand_id=rand_id)
+    url = invitation.get_absolute_url()
+    main_object = eval(main_object)
+    try:
+        object = main_object.objects.get(invitation=invitation)
+    except main_object.DoesNotExist:
+        object = main_object(invitation=invitation)
+    
+    properties = {
+        'Roommate': ( 'sex', 'roommate', 'more', ),
+        'Ignite': ( 'title', 'experience', 'description', ),
+        'Session': ( 'title', 'description', ),
+    }
+    
+    local_dict = properties[main_object.__name__]
+    
+    if request.method == 'POST':
+        form = eval('%sForm(request.POST, instance=object)' % main_object.__name__)
+        if form.is_valid():
+            for item in local_dict:
+                key = compile(item, '', 'exec')
+                object.key = form.cleaned_data[item]
+            object.save()
+            return HttpResponseRedirect(url)
+    else:
+        form = eval('%sForm(instance=object)' % main_object.__name__)
+    
+    variables = {
+        'invitation': invitation,
+        'form': form,
+        'object': object,
+        'main_object': main_object.__name__,
+        'properties': properties,
+        'rand_id': rand_id,
+    }
+    
+    return render_to_response('register_related.html', variables, context_instance=RequestContext(request))
+
+def register_related_delete(request, rand_id, main_object):
+    invitation = get_object_or_404(Invitation, rand_id=rand_id)
+    url = invitation.get_absolute_url()
+    main_object = eval(main_object)
+    try:
+        object = main_object.objects.get(invitation=invitation)
+    except main_object.DoesNotExist:
+        raise Http404(u'Could not find this %s.' % main_object)
+    
+    variables = {
+        'invitation': invitation,
+        'object': object,
+        'main_object': main_object.__name__,
+        'rand_id': rand_id,
+        'url': url,
+    }
+    
+    return render_to_response('register_related_delete.html', variables, context_instance=RequestContext(request))
+
+def register_confirm_delete(request, main_object, object_id):
+    main_object = eval(main_object)
+    object = get_object_or_404(main_object, id=object_id)
+    url = object.invitation.get_absolute_url()
+    object.delete()
+    return HttpResponseRedirect(url)
 
 ##########
 # Deprecated invitation views

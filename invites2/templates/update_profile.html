@@ -1,0 +1,25 @@
+{% extends 'registration_complete.html' %}
+
+{% block leftcolumn %}
+
+{% block breadcrumb %}
+{% if invitation.status != 'Y' %}<p class="text"><a href="{% url 'route_registration' rand_id=invitation.rand_id %}" class="url orange">⬅ Back to invitation</a></p>{% endif %}
+{% endblock breadcrumb %}
+
+{% block form %}
+        <form class="comment-form form-basic" action="{% url 'update_profile' invitation.rand_id %}" method="post">
+        <h3 class="h3">Profile for {{ invitation.user.first_name }} {{ invitation.user.last_name }}</h3><br />
+        <table class="table table-basic">
+        {% csrf_token %}
+        {{ form.as_table }}
+        </table>
+        <input class="submit btn-large" type="submit" value="submit" />
+        </form>
+{% endblock form %}
+
+<p class="text">&nbsp;</p>
+<p class="text">&nbsp;</p>
+<p class="text">&nbsp;</p>
+
+
+{% endblock leftcolumn %}

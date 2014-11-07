@@ -1,6 +1,9 @@
 {% extends "single_column.html" %}
 
 {% block content %}
+<p class="text"><a href="{% url 'route_registration' rand_id=invitation.rand_id %}" class="url orange">⬅ Back to invitation</a></p>
+
+{% block content %}
 <form class="well" action="{% url 'registration_cancel' rand_id=invitation.rand_id %}" method="post">
     {% csrf_token %}
 <h3 class="h3">Can't make it?</h3><br />

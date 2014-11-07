@@ -25,8 +25,13 @@
     
     <h1 class="h1">Yay, your spot is reserved!</h1>
     <h1 class="h1 orange">Now complete your registration.</h1>
-    {% if not invitation.user.sparkprofile.has_headshot %}<p class="text-med">We don't yet have a headshot on file for you. Please email a clear, hi-res photo of yourself to <a href="mailto:sparkcampphotos@gmail.com" class="orange">sparkcampphotos@gmail.com</a>.</p>{% endif %}
-    <p class="text-med">Please make sure all the following information we have on file for you is correct:</p>
+    <p class="text-med">Here's the information we have on file for you. {% if not invitation.user.sparkprofile.has_headshot %}We don't yet have a headshot; please email a clear, hi-res photo of yourself to <a href="mailto:sparkcampphotos@gmail.com" class="orange">sparkcampphotos@gmail.com</a>, and check the 'Headshot sent' box below.{% endif %}{% if invitation.user.sparkprofile.bio == '' %} We're missing a bio for you; please submit one below.{% endif %} Please make sure everything here is up-to-date:</p>
+    <form class="well" action="{% url 'registration_complete' rand_id=invitation.rand_id %}" method="post">{% csrf_token %}
+    <table class="table table-basic">
+    {{ profileform.as_table }}
+    </table>
+        <input class="submit btn-large" type="submit" value="Submit" />
+    </form>
 
 {% endif %}
 

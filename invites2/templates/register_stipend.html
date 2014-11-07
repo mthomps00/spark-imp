@@ -2,6 +2,8 @@
 
 {% block content %}
 <p class="text"><a href="{% url 'route_registration' rand_id=invitation.rand_id %}" class="url orange">⬅ Back to invitation</a></p>
+
+{% block form %}
 <form class="well" action="{% url 'register_stipend' rand_id=invitation.rand_id %}" method="post">
     {% csrf_token %}
 <h3 class="h3">Request a stipend</h3><br />
@@ -11,4 +13,6 @@
 </table>
     <input class="submit btn-large" type="submit" value="Submit" />
 </form>
+{% endblock form %}
+
 {% endblock content %}

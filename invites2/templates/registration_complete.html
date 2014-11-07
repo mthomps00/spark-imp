@@ -3,25 +3,39 @@
 {% block title %}{{ invitation.camp.display_name }}: Reserve your place{% endblock %}
 
 {% block leftcolumn %}
-<p class="text"><a href="{% url 'route_registration' rand_id=invitation.rand_id %}" class="url orange">⬅ Back to invitation</a></p>
+
+{% block breadcrumb %}
+{% if invitation.status != 'Y' %}<p class="text"><a href="{% url 'route_registration' rand_id=invitation.rand_id %}" class="url orange">⬅ Back to invitation</a></p>{% endif %}
+{% endblock breadcrumb %}
+
+{% block update_header %}
 <h3 class="overline-alt">{{ invitation.camp.display_name }}</h3>
 
-{% if invitation.status == 'I' %}
+{% if invitation.status == 'I' and not update %}
 <h1 class="h1">Your spot is reserved.</h1>
 <h1 class="h1 orange">Now complete your registration.</h1>
-{% elif invitation.status == 'Y' %}
+{% elif invitation.status == 'Y' and not update %}
 <h1 class="h1">Your attendance is confirmed.</h1>
 <h1 class="h1 orange">Update your information here.</h1>
+{% elif update %}
+<h1 class="h1">Update your information here.</h1>
 {% endif %}
+{% endblock update_header %}
 
-    <p class="text-med">{% if not invitation.user.sparkprofile.has_headshot %}We don't yet have a headshot on file for you. Please email a clear, hi-res photo of yourself to <a href="mailto:sparkcampphotos@gmail.com" class="orange">sparkcampphotos@gmail.com</a>, and check the 'Headshot sent' box below.{% endif %}{% if invitation.user.sparkprofile.bio == '' %} We're missing a bio for you; please submit one below.{% endif %} Here's the information we have for you, please make sure it's correct:</p>
-    <form class="well" action="{% url 'registration_complete' rand_id=invitation.rand_id %}" method="post">{% csrf_token %}
+{% block content %}
+    <p class="text-med">Here's the information we have on file for you. {% if not invitation.user.sparkprofile.has_headshot %}We don't yet have a headshot; please email a clear, hi-res photo of yourself to <a href="mailto:sparkcampphotos@gmail.com" class="orange">sparkcampphotos@gmail.com</a>, and check the 'Headshot sent' box below.{% endif %}{% if invitation.user.sparkprofile.bio == '' %} We're missing a bio for you; please submit one below.{% endif %} Please make sure everything here is up-to-date:</p>
+     {% if not update %}
+    <form class="well" action="{% url 'registration_complete' rand_id=invitation.rand_id %}" method="post">
+    {% else %}
+    <form class="well" action="{% url 'registration_update' rand_id=invitation.rand_id %}" method="post">
+    {% endif %}
+    {% csrf_token %}
     <table class="table table-basic">
     {{ profileform.as_table }}
     </table>
         <input class="submit btn-large" type="submit" value="Submit" />
     </form>
-
+{% endblock content %}
 
 <p class="text">&nbsp;</p>
 <p class="text">&nbsp;</p>

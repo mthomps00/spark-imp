@@ -16,6 +16,7 @@ class Camp(models.Model):
     capacity = models.IntegerField(blank=True, null=True)
     ticket_cost = models.PositiveIntegerField(blank=True, null=True)
     cancel_by = models.DateTimeField(blank=True, null=True)
+    confirmation_email = models.TextField(blank=True, default='')
 
     # Hotel information
     hotel = models.CharField(max_length=60, blank=True)
@@ -75,6 +76,7 @@ class Invitation(models.Model):
     custom_message = models.TextField(blank=True, null=True)
     has_paid = models.BooleanField(default=False)
     special_cost = models.IntegerField(blank=True, null=True)
+    comp_ticket = models.BooleanField(default=False)
     nominated_by = models.CharField(max_length=60, blank=True, null=True)
     
     # User-specific metadata

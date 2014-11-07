@@ -1,0 +1,15 @@
+{% extends "single_column.html" %}
+
+{% block content %}
+<p class="text"><a href="{% url 'route_registration' rand_id=invitation.rand_id %}" class="url orange">⬅ Back to invitation</a></p>
+
+{% block form %}
+<h3 class="h3">{{ main_object }} request cancellation</h3><br />
+<p class="text">Are you sure you want to cancel your request for a {{ main_object|lower }}?</p>
+<div class="btn-group">
+<a class="submit btn-large" href="{% url 'confirm_delete' main_object=main_object object_id=object.id %}">Yes, cancel it</a>
+<a class="submit btn-large" href="{{ url }}">No, take me back</a>
+</div>
+{% endblock form %}
+
+{% endblock content %}
