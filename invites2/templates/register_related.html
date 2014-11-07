@@ -1,0 +1,13 @@
+{% extends "single_column.html" %}
+
+{% block content %}
+<p class="text-med"><a href="{% url 'route_registration' rand_id=rand_id %}" class="url">Back to invitation</a></p>
+<form class="well" action="{% url 'register_related' rand_id=rand_id main_object=main_object %}" method="post">
+    {% csrf_token %}
+<h3 class="h3">{{ main_object }} Form</h3><br />
+<table class="table table-basic">
+{{ form.as_table }}
+</table>
+    <input class="submit btn-large" type="submit" value="Submit" />
+</form>
+{% endblock content %}

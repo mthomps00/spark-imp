@@ -1,0 +1,35 @@
+{% extends "registration_complete.html" %}
+
+{% block title %}{{ invitation.camp.display_name }}: Details{% endblock %}
+
+{% block leftcolumn %}
+
+{% if confirmation_message %}
+    <h1 class="h1">Success!</h1>
+    <p class="text-med">{{ confirmation_message }}</p>
+{% endif %}
+
+<section class="content">
+    <h3 class="overline-alt">{{ invitation.camp.display_name }} Details
+    <h1 class="h1">{{ invitation.user.first_name }} {{ invitation.user.last_name }}</h1>
+    <p class="text-med">{{ invitation.camp.description }}</p>
+</section>
+<section class="content">
+    <h3 class="overline-alt">Logistics</h3>
+    <div class="page-h2">Vital information</div>
+    <p class="text">{{ invitation.camp.logistics }}</p>
+    {% if invitation.camp.venue %}
+    <div class="section-h3">Venue</div>
+    <p class="text">{{ invitation.camp.venue }} ({{ invitation.camp.venue_address }} - {{ invitation.camp.city }}, {{ invitation.camp.state }})
+    {% endif %}
+    {% if invitation.camp.hotel %}
+    <div class="section-h3">Official Hotel</div>
+    <p class="text">{% if invitation.camp.hotel_link %}<a href="{{ invitation.camp.hotel_link }}">{% endif %}{{ invitation.camp.hotel }}{% if invitation.camp.hotel_link %}</a>{% endif %} 
+        {% if invitation.camp.hotel_code %} | Group code: {{ invitation.camp.hotel_code }}{% endif %}
+        {% if invitation.camp.hotel_deadline %} (reserve by {{ invitation.camp.hotel_deadline }}){% endif %}
+    {% endif %}
+
+<p class="text">&nbsp;</p>
+<p class="text">&nbsp;</p>
+<p class="text">&nbsp;</p>
+{% endblock leftcolumn %}

@@ -1,0 +1,10 @@
+{% extends "single_column.html" %}
+
+{% block content %}
+<form class="well" action="{% url 'registration_cancel' rand_id=invitation.rand_id %}" method="post">
+    {% csrf_token %}
+<h3 class="h3">Can't make it?</h3><br />
+    <input class="submit btn-large" type="submit" value="Submit" />
+    <input type="hidden" name="confirm_cancel" value="True" />
+</form>
+{% endblock content %}

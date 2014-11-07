@@ -1,0 +1,14 @@
+{% extends "single_column.html" %}
+
+{% block content %}
+<p class="text"><a href="{% url 'route_registration' rand_id=invitation.rand_id %}" class="url orange">⬅ Back to invitation</a></p>
+<form class="well" action="{% url 'register_stipend' rand_id=invitation.rand_id %}" method="post">
+    {% csrf_token %}
+<h3 class="h3">Request a stipend</h3><br />
+<p class="text-med">We use part of our budget for each event to offer financial assistance to Campers that otherwise wouldn't be able to make it. Please fill out the form below to give us an idea of your travel costs.</p>
+<table class="table table-basic">
+{{ form.as_table }}
+</table>
+    <input class="submit btn-large" type="submit" value="Submit" />
+</form>
+{% endblock content %}
