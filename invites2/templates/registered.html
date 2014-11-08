@@ -7,7 +7,7 @@
 {% if confirmation_message %}
 <div class="post-script-mod">
     <h3 class="overline-alt">Success!</h1>
-    <em class="post-script">{{ confirmation_message }}</em>
+    <em class="post-script">{{ confirmation_message }}</em><br /><br />
 </div>
 {% endif %}
 
@@ -19,7 +19,7 @@
     <div class="overline-alt">About Spark {{ invitation.camp.theme }}</div>
     <div class="page-h2">{{ invitation.camp.start_date|date:"l, F j" }} to {{ invitation.camp.end_date|date:"l, F j, Y" }}</div>
     <p class="text">{{ invitation.camp.description|safe }}</p>
-    <div class="page-h2">Status: <span class="orange">{{ invitation.pretty_status }}</span></div>
+    {% if invitation.status == 'Y' %}<div class="page-h2">Status: <span class="orange">Attendance confirmed</span></div>{% endif %}
 </section>
 <section class="content">
     <div class="overline-alt">Logistics</div>

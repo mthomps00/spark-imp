@@ -44,7 +44,7 @@
 
 {% block rightcolumn %}
 <h4 class="h4">Can't make it?</h4>
-<p class="text">If you won't be able to make it to Spark Camp after all, please let us know as early as possible. After XXXXX, most of the costs of your attendance have already been incurred, and we can only issue a partial refund.</p>
+<p class="text">If you won't be able to make it to Spark Camp after all, please let us know as early as possible.{% if invitation.camp.cancel_by %} After {{ invitation.camp.cancel_by|date:"l, F j" }}, most of the costs of your attendance have already been incurred, and we can only refund half of your initial ticket cost.{% endif %}</p>
 <form action="{% url 'registration_cancel' rand_id=invitation.rand_id %}" method="get">
     {% csrf_token %}
 <input type="submit" class="submit btn-large" value="Cancel my ticket" />

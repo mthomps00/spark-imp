@@ -32,7 +32,6 @@
 {% block rightcolumn %}
 <h4 class="h4">Attend</h4>
 <p class="text">The cost to attend {{ invitation.camp.display_name }} is ${{ invitation.camp.ticket_cost }}.{% if invitation.special_cost %} Your ticket comes at a special discounted rate of ${{ invitation.special_cost }}. {% endif %}{% if invitation.camp.stipends %} If you won't be able to attend without financial assistance, please <a href="{% url 'register_stipend' rand_id=invitation.rand_id %}" class="orange">request a stipend</a>.{% endif %}</p>
-<p class="text">Act now: there are XX of {{ invitation.camp.capacity }} tickets left.</p>
 <form action="{% url 'receive_payment' invitation.rand_id %}" method="POST">
     {% csrf_token %}
     <script
@@ -45,5 +44,7 @@
     </script>
     <input type="hidden" name="rand_id" value="{{ invitation.rand_id }}" />
 </form>
+
+<h4 class="h4 orange"><a href="{{ invitation.camp.faq_url }}">Read the FAQ ➡</a></h4>
 {% endblock rightcolumn %}
 

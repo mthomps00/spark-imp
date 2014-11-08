@@ -1,10 +1,7 @@
 {% extends "single_column.html" %}
 
 {% block content %}
-<form class="well" action="{% url 'registration_restore' rand_id=invitation.rand_id %}" method="post">
-    {% csrf_token %}
 <h3 class="h3">Can you make it after all?</h3><br />
-    <input class="submit btn-large" type="submit" value="Submit" />
-    <input type="hidden" name="confirm_restore" value="True" />
+    <p class="text-med">As far as we know, you won't be able to make it to {{ invitation.camp.display_name }}. But if your plans change and you can make it after all, we'll do our best to accommodate you. Please send a message to rsvp@sparkcamp.com explaining your change of plans and someone will be in touch.</p>
 </form>
 {% endblock content %}

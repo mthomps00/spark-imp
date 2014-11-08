@@ -510,39 +510,34 @@ def registered(request, rand_id, confirmation_message=False):
     }
     return render_to_response('registered.html', variables, context_instance=RequestContext(request))
 
-def registration_cancel(request, rand_id, confirm_cancel=False):
+def registration_cancel(request, rand_id):
     invitation = get_object_or_404(Invitation, rand_id=rand_id)
-    cancellation_message = False
+    today = datetime.date.today()
+    cancel_by = invitation.camp.cancel_by.date()
     
-    if request.method == 'POST':
-        if confirm_cancel == True:
-            invitation.status = 'C'
-            cancellation_message = '''
-We're sorry to hear you won't be able to make it to Spark Camp. Do let us know if your plans change.
-            '''
-            invitation.save()
+    if today > cancel_by:
+        invitation.partial_refund = True
+    else:
+        invitation.partial_refund = False
     
     variables = {
         'invitation': invitation,
-        'cancellation_message': cancellation_message,
     }
     return render_to_response('registration_cancel.html', variables, context_instance=RequestContext(request))
 
-def registration_restore(request, rand_id, confirm_restore=False):
+def registration_confirm_cancel(request, rand_id):
     invitation = get_object_or_404(Invitation, rand_id=rand_id)
-    confirmation_message = False
     
-    if request.method == 'POST':
-        if confirm_restore == True:
-            invitation.status = 'W'
-            confirmation_message = '''
-Glad to hear you might be able to make it to Spark Camp! We've got you on the waitlist, and will update you if we can accommodate your request.            
-            '''
-            invitation.save()
+    invitation.status = 'C'
+    invitation.save()
+    
+    return redirect('registration_restore', rand_id=rand_id)
+
+def registration_restore(request, rand_id):
+    invitation = get_object_or_404(Invitation, rand_id=rand_id)
     
     variables = {
         'invitation': invitation,
-        'confirmation_message': confirmation_message,
     }
     return render_to_response('registration_restore.html', variables, context_instance=RequestContext(request))
 
@@ -560,7 +555,7 @@ def register_stipend(request, rand_id):
             stipend.invitee_percentage = form.cleaned_data['invitee_percentage']
             stipend.details = form.cleaned_data['details']
             stipend.save()
-            invitation.status = 'Y'
+            invitation.status = 'I'
             invitation.user.save()
             invitation.save()
             return HttpResponseRedirect('/register/%s' % invitation.rand_id)

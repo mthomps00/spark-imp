@@ -40,6 +40,7 @@ urlpatterns = patterns('',
     url(r'^register/(?P<rand_id>\d{8})/complete/$', registration_complete, name="registration_complete"),
     url(r'^register/(?P<rand_id>\d{8})/update/$', registration_update, name="registration_update"),
     url(r'^register/(?P<rand_id>\d{8})/cancel/$', registration_cancel, name="registration_cancel"),
+    url(r'^register/(?P<rand_id>\d{8})/cancel/confirm/$', registration_confirm_cancel, name="registration_confirm_cancel"),
     url(r'^register/(?P<rand_id>\d{8})/restore/$', registration_restore, name="registration_restore"),
     url(r'^register/(?P<rand_id>\d{8})/pay/$', receive_payment, name="receive_payment"),
     url(r'^register/(?P<rand_id>\d{8})/stipend/$', register_stipend, name="register_stipend"),
@@ -51,3 +52,10 @@ urlpatterns = patterns('',
     url(r'^logout/$', logout_then_login),
     url(r'^pages/', include('django.contrib.flatpages.urls')),
 )
+
+if settings.DEBUG:
+    urlpatterns += patterns('',
+        url(r'^static/media/(?P<path>.*)$', 'django.views.static.serve', {
+            'document_root': settings.MEDIA_ROOT,
+        }),
+   )
