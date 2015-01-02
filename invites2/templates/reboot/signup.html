@@ -1,0 +1,28 @@
+{% extends "reboot/pay.html" %}
+
+  {% block title %}{{ invitation.camp.display_name }} &endash; {{ main_object }} Sign-Up{% endblock %}
+
+  {% block leftcolumn %}
+  {% if messages %}
+    {% for message in messages %}
+    <div class="alert{% if message.tags %} alert-{{ message.tags }}{% endif %} alert-dismissible" role="alert">
+      <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+      {{ message }}
+    </div>
+    {% endfor %}
+  {% endif %}
+
+    <ol class="breadcrumb">
+      <li><a href="{% url 'details' rand_id=invitation.rand_id %}">Back</a></li>
+      <li class="active">{{ main_object}} Sign-Up</li>
+    </ol>
+
+    <h3>{{ main_object }} Sign-Up</h3>
+    <form action="{% url 'signup' rand_id=rand_id main_object=main_object %}" method="post">
+        {% csrf_token %}
+      <table class="table table-basic">
+      {{ form.as_table }}
+      </table>
+      <input class="btn btn-large" type="submit" value="Submit" />
+    </form>
+  {% endblock leftcolumn %}

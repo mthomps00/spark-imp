@@ -1,0 +1,142 @@
+{% extends "reboot/pay.html" %}
+
+  {% block title %}Spark Camp: Stay tuned!{% endblock %}
+
+  {% block leftcolumn %}
+  {% if messages %}
+    {% for message in messages %}
+    <div class="alert{% if message.tags %} alert-{{ message.tags }}{% endif %} alert-dismissible" role="alert">
+      <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+      {{ message }}
+    </div>
+    {% endfor %}
+  {% endif %}
+
+    {% if invitation.camp.description %}
+    <p class="lead text-muted">{{ invitation.camp.description|safe }}</p>
+    {% endif %}
+
+    <h3>Stay tuned, {{ invitation.user.first_name }}.</h3>
+    <p>We have you on the waitlist for {{ invitation.camp.display_name }}. We'll update you on the status of your ticket as soon as possible. Meanwhile, make sure your information is up-to-date below. <span class="text-warning">Please keep the URL of this page secret.</span></p>
+
+    <hr />
+    <h4>Make sure the following info is accurate. See anything wrong or missing? <a href="{% url 'update' rand_id=invitation.rand_id %}">Update it.</a></h4>
+    <dl class="dl-horizontal">
+
+      <dt>Bio</dt>
+      <dd>
+        {% if invitation.user.sparkprofile.bio %}
+        {{ invitation.user.sparkprofile.bio }}
+        {% else %}
+        <span class="text-muted">Submit a brief bio for yourself, no more than tweet-length.</span>
+        {% endif %}
+      </dd>
+      
+      <dt>Dietary needs</dt>
+      <dd>
+        {% if invitation.user.sparkprofile.dietary %}
+        {{ invitation.user.sparkprofile.dietary }}
+        {% else %}
+        <span class="text-muted">Please let us know of any dietary needs or preferences.</span>
+        {% endif %}
+      </dd>
+      
+      <dt>Email</dt>
+      <dd>
+        {% if invitation.user.email %}
+        {{ invitation.user.email }}
+        {% else %}
+        <span class="text-muted">Please tell us your preferred email address.</span>
+        {% endif %}
+      </dd>
+      
+      <dt>Phone</dt>
+      <dd>
+        {% if invitation.user.sparkprofile.phone %}
+        {{ invitation.user.sparkprofile.phone }}
+        {% else %}
+        <span class="text-muted">Please tell us your best phone number.</span>
+        {% endif %}
+      </dd>
+      
+      <dt>URL</dt>
+      <dd>
+        {% if invitation.user.sparkprofile.url %}
+        {{ invitation.user.sparkprofile.url }}
+        {% else %}
+        <span class="text-muted">Tell us the best URL to find out more about you.</span>
+        {% endif %}
+      </dd>
+      
+      <dt>Twitter handle</dt>
+      <dd>
+        {% if invitation.user.sparkprofile.twitter %}
+        <a href="http://twitter.com/{{ invitation.user.sparkprofile.twitter }}">@{{ invitation.user.sparkprofile.twitter }}</a>
+        {% else %}
+        <span class="text-muted">Tell us your Twitter handle.</span>
+        {% endif %}
+      </dd>
+      
+      <dt>Job title</dt>
+      <dd>
+        {% if invitation.user.sparkprofile.job_title %}
+        {{ invitation.user.sparkprofile.job_title }}
+        {% else %}
+        <span class="text-muted">Tell us your job title.</span>
+        {% endif %}
+      </dd>
+      
+      <dt>Organization</dt>
+      <dd>
+        {% if invitation.user.sparkinvitation.user.sparkprofile.employer %}
+        {{ invitation.user.sparkprofile.employer }}
+        {% else %}
+        <span class="text-muted">Tell us where you work.</span>
+        {% endif %}
+      </dd>
+  {% endblock leftcolumn %}      
+              
+  {% block rightmore %}
+      <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+        
+        {% if invitation.camp.stipends %}
+        <div class="panel panel-default">
+          <div class="panel-heading" role="tab" id="headingOne">
+            <h4 class="panel-title">
+              <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                Request a travel stipend
+                {% if stipend %}&nbsp;<span class="label label-success">Requested</a>{% endif %}
+              </a>
+            </h4>
+          </div>
+          <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+            <div class="panel-body">
+              {% if stipend %}
+                  <p>You've requested a travel stipend, and we hope to be able to accommodate your request. We'll get back to you as soon as we've finalized our attendee list. Meanwhile, be sure the information below is correct.</p>
+                  <dl class="dl-horizontal">
+                    <dt>Cost estimate</dt>
+                    <dd>{{ stipend.cost_estimate }}</dd>
+                    <dt>Employer subsidy</dt>
+                    <dd>{{ stipend.employer_percentage }}%</dd>
+                    <dt>Your contribution</dt>
+                    <dd>{{ stipend.invitee_percentage }}%</dd>
+                    <dt>Other details</dt>
+                    <dd>{{ stipend.details }}</dd>
+                  </dl>
+                  <a class="btn btn-default" href="{% url 'stipend' rand_id=invitation.rand_id %}">Edit this request</a>
+                  <a class="btn btn-default" href="{% url 'register_related_delete' main_object='Stipend' rand_id=invitation.rand_id %}">Cancel this request</a>
+              {% else %}
+                <p>A limited number of partial travel stipends are available to ensure campers can attend regardless of financial situation.</p>
+                <div class="text-center">
+                  <form action="{% url 'stipend' rand_id=invitation.rand_id %}" method="post">
+                    {% csrf_token %}
+                    <input type="submit" class="btn btn-default" value="Request a stipend" />
+                  </form>
+                </div>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+        {% endif %}
+        
+  {% endblock rightmore %}

@@ -1,0 +1,26 @@
+{% extends "reboot/pay.html" %}
+
+  {% block title %}{{ invitation.camp.display_name }} &endash; Cancel {{ main_object }} Sign-Up{% endblock %}
+
+  {% block leftcolumn %}
+  {% if messages %}
+    {% for message in messages %}
+    <div class="alert{% if message.tags %} alert-{{ message.tags }}{% endif %} alert-dismissible" role="alert">
+      <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+      {{ message }}
+    </div>
+    {% endfor %}
+  {% endif %}
+
+    <ol class="breadcrumb">
+      <li><a href="{% url 'details' rand_id=invitation.rand_id %}">Back</a></li>
+      <li class="active">Cancel {{ main_object}} Sign-Up</li>
+    </ol>
+
+    <h3>Cancel {{ main_object }} Sign-Up</h3>
+    <p class="lead">Are you sure you want to take your name off the {{ main_object }} List?</p>
+    <div class="text-center">
+      <a class="btn btn-default" href="{% url 'delete_signup' main_object=main_object rand_id=invitation.rand_id object_id=object.id %}">Yes, cancel it</a>
+      <a class="btn btn-default" href="{% url 'details' rand_id=invitation.rand_id %}">No, take me back</a>
+    </div>
+  {% endblock leftcolumn %}

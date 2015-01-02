@@ -1,0 +1,82 @@
+{% extends "reboot/camp.html" %}
+
+  {% block admin-invite-navitems %}
+  <li><a href="{% url 'admin:rsvp_invitation_change' invitation.id %}">Edit invitation</a></li>
+  {% endblock admin-invite-navitems %}
+
+  {% block navitems %}
+  {% if camp.faq_url %}
+  <li><a href="{{ camp.faq_url }}">Event FAQ</a></li>
+  {% endif %}
+  {% endblock navitems %}
+
+  {% block pageheader %}
+  <h1>{{ camp.display_name }} <small>{% if invitation.camp.start_date and invitation.camp.end_date %}{{ invitation.camp.start_date|date:"F j" }}-{{ invitation.camp.end_date|date:"j, Y" }}{% endif %}</small></h1>
+  {% endblock pageheader %}
+
+  {% block main %}
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8">
+          
+          {% if messages %}
+            {% for message in messages %}
+            <div class="alert{% if message.tags %} alert-{{ message.tags }}{% endif %} alert-dismissible" role="alert">
+              <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+              {{ message }}
+            </div>
+            {% endfor %}
+          {% endif %}
+
+          {% autoescape off %}
+          <p class="lead">{{ camp.welcome }}</p>
+          {% endautoescape %}
+        </div>
+        <div class="col-lg-4">
+          {% block action %}
+          <div class="panel panel-info">
+            <div class="panel-heading">
+              <h3 class="panel-title">Join us at {{ camp.display_name }}</h3>
+            </div>
+            <div class="panel-body">
+              {% if invitation.camp.paid %}
+                <p>The registration fee for {{ invitation.camp.display_name }} is ${{ invitation.camp.ticket_cost }}. 
+                {% if invitation.has_paid or invitation.comp_ticket %}
+                  But your registration fee is already taken care of. Just <a href="{% url 'details' rand_id=invitation.rand_id %}">proceed with your registration</a>, and we'll reserve your spot.</p>
+                {% else %}
+                  {% if invitation.special_cost %} 
+                    However, your ticket comes at a special rate of ${{ invitation.special_cost }}.
+                  {% endif %}
+                  {% if invitation.camp.stipends %}
+                    If you won't be able to attend without financial assistance, please <a href="{% url 'stipend' rand_id=invitation.rand_id %}">request a stipend</a>.
+                  {% endif %}
+                  </p>
+                  <form action="{% url 'pay' invitation.rand_id %}" method="POST" class="text-right">
+                    {% csrf_token %}
+                    <script src="https://checkout.stripe.com/checkout.js" class="stripe-button"
+                      data-key="{{ invitation.key }}"
+                      data-amount="{{ invitation.stripe_cost }}"
+                      data-name="{{ invitation.camp.theme }}"
+                      data-description="Reserve your place"
+                      data-label="Reserve your place"
+                    </script>
+                    <input type="hidden" name="rand_id" value="{{ invitation.rand_id }}" />
+                  </form>
+                {% endif %}
+              {% else %}
+                <p>There's no charge to attend {{ invitation.camp.display_name }}, although you're responsible for your own travel and lodging. If you'd like to attend, please <a href="{% url 'update' rand_id=invitation.rand_id %}">register here</a>.
+                {% if invitation.camp.stipends %}
+                  If you won't be able to attend without financial assistance, please <a href="{% url 'stipend' rand_id=invitation.rand_id %}">request a stipend</a>.
+                {% endif %}
+                </p>
+              {% endif %}
+          </div> <!-- /panel-body -->
+        </div> <!-- /panel panel-info -->
+        {% endblock action %}
+      </div> <!-- /col-lg-4 -->
+    </div> <!-- /row -->
+  </div> <!-- /container -->
+  {% endblock main %}
+
+  {% block customscripts %}
+  {% endblock customscripts %}

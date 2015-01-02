@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}Spark Camp{% endblock title %}</title>
+
+    <!-- Bootstrap -->
+    <link href="//maxcdn.bootstrapcdn.com/bootswatch/3.3.0/sandstone/bootstrap.min.css" rel="stylesheet">
+
+    <style type='text/css'>
+     .navbar .brand {
+          max-height: 40px;
+          overflow: visible;
+          padding-top: 0;
+          padding-bottom: 0;
+      }
+
+      .navbar a.navbar-brand {
+          padding: 12px 15px 8px; 
+      }
+    {% block customstyles %}
+    <!-- PUT CUSTOM STYLE DECLARATIONS HERE -->
+    {% endblock %}
+    </style>
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+      
+    <!-- NAVIGATION BAR -->
+    <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+      <div class="container">
+        <div class="navbar-header">
+          <a class="navbar-brand" href="#"><img src="{{ STATIC_URL }}_img/spark-header-img-219x35.png" alt="Spark Camp" /></a>
+        </div>
+        <div id="navbar" class="collapse navbar-collapse">
+          <ul class="nav navbar-nav">
+            {% block navbar %}
+            {% if user.is_authenticated %}
+            {% load admin_urls %}
+            <li><a href="#" class="dropdown-toggle" data-toggle="dropdown">Admin <span class="caret"></span>
+              <ul  class="dropdown-menu" role="menu">
+                <li><a href="{% url 'admin:index' %}">Admin dashboard</a></li>                
+                {% block admin-navitems %}
+                {% endblock admin-navitems %}
+                <li><a href="{% url 'admin:logout' %}">Log out</a></li>
+              </ul>
+            {% endif %}
+            <li><a href="http://sparkcamp.com">Main site</a></li>
+            {% block navitems %}
+            {% endblock navitems %}
+            {% endblock navbar %}
+          </ul>
+        </div><!--/.nav-collapse -->
+      </div>
+    </nav>
+
+    <!-- CAMP PAGE HEADER -->
+    <div class="container">
+      <div class="page-header">
+        ::before
+        {% block pageheader %}
+        <h1>Dashboard</h1>
+        {% endblock pageheader %}
+      </div>
+    </div>
+    
+    {% block main %}
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-6">
+          <h3>Upcoming events</h3>
+          {% for event in upcoming %}
+          <h4><a href="{% url 'camp' camptheme=event.theme %}">{{ event.display_name }}</a></h4>
+          <dl class="dl-horizontal">
+            <dt>Description: </dt>
+            <dd>{{ event.description }}</dd>
+            <dt>Dates: </dt>
+            <dd>{{ event.start_date }} to {{ event.end_date }}</dd>
+          </dl>
+          {% endfor %}
+          <h3>Past events</h3>
+          {% for event in past %}
+          <h4>{{ event.display_name }}</h4>
+          <dl class="dl-horizontal">
+            <dt>Description: </dt>
+            <dd>{{ event.description }}</dd>
+            <dt>Dates: </dt>
+            <dd>{{ event.start_date }} to {{ event.end_date }}</dd>
+          </dl>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+    {% endblock main %}      
+         
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+
+    {% block customscripts %}{% endblock customscripts %}
+  </body>
+</html>

@@ -1,0 +1,54 @@
+{% extends "reboot/pay.html" %}
+
+  {% block title %}{{ invitation.camp.display_name }} &endash; Update Your Profile{% endblock %}
+
+  {% block leftcolumn %}
+  
+  {% if messages %}
+    {% for message in messages %}
+    <div class="alert{% if message.tags %} alert-{{ message.tags }}{% endif %}" role="alert">{{ message }}</div>
+    {% endfor %}
+  {% endif %}
+
+  {% if invitation.status == 'I' %}
+
+    <h3>{{ invitation.user.first_name }}, your spot is reserved.</h3>
+    <p><strong>To complete your registration</strong>, please make sure everything below is up-to-date.</p>
+
+  {% elif invitation.status == 'W' %}
+
+    <h3>{{ invitation.user.first_name }}, we have you on the waitlist.</h3>
+    <p><strong>We'll let you know as soon as we determine whether we can accommodate you at {{ invitation.camp.display_name }}.</strong> Meanwhile, please make sure everything below is up-to-date.</p>
+
+  {% elif invitation.status == 'Y' %}
+
+    <ol class="breadcrumb">
+      <li><a href="{% url 'details' rand_id=invitation.rand_id %}">Back</a></li>
+      <li class="active">Update your profile</li>
+    </ol>
+
+    <h3>{{ invitation.user.first_name }}, we're thrilled you can join us.</h3>
+    <p>Please make sure everything below is up-to-date.</p>
+    
+  {% else %}
+
+    <h3>Register</h3>
+    <p>Please make sure everything below is up-to-date.</p>
+
+  {% endif %}
+
+    <p><span class="text-danger">
+      {% if not invitation.user.sparkprofile.has_headshot %}We need a headshot of you to finish your registration. Please email a clear, hi-res photo of yourself to <a href="mailto:sparkcampphotos@gmail.com">sparkcampphotos@gmail.com</a>, and check the 'Headshot sent' box below. {% endif %}
+      {% if invitation.user.sparkprofile.bio == '' %} We're missing a bio for you; please submit a brief bio below.{% endif %}
+    </span></p>
+
+    <form action="{% url 'update' rand_id=invitation.rand_id %}" method="post">
+      {% csrf_token %}
+      <table class="table table-basic">
+      {{ profileform.as_table }}
+      </table>
+      <div class="well text-center">
+        <input class="btn btn-success" type="submit" value="Submit" />
+      </div>
+    </form>
+  {% endblock leftcolumn %}

@@ -121,7 +121,7 @@ class Invitation(models.Model):
     
     @models.permalink
     def get_absolute_url(self):
-        return ('route_registration', [str(self.rand_id)])
+        return ('route', [str(self.rand_id)])
             
     class Meta:
         unique_together = ('user', 'camp')

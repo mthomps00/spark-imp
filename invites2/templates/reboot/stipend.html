@@ -1,0 +1,18 @@
+{% extends 'reboot/pay.html' %}
+
+  {% block title %}Spark Camp: Request a stipend{% endblock %}
+
+  {% block leftcolumn %}
+    <form action="{% url 'stipend' rand_id=invitation.rand_id %}" method="post">
+        {% csrf_token %}
+      <h3 class="h3">Request a stipend</h3><br />
+      <p>We use part of our budget for each event to offer financial assistance to Campers that otherwise wouldn't be able to make it. Please fill out the form below to give us an idea of your travel costs.</p>
+      <table class="table table-basic">
+        {{ form.as_table }}
+      </table>
+      <div class="well text-center">
+      <input class="btn btn-default" type="submit" value="Submit" />
+      </div>
+    </form>
+  {% endblock leftcolumn %}
+

@@ -1,13 +1,15 @@
-{% extends "single_column.html" %}
+{% extends "reboot/pay.html" %}
 
-{% block content %}
-<p class="text"><a href="{% url 'route_registration' rand_id=invitation.rand_id %}" class="url orange">⬅ Back to invitation</a></p>
+  {% block title %}Spark Camp: Can't make it?{% endblock %}
 
-<form class="well" action="{% url 'registration_confirm_cancel' rand_id=invitation.rand_id %}" method="post">
-    {% csrf_token %}
-<h3 class="h3">Can't make it?</h3><br />
-    <p class="text-med">We're very sorry to hear you won't be able to make it to Spark Camp! {% if invitation.partial_refund %}Because it's after {{ invitation.camp.cancel_by|date:"l, F j" }}, many of the costs of your attendance have already been incurred, and we can only offer you a partial refund. {% endif %}We'll process your refund as soon as possible. If by any chance your plans change, please email us at rsvp@sparkcamp.com.</p>
-    <input class="submit btn-large" type="submit" value="Confirm cancellation" />
+  {% block main %}
+  <p class="text"><a href="{% url 'route_registration' rand_id=invitation.rand_id %}" class="url orange">⬅ Back to invitation</a></p>
 
-</form>
-{% endblock content %}
+  <form class="well" action="{% url 'registration_confirm_cancel' rand_id=invitation.rand_id %}" method="post">
+      {% csrf_token %}
+  <h3 class="h3">Can't make it?</h3><br />
+      <p class="text-med">We're very sorry to hear you won't be able to make it to Spark Camp! {% if invitation.partial_refund %}Because it's after {{ invitation.camp.cancel_by|date:"l, F j" }}, many of the costs of your attendance have already been incurred, and we can only offer you a partial refund. {% endif %}We'll process your refund as soon as possible. If by any chance your plans change, please email us at rsvp@sparkcamp.com.</p>
+      <input class="submit btn-large" type="submit" value="Confirm cancellation" />
+
+  </form>
+  {% endblock main %}
