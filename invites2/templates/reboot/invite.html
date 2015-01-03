@@ -42,7 +42,7 @@
               {% if invitation.camp.paid %}
                 <p>The registration fee for {{ invitation.camp.display_name }} is ${{ invitation.camp.ticket_cost }}. 
                 {% if invitation.has_paid or invitation.comp_ticket %}
-                  But your registration fee is already taken care of. Just <a href="{% url 'details' rand_id=invitation.rand_id %}">proceed with your registration</a>, and we'll reserve your spot.</p>
+                  But your registration fee is already taken care of. Just <a href="{% url 'update' rand_id=invitation.rand_id %}">proceed with your registration</a>, and we'll reserve your spot.</p>
                 {% else %}
                   {% if invitation.special_cost %} 
                     However, your ticket comes at a special rate of ${{ invitation.special_cost }}.

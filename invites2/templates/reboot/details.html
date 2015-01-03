@@ -1,6 +1,6 @@
 {% extends "reboot/pay.html" %}
 
-  {% block title %}{{ invitation.camp.display_name }} &endash; The Lowdown{% endblock %}
+  {% block title %}{{ invitation.camp.display_name }} – Details{% endblock %}
 
   {% block leftcolumn %}
   {% if messages %}
@@ -213,7 +213,7 @@
           <div class="panel-heading" role="tab" id="headingTwo">
             <h4 class="panel-title">
               <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                Share a hotel room{% if roommate %}&nbsp;<span class="label label-success">Requested</span>{% endif %}
+                Share a hotel room{% if roommate %}{% if roommate.potentials %}&nbsp;<span class="label label-success">Potential matches</span>{% else %}&nbsp;<span class="label label-default">No matches yet</span>{% endif %}{% endif %}
               </a>
             </h4>
           </div>
@@ -235,7 +235,7 @@
                   </thead>
                   {% for potential in roommate.potentials %}
                   <tr>
-                    <td><a href="mailto:{{ potential.invitation.user.email }}?subject=Sharing a room at Spark Camp"><strong>{{ potential.invitation.user.first_name }} {{ potential.invitation.user.last_name }}</strong></a></td>
+                    <td><a href="mailto:{{ potential.invitation.user.email }}?subject=Sharing a room at {{ invitation.camp.display_name }}"><strong>{{ potential.invitation.user.first_name }} {{ potential.invitation.user.last_name }}</strong></a></td>
                     <td>{% if potential.invitation.user.sparkprofile.employer %}{{ potential.invitation.user.sparkprofile.employer }}{% endif %}</td>
                     <td>{% if potential.invitation.user.sparkprofile.bio %}{{ potential.invitation.user.sparkprofile.bio }}{% endif %}</td>
                   </tr>

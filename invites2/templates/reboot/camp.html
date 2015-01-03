@@ -45,12 +45,14 @@
         {% endif %}
         {% if camp.mailchimp_list %}
         <h4>Sync with Mailchimp</h4>
-        <form class="form-inline comment-form" action="{% url 'mailsync' camptheme=camp.theme %}" method="get" role="form">
+        <form class="form-inline comment-form" action="{% url 'mailsync' camptheme=camp.short_name %}" method="get" role="form">
           <div class="form-group">
             <input class="btn btn-sm" type="submit" value="Sync" />
           </div>
-        </form>          
+        </form>       
         {% endif %}
+        <h4>Download CSV</h4>
+        <p><span class="glyphicon glyphicon-file"></span>&nbsp;<a href="{% url 'camp_table' camptheme=camp.theme %}">All invitees to this camp</a></p>    
       </div>
     </div>
   </div>
@@ -66,9 +68,10 @@
             <th>First name</th>
             <th>Last name</th>
             <th>Status</th>
-            {% if invite.camp.stipend %}<th>Stipend</th>{% endif %}
+            {% if camp.paid %}<th>Paid</th>{% endif %}
+            {% if camp.stipends %}<th>Stipend</th>{% endif %}
             <th>Roommate</th>
-            {% if invite.camp.ignite %}<th>Ignite</th>{% endif %}
+            {% if camp.ignite %}<th>Ignite</th>{% endif %}
             <th>Expires</th>
           </tr>
         </thead>                        
@@ -78,12 +81,15 @@
           <td>{{ invite.user.first_name }}</td>
           <td>{{ invite.user.last_name }}</td>
           <td>{{ invite.status }}</td>
-          {% if invite.camp.stipend %}
-          <td style="text-align: center">{% if invite.stipend %}<a href="{% url 'invite_related' rand_id=invite.rand_id main_object='Stipend' %}"><span class="glyphicon glyphicon-ok"></span></a>{% endif %}</td>
+          {% if camp.paid %}
+          <td style="text-align: center">{% if invite.has_paid or invite.comp_ticket %}<span class="glyphicon glyphicon-ok"></span>{% endif %}</td>
           {% endif %}
-          <td style="text-align: center">{% if invite.roommate %}<a href="{% url 'invite_related' rand_id=invite.rand_id main_object='Roommate' %}"><span class="glyphicon glyphicon-ok"></span></a>{% endif %}</td>
-          {% if invite.camp.ignite %}
-          <td style="text-align: center">{% if invite.ignite %}<a href="{% url 'invite_related' rand_id=invite.rand_id main_object='Ignite' %}"><span class="glyphicon glyphicon-ok"></span></a>{% endif %}</td>
+          {% if camp.stipends %}
+          <td style="text-align: center">{% if invite.stipend %}<a href="{% url 'stipend' rand_id=invite.rand_id %}"><span class="glyphicon glyphicon-ok"></span></a>{% endif %}</td>
+          {% endif %}
+          <td style="text-align: center">{% if invite.roommate %}<a href="{% url 'signup' rand_id=invite.rand_id main_object='Roommate' %}"><span class="glyphicon glyphicon-ok"></span></a>{% endif %}</td>
+          {% if camp.ignite %}
+          <td style="text-align: center">{% if invite.ignite %}<a href="{% url 'signup' rand_id=invite.rand_id main_object='Ignite' %}"><span class="glyphicon glyphicon-ok"></span></a>{% endif %}</td>
           {% endif %}
           <td>{{ invite.expires }}</td>
         </tr>

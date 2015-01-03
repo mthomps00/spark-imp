@@ -1,6 +1,6 @@
 {% extends "reboot/pay.html" %}
 
-  {% block title %}{{ invitation.camp.display_name }} &endash; Update Your Profile{% endblock %}
+  {% block title %}{{ invitation.camp.display_name }} – Update Your Profile{% endblock %}
 
   {% block leftcolumn %}
   
@@ -27,13 +27,13 @@
       <li class="active">Update your profile</li>
     </ol>
 
-    <h3>{{ invitation.user.first_name }}, we're thrilled you can join us.</h3>
+    <h3>{{ invitation.user.first_name }}, we're thrilled you'll be joining us.</h3>
     <p>Please make sure everything below is up-to-date.</p>
     
   {% else %}
 
-    <h3>Register</h3>
-    <p>Please make sure everything below is up-to-date.</p>
+    <h3>Register for {{ invitation.camp.display_name}}.</h3>
+    <p>Look over the items below and make sure everything is tip-top.</p>
 
   {% endif %}
 

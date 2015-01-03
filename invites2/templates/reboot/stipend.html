@@ -1,6 +1,6 @@
 {% extends 'reboot/pay.html' %}
 
-  {% block title %}Spark Camp: Request a stipend{% endblock %}
+  {% block title %}{{ invitation.camp.display_name }} – Request A Stipend{% endblock %}
 
   {% block leftcolumn %}
     <form action="{% url 'stipend' rand_id=invitation.rand_id %}" method="post">

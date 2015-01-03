@@ -465,11 +465,15 @@ def update(request, rand_id):
     user = invitation.user
     profile = SparkProfile.objects.get(user=user)
     
+    # Redirect users who've said they can't attend to put them on the waitlist.
     if invitation.status == 'N' or invitation.status == 'C':
         return redirect('restore', rand_id=rand_id)    
 
+    # If the user has submitted a profile form ...
     if request.method == 'POST':
         profileform = SparkProfileForm(request.POST, instance=profile)
+
+        # ... and that form is valid ...
         if profileform.is_valid():
             profile.bio = profileform.cleaned_data['bio']
             profile.job_title = profileform.cleaned_data['job_title']
@@ -483,29 +487,56 @@ def update(request, rand_id):
             user.email = profileform.cleaned_data['email']
             profile.save()
             user.save()
+
+            # ... AND that form has a bio and headshot ...
             if profile.bio != '' and profile.has_headshot == True:
+
+                # If the user is on the waitlist, merely update their information. Send no email.
                 if invitation.status == 'W':
                     messages.success(request, 'Thank you for updating your information! We\'ll let you know as soon as possible if we can accommodate you at %s' % (invitation.camp.display_name))
-                    variables = {
-                        'invitation': invitation,
-                        'camp': invitation.camp,
-                    }
-                    return render_to_response('reboot/waitlist.html', variables, context_instance=RequestContext(request))
+                    return redirect('waitlist', rand_id=rand_id)
+                
+                # And if they're not on the waitlist, then ...
                 else: 
+                    
+                    # If they're already confirmed, also just update; no email.
                     if invitation.status == 'Y':
                         messages.success(request, '%s, thank you for updating your information!' % (user.first_name))
+                    
+                    # Otherwise, set them as confirmed, and send a confirmation email.
                     else:
-                        messages.success(request, '%s, you\'re now registered for %s' % (user.first_name, invitation.camp.display_name))
+                        messages.success(request, '%s, you\'re now registered for %s.' % (user.first_name, invitation.camp.display_name))
                         invitation.status = 'Y'
+                        
+                        # Confirmation email
+                        date_format = '%A, %B %d, %Y'
+                        confirmdict = {
+                            'first_name': user.first_name,
+                            'last_name': user.first_name,
+                            'display_name': invitation.camp.display_name,
+                            'description': invitation.camp.description,
+                            'logistics': invitation.camp.logistics,
+                            'cancel_by': invitation.camp.cancel_by.strftime(date_format),
+                            'venue': invitation.camp.venue,
+                            'venue_address': invitation.camp.venue_address,
+                            'hotel': invitation.camp.hotel,
+                            'hotel_link': invitation.camp.hotel_link,
+                            'hotel_code': invitation.camp.hotel_code,
+                            'invite_link': settings.EXTERNAL_URL + invitation.get_absolute_url(),
+                        }
+                        body = invitation.camp.confirmation_email % confirmdict
+                        subject = 'Confirming your registration for %s' % invitation.camp.display_name
+                        if settings.DEBUG == False:
+                            email = user.email
+                        else:
+                            email = settings.EMAIL_TEST
+                        send_mail(subject, body, 'rsvp@sparkcamp.com', ['rsvp@sparkcamp.com', email], fail_silently=True)
+                        
                     invitation.save()
-                    messages.success(request, '%s, thank you for updating your information!' % (user.first_name))
-                    variables = {
-                        'invitation': invitation,
-                        'camp': invitation.camp,
-                    }
-                    return render_to_response('reboot/details.html', variables, context_instance=RequestContext(request))
+                    return redirect('details', rand_id=rand_id)
             else:
                 invitation.status = 'I'
+                messages.warning(request, 'We\'re still missing some key pieces of info to finalize your registration.')
                 invitation.save()
                 
     else:
@@ -1380,20 +1411,29 @@ def profile(request, rand_id):
 def camp_table(request, camptheme):
     camp = get_object_or_404(Camp, theme__iexact=camptheme)
     invitations = Invitation.objects.filter(camp=camp)
-
     confirmed = invitations.filter(status='Y')
+    
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="all_invitees_for_' + camp.short_name + '.csv"'
+    writer = unicodecsv.writer(response)    
+
+    writer.writerow(['Username', 'First name', 'Last name', 'Email address', 'Email 2', 'Phone', 'Job title', 'Organization', 'Bio', 'Twitter', 'URL', 'W', 'POC', 'J', 'Dietary needs', 'Headshot sent', 'Expires', 'Custom message', 'Invitation status', 'Special cost', 'Stipend requested', 'Has paid', 'Comp ticket'])
+    
+    for invite in invitations:
+        profile = SparkProfile.objects.get(user=invite.user)
+        if invite.stipend_set.all():
+            stipend = True
+        else:
+            stipend = False
+            
+        writer.writerow([invite.user.username, invite.user.first_name, invite.user.last_name, invite.user.email, profile.secondary_email, profile.phone, profile.job_title, profile.employer, profile.bio, profile.twitter, profile.url, profile.woman, profile.poc, profile.journo, profile.dietary, profile.has_headshot, invite.expires, invite.custom_message, invite.status, invite.special_cost, stipend, invite.has_paid, invite.comp_ticket])
         
-    variables = {
-        'camp': camp,
-        'invitations': invitations,
-        'confirmed': confirmed,
-    }
-    return render_to_response('camp_table.html', variables, context_instance=RequestContext(request))
+    return response
 
 @login_required
 def user_table(request):
     response = HttpResponse(content_type='text/csv')
-    response['Content-Disposition'] = 'attachment; filename="campers.csv"'
+    response['Content-Disposition'] = 'attachment; filename="all_campers.csv"'
     writer = unicodecsv.writer(response)
     users = User.objects.all()
     
