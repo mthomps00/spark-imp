@@ -9,6 +9,7 @@ class Camp(models.Model):
     short_name = models.CharField(max_length=20, blank=True, null=True)
     welcome = models.TextField(blank=True, default='')
     description = models.TextField(blank=True)
+    faq = models.TextField(blank=True, default='')
     start_date = models.DateTimeField(blank=True, null=True)
     end_date = models.DateTimeField(blank=True, null=True)
     logistics = models.TextField(blank=True)
@@ -38,7 +39,6 @@ class Camp(models.Model):
 
     # Google Spreadsheet with invitee information
     spreadsheet_url = models.URLField(blank=True)
-    faq_url = models.URLField(blank=True, null=True)
     
     # MailChimp list name
     mailchimp_list = models.CharField(max_length=140, blank=True)
