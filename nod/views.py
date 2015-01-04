@@ -4,6 +4,7 @@ from django.db.models import Q
 from django.shortcuts import render, render_to_response
 from django.template import Context, RequestContext
 from rsvp.models import Camp, SparkProfile, Invitation
+from nod.models import *
 import re
 
 ####################
@@ -45,9 +46,10 @@ def get_query(query_string, search_fields):
     return query
 
 @login_required
-def search(request):
+def search(request, nominate=False):
     query_string = ''
     results = None
+    camps = Camp.objects.all()
     if ('q' in request.GET) and request.GET['q'].strip():
         query_string = request.GET['q']
         item_query = get_query(query_string, ['last_name','first_name','username','sparkprofile__bio','sparkprofile__employer'])
@@ -56,7 +58,88 @@ def search(request):
     variables = {
         'query_string': query_string,
         'results': results,
+        'nominate': nominate,
+        'camps': camps,
     }
+    
+    return render_to_response('nod/search.html', variables, context_instance=RequestContext(request))
 
-    return render_to_response('nod/search.html', variables,
-                          context_instance=RequestContext(request))
+@login_required
+def nominated(request, camp=False):
+    if request.method == 'POST':
+        nominees = request.POST.getlist('checked')
+        selected_camp = request.POST.get('campselect')
+        if selected_camp != '':
+            camp = Camp.objects.get(id=selected_camp)
+            
+        nominations = []
+        existing_nominations = []
+        for nominee in nominees:
+            user = User.objects.get(id=nominee)
+            if camp:
+                n, created = Nomination.objects.get_or_create(user=user, nominated_by=request.user, camp=camp)
+            else:
+                n, created = Nomination.objects.get_or_create(user=user, nominated_by=request.user)
+            if created:
+                nominations.append(n)
+            else:
+                existing_nominations.append(n)
+                
+        variables = {
+            'nominate': True,
+            'nominations': nominations,
+            'existing_nominations': existing_nominations,
+            'camp': camp,
+        }
+    return render_to_response('nod/nominated.html', variables, context_instance=RequestContext(request))
+
+@login_required
+def vote(request, round):
+    current_round = VotingRound.objects.get(id=round)
+    camp = Camp.objects.get(id=current_round.camp.id)
+    nominations = Nomination.objects.filter(camp=camp)
+    ballot, created = Ballot.objects.get_or_create(voter=request.user, voting_round=current_round)
+    num_votes = current_round.num_votes
+    
+    if request.method == 'POST':
+        tally = request.POST.getlist('vote_tally')
+        nominees = request.POST.getlist('voter_id')
+        h = 0
+        i = len(nominees)
+        while h < i:
+            value = tally[h]
+            nod = Nomination.objects.get(id=nominees[h])
+            vote, created = Vote.objects.get_or_create(nomination=nod, ballot=ballot)
+            if created == False:
+                vote.value = value
+                vote.save()
+            h += 1
+
+    for nomination in nominations:
+        count = 0
+        your_count = 0
+        comments = ''
+        votes = Vote.objects.filter(nomination=nomination)
+        your_vote, created = Vote.objects.get_or_create(nomination=nomination, ballot=ballot)
+        for vote in votes:
+            count = count + vote.value
+            if vote.comment:
+                comments += '{1}: {2}; '.format(comments, vote.ballot.voter.username, vote.comment)
+        nomination.count = count
+        nomination.minimum = count - your_vote.value
+        nomination.comments = comments
+        
+    ballot_votes = Vote.objects.filter(ballot=ballot)
+    vote_count = 0
+    for vote in ballot_votes:
+        vote_count = vote_count + vote.value
+    num_votes = num_votes - vote_count
+    
+    variables = {
+        'camp': camp,
+        'nominations': nominations,
+        'round': current_round,
+        'num_votes': num_votes,
+    }
+    
+    return render_to_response('nod/vote.html', variables, context_instance=RequestContext(request))

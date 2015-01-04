@@ -1,0 +1,24 @@
+{% extends "nod/search.html" %}
+
+    {% block main %}
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                {% if nominations %}<h1>New nominations<small> created by {{ user }}{% if camp %} for {{ camp.display_name }}{% endif %}</small></h1>
+                <ul>
+                {% for nomination in nominations %}
+                    <li><strong>{{ nomination.user.first_name }} {{ nomination.user.last_name }}</strong></li>
+                {% endfor %}
+                </ul>
+                {% endif %}
+                {% if existing_nominations %}<h1>You'd already nominated these users for this camp.</h1>
+                <ul>
+                {% for nomination in existing_nominations %}
+                    <li><strong>{{ nomination.user.first_name }} {{ nomination.user.last_name }}</strong></li>
+                {% endfor %}
+                </ul>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    {% endblock main %}

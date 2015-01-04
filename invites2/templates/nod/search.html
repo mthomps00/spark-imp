@@ -1,5 +1,14 @@
 {% extends "reboot/reboot.html" %}
 
+    {% if nominate %}
+    {% block customstyles %}
+    body { 
+        padding-bottom: 70px; 
+    }
+    {% endblock customstyles %}
+    {% endif %}
+
+    
     {% block pageheader %}
     <div class="row">
         <div class="col-lg-6">
@@ -7,7 +16,7 @@
         </div>
         <div class="col-lg-6">
             <br />
-            <form action="{% url 'search' %}" class="form-inline" method="GET" >
+            <form action="{% if nominate %}{% url 'nodsearch' %}{% else %}{% url 'search' %}{% endif %}" class="form-inline" method="GET" >
             <div class="form-group">
                 <input type="text" class="form-control" id="q" name="q" {% if query_string %}value="{{ query_string }}"{% else %}placeholder="Enter your search query"{% endif %} />
             </div>
@@ -27,6 +36,9 @@
                         <table class="table table-striped">
                             <thead>
                                 <tr>
+                                    {% if nominate %}
+                                    <th><input type="checkbox" /></th>
+                                    {% endif %}
                                     <th>Name</th>
                                     <th>Company</th>
                                     <th>Title</th>
@@ -36,8 +48,15 @@
                                     <th>J</th>
                                 </tr>
                             </thead>
+                            {% if nominate %}
+                            <form action="{% url 'nominated' %}" method="POST">
+                                {% csrf_token %}
+                            {% endif %}
                         {% for result in results %}
                             <tr>
+                                {% if nominate %}
+                                <td><input type="checkbox" name="checked" value="{{ result.id }}" /></td>
+                                {% endif %}
                                 <td>{{ result.first_name }} {{ result.last_name }}</td>
                                 <td>{{ result.sparkprofile.employer }}</td>
                                 <td>{{ result.sparkprofile.job_title }}</td>
@@ -58,4 +77,27 @@
             </div>
         </div>
     </div>
+
+    {% if nominate %}
+    <nav class="navbar navbar-default navbar-fixed-bottom text-right">
+        <div class="container">
+            <div class="navbar-form">
+                {{ camptheme }}
+                {% if not camptheme %}
+                <select class="form-control" name="campselect">
+                    <option value="">Choose a camp (optional):</option>
+                    {% for camp in camps %}
+                    <option value="{{ camp.id }}">{{ camp.display_name }}</option>
+                    {% endfor %}
+                </select>
+                {% else %}
+                <label for="nodsubmit">Nominating for {{ camp.display_name }}</label>
+                {% endif %}
+                <input type="submit" class="btn btn-info" value="Nominate" id="nodsubmit" />
+            </div>
+        </div>
+    </nav>
+    </form>
+    {% endif %}
+
     {% endblock main %}
