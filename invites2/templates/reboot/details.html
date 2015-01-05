@@ -16,6 +16,10 @@
     <p class="lead text-muted">{{ invitation.camp.description|safe }}</p>
     {% endif %}
 
+    {% if invitation.user.sparkprofile.headshot %}
+    <img src="{{ invitation.user.sparkprofile.headshot.url_125x125 }}" class="img-responsive img-circle pull-right" style="padding: 10px" />
+    {% endif %}
+
     <h3>Welcome, {{ invitation.user.first_name }}.</h3>
     <p>This is the place to manage your information about {{ invitation.camp.display_name }}. <span class="text-warning">Please keep the URL of this page secret.</span> Remember, we ask our attendees to be present for the entire event. {% if invitation.camp.start_date and invitation.camp.end_date %}If you're booking a flight, please choose an itinerary that gets you to the event by {{ invitation.camp.start_date|date:"P" }} on {{ invitation.camp.start_date|date:"l, F j" }}, and allows you to stay until {{ invitation.camp.end_date|date:"P" }} on {{ invitation.camp.end_date|date:"l, F j" }}.{% endif %}</p>
 

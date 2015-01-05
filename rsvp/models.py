@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save
+from rsvp.thumbs import ImageWithThumbsField
 import random
 
 class Camp(models.Model):
@@ -250,6 +251,7 @@ class SparkProfile(models.Model):
         verbose_name='Headshot sent',
         help_text='Check this if you\'ve sent your headshot to sparkcampphotos@gmail.com.'
     )
+    headshot = ImageWithThumbsField(blank=True,null=True,upload_to='headshot', sizes=((125,125),(200,200)))
     bio = models.CharField(
         max_length=140,
         blank=True,
