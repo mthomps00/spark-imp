@@ -582,7 +582,7 @@ def camp_csv(request):
     writer.writerow(['Theme', 'Description', 'Start date', 'End date', 'Logistics', 'Hotel', 'Hotel link', 'Hotel code', 'Hotel deadline', 'Venue', 'Venue address', 'Ignite', 'Stipends', 'Spreadsheet URL', 'Mailchimp list'])
 
     for camp in camps:
-        writer.writerow([camp.theme, camp.description, camp.start_date, camp.logistics, camp.hotel, camp.hotel_link, camp.hotel_code, camp.hotel_deadline, camp.venue, camp.venue_address, camp.ignite, camp.stipends, camp.spreadsheet_url, camp.mailchimp_list]) 
+        writer.writerow([camp.theme, camp.description, camp.start_date, camp.end_date, camp.logistics, camp.hotel, camp.hotel_link, camp.hotel_code, camp.hotel_deadline, camp.venue, camp.venue_address, camp.ignite, camp.stipends, camp.spreadsheet_url, camp.mailchimp_list]) 
 
     return response
                     
