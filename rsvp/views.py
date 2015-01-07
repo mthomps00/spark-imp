@@ -559,13 +559,41 @@ def camp_table(request, camptheme):
     return render_to_response('camp_table.html', variables, context_instance=RequestContext(request))
 
 @login_required
+def invites_csv(request):
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="all_invites.csv"'
+    writer = unicodecsv.writer(response)
+    invites = Invitation.objects.all()
+    
+    writer.writerow(['Status', 'Type', 'Plus one', 'Inviter', 'Expires', 'User', 'Camp', 'Rand_ID', 'Dietary', 'Arrival time', 'Departure time', 'Hotel booked'])
+
+    for invite in invites:
+        writer.writerow([invite.status, invite.type, invite.plus_one, invite.inviter, invite.expires, invite.user, invite.camp, invite.rand_id, invite.dietary, invite.arrival_time, invite.departure_time, invite.hotel_booked]) 
+
+    return response
+
+@login_required
+def camp_csv(request):
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="camps.csv"'
+    writer = unicodecsv.writer(response)
+    camps = Camp.objects.all()
+    
+    writer.writerow(['Theme', 'Description', 'Start date', 'End date', 'Logistics', 'Hotel', 'Hotel link', 'Hotel code', 'Hotel deadline', 'Venue', 'Venue address', 'Ignite', 'Stipends', 'Spreadsheet URL', 'Mailchimp list'])
+
+    for camp in camps:
+        writer.writerow([camp.theme, camp.description, camp.start_date, camp.logistics, camp.hotel, camp.hotel_link, camp.hotel_code, camp.hotel_deadline, camp.venue, camp.venue_address, camp.ignite, camp.stipends, camp.spreadsheet_url, camp.mailchimp_list]) 
+
+    return response
+                    
+@login_required
 def user_table(request):
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="campers.csv"'
     writer = unicodecsv.writer(response)
     users = User.objects.all()
     
-    writer.writerow(['Username', 'First name', 'Last name', 'Email address', 'Secondary email', 'Twitter', 'URL', 'POC', 'Woman', 'Journo', 'Dietary preferences', 'Job title', 'Phone', 'Organization', 'Camps attended', 'Camps invited to', 'Camps nominated for'])
+    writer.writerow(['Username', 'First name', 'Last name', 'Email address', 'Secondary email', 'Twitter', 'URL', 'POC', 'Woman', 'Journo', 'Dietary preferences', 'Job title', 'Phone', 'Organization', 'Bio', 'Camps attended', 'Camps invited to', 'Camps nominated for'])
     
     for user in users:
         invitations = Invitation.objects.filter(user=user)
@@ -576,6 +604,6 @@ def user_table(request):
             invitelist.append(invitation.camp.theme)
             if invitation.status == 'Y':
                 attendlist.append(invitation.camp.theme)
-        writer.writerow([user.username, user.first_name, user.last_name, user.email, profile.secondary_email, profile.twitter, profile.url, profile.poc, profile.woman, profile.journo, profile.dietary, profile.job_title, profile.phone, profile.employer, '|'.join(attendlist), '|'.join(invitelist), ''])
+        writer.writerow([user.username, user.first_name, user.last_name, user.email, profile.secondary_email, profile.twitter, profile.url, profile.poc, profile.woman, profile.journo, profile.dietary, profile.job_title, profile.phone, profile.employer, profile.bio, '|'.join(attendlist), '|'.join(invitelist), ''])
         
     return response
