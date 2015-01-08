@@ -38,6 +38,7 @@
         <div class="row">
             <div class="col-lg-12">
                 {% if nominations %}
+                {% regroup nominations by user as nominations_list %}
                     <div class="table-responsive">
                     <table class="table table-bordered" id="vote-table">
                         <thead>
@@ -55,8 +56,10 @@
                             </tr>
                         </thead>
                         {% csrf_token %}
-                    {% for nominee in nominations %}
+                    {% for nomination in nominations_list %}
                         <tr>
+                            {% for nominee in nomination.list %}
+                            {% if forloop.first %}
                             <td><span class="glyphicon glyphicon-plus-sign"></span></td>
                             <td><span class="glyphicon glyphicon-chevron-left" class="subtract_vote"></span><input type="number" name="vote_tally" min="{{ nominee.minimum }}" max="50" size="2" value="{{ nominee.count }}" class="vote_tally" /></span>&nbsp;
                                 <span class="glyphicon glyphicon-chevron-right" class="add_vote"></span><input type="hidden" value="{{ nominee.pk }}" name="voter_id" /></td>
@@ -71,15 +74,20 @@
                         </tr>
                         <tr class="vote_more expand-child" style="display:none;">
                             <td colspan="10">
-                                <p><strong>{{ nominee.nominated_by }}:</strong> {{ nominee.reason }}</p>
-                                <p>{{ nominee.description }}</p>
+                                {% endif %}
+                                <p><strong>{{ nominee.nominated_by }}</strong>
+                                <dl class="dl-horizontal">
+                                    <dt>Reason:</dt><dd>{{ nominee.reason }}</dd>
+                                    <dt>Description:</dt><dd>{{ nominee.description }}</dd>
+                                </dl>
+                                {% if forloop.last %}
                                 <div class="form-group">
                                     <label for="vote_comments" />Your comment:</label>
-                                    <input type="text" class="vote_more" value="{{ nominee.comments }}" />
+                                    <input type="text" class="vote_more" value="{{ nominee.comments }}" id="vote_comments" />
                                 </div>
                             </td>
                         </tr>
-                    {% endfor %}
+                    {% endif %}{% endfor %}{% endfor %}
                     </table>
                     </div>
                 {% else %}

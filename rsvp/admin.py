@@ -68,9 +68,7 @@ class InvitationInline(admin.TabularInline):
     extra = 20
     
 class CampAdmin(admin.ModelAdmin):
-    inlines = [
-        InvitationInline,
-    ]
+    pass
 
 admin.site.register(Camp, CampAdmin)
 admin.site.register(Invitation, InvitationAdmin)

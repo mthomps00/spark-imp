@@ -97,7 +97,7 @@ def nominated(request, camp=False):
 def vote(request, round):
     current_round = VotingRound.objects.get(id=round)
     camp = Camp.objects.get(id=current_round.camp.id)
-    nominations = Nomination.objects.filter(camp=camp)
+    nominations = Nomination.objects.filter(camp=camp).order_by('user')
     ballot, created = Ballot.objects.get_or_create(voter=request.user, voting_round=current_round)
     num_votes = current_round.num_votes
     
@@ -109,7 +109,7 @@ def vote(request, round):
         while h < i:
             value = tally[h]
             nod = Nomination.objects.get(id=nominees[h])
-            vote, created = Vote.objects.get_or_create(nomination=nod, ballot=ballot)
+            vote, created = Vote.objects.get_or_create(user=nod.user, ballot=ballot)
             if created == False:
                 vote.value = value
                 vote.save()
@@ -117,17 +117,13 @@ def vote(request, round):
 
     for nomination in nominations:
         count = 0
-        your_count = 0
-        comments = ''
-        votes = Vote.objects.filter(nomination=nomination)
-        your_vote, created = Vote.objects.get_or_create(nomination=nomination, ballot=ballot)
-        for vote in votes:
+        nomination.allvotes = Vote.objects.filter(user=nomination.user)
+        nomination.othernods = Nomination.objects.filter(user=nomination.user, camp=camp).exclude(pk=nomination.pk)
+        your_vote, created = Vote.objects.get_or_create(user=nomination.user, ballot=ballot)
+        for vote in nomination.allvotes:
             count = count + vote.value
-            if vote.comment:
-                comments += '{1}: {2}; '.format(comments, vote.ballot.voter.username, vote.comment)
         nomination.count = count
         nomination.minimum = count - your_vote.value
-        nomination.comments = comments
         
     ballot_votes = Vote.objects.filter(ballot=ballot)
     vote_count = 0

@@ -90,15 +90,11 @@
           </dl>
           {% endfor %}
           <h3>Past events</h3>
+          <ul>
           {% for event in past %}
-          <h4>{{ event.display_name }}</h4>
-          <dl class="dl-horizontal">
-            <dt>Description: </dt>
-            <dd>{{ event.description }}</dd>
-            <dt>Dates: </dt>
-            <dd>{{ event.start_date }} to {{ event.end_date }}</dd>
-          </dl>
+          <li><a href="{% url 'camp' camptheme=event.theme %}">{{ event.display_name }}</a> ({{ event.start_date|date:"n/j" }}-{{ event.end_date|date:"n/j/y"}})</li>
           {% endfor %}
+          </ul>
         </div>
       </div>
     </div>

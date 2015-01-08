@@ -303,7 +303,7 @@ def mailsync(request, camptheme):
 def dashboard(request):
     today = date.today()
     upcoming = Camp.objects.filter(start_date__gte=today)
-    past = Camp.objects.filter(start_date__lte=today)
+    past = Camp.objects.filter(start_date__lte=today).order_by('-start_date')
     
     variables = {
         'upcoming' : upcoming,
@@ -1445,3 +1445,36 @@ def user_table(request):
         writer.writerow([user.username, user.first_name, user.last_name, user.email, profile.job_title, profile.employer, '', '', ''])
         
     return response
+
+@login_required
+def camp_import(url):
+    my_sheet = csv.DictReader(urlopen(url))
+
+    imports = []
+    for row in my_sheet:
+        theme = row['Theme']
+        description = row['Description']
+        start_date = row['Start date']
+        end_date = row['End date']
+        logistics = row['Logistics']
+        hotel = row['Hotel']
+        hotel_link = row['Hotel link']
+        hotel_code = row['Hotel code']
+        hotel_deadline = row['Hotel deadline']
+        venue = row['Venue']
+        venue_address = row['Venue address']
+        if row['Ignite'] == 'False':
+            ignite = False
+        else:
+            ignite = True
+        if row['Stipends'] == 'False':
+            stipends = False
+        else:
+            stipends = True
+        spreadsheet_url = row['Spreadsheet URL']
+        mailchimp_list = row['Mailchimp list']
+        
+        camp, created = Camp.objects.get_or_create(theme=theme,description=description,start_date=start_date,end_date=end_date,logistics=logistics,hotel=hotel,hotel_link=hotel_link,hotel_code=hotel_code,hotel_deadline=hotel_deadline,venue=venue,venue_address=venue_address,ignite=ignite,stipends=stipends,spreadsheet_url=spreadsheet_url,mailchimp_list=mailchimp_list)
+        imports.append(camp)
+    
+    return render_to_response('camp_import.html', { 'camps': camps }, context_instance=RequestContext(request))

@@ -20,7 +20,9 @@ class Nomination(models.Model):
         if self.nominated_by:
             name += ' (by ' + self.nominated_by.first_name + ' ' + self.nominated_by.last_name + ')'
         return name
-
+    
+    class Meta:
+        unique_together = ('nominated_by', 'camp', 'user')
 
 class Tag(models.Model):
     name = models.CharField(max_length=50)
@@ -42,21 +44,21 @@ class Ballot(models.Model):
     voting_round = models.ForeignKey(VotingRound)    
 
     def __unicode__(self):
-        name = '{0}: {1}'.format(self.voting_round.short_name, self.voter.username)
+        name = u'{0}: {1}'.format(self.voting_round.short_name, self.voter.username)
         return name
     
     class Meta:
         unique_together = ('voter', 'voting_round')
     
 class Vote(models.Model):
-    nomination = models.ForeignKey(Nomination, related_name="votes", related_query_name="vote")
+    user = models.ForeignKey(User, related_name="votes", related_query_name="vote")
     value = models.PositiveSmallIntegerField(default=0)
     ballot = models.ForeignKey(Ballot)
     comment = models.TextField(blank=True, null=True)
     
     def __unicode__(self):
-        name = '{0} ({1}): {2} votes for {3} {4}'.format(self.ballot.voting_round.short_name, self.ballot.voter.username, self.value, self.nomination.user.first_name, self.nomination.user.last_name)
+        name = u'{0} ({1}): {2} votes for {3} {4}'.format(self.ballot.voting_round.short_name, self.ballot.voter.username, self.value, self.user.first_name, self.user.last_name)
         return name
 
     class Meta:
-        unique_together = ('nomination', 'ballot')
+        unique_together = ('user', 'ballot')
