@@ -34,9 +34,10 @@ urlpatterns = patterns('',
     # Nod views
     url(r'^search/$', search, name="search"), # generic search of all users
     url(r'^search/nominate/$', search, {'nominate': True}, name="nodsearch"), # search for potential nominees for camp
-    # url(r'^search/nominate/(?P<camptheme>[a-zA-Z-,& ]+)/$', search, {'nominate': True}, name="nodsearch"), # nominate users for a particular camp
+    # url(r'^(?P<camptheme>[a-zA-Z-,& ]+)/nominate/$', search, {'nominate': True}, name="nodsearch"), # nominate users for a particular camp
     url(r'^nominated/$', nominated, name="nominated"), # nominated users
-    url(r'^vote/(?P<round>\d+)/$', vote, name="vote"), # camp dashboard
+    url(r'^vote/(?P<round>\d+)/$', vote, name="vote"), # voting table
+    url(r'^round/(?P<round>\d+)/$', round, name="round"), # voting round breakdown
 
     # Deprecated views (replace these!)
     url(r'^camps/$', camps, name="camps"),

@@ -57,12 +57,12 @@
                                 {% if nominate %}
                                 <td><input type="checkbox" name="checked" value="{{ result.id }}" /></td>
                                 {% endif %}
-                                <td>{{ result.first_name }} {{ result.last_name }}</td>
+                                <td>{% if result.first_name %}{{ result.first_name }} {{ result.last_name }}{% else %}{{ result.username }}{% endif %}</td>
                                 <td>{{ result.sparkprofile.employer }}</td>
                                 <td>{{ result.sparkprofile.job_title }}</td>
                                 <td>{{ result.sparkprofile.bio }}</td>
                                 <td>{% if result.sparkprofile.poc %}<span class="glyphicon glyphicon-ok"></span>{% endif %}</td>
-                                <td>{% if result.sparkprofile.w %}<span class="glyphicon glyphicon-ok"></span>{% endif %}</td>
+                                <td>{% if result.sparkprofile.woman %}<span class="glyphicon glyphicon-ok"></span>{% endif %}</td>
                                 <td>{% if result.sparkprofile.journo %}<span class="glyphicon glyphicon-ok"></span>{% endif %}</td>
                             </tr>
                         {% endfor %}
@@ -87,7 +87,7 @@
                 <select class="form-control" name="campselect">
                     <option value="">Choose a camp (optional):</option>
                     {% for camp in camps %}
-                    <option value="{{ camp.id }}">{{ camp.display_name }}</option>
+                    <option value="{{ camp.id }}">{% if camp.display_name %}{{ camp.display_name }}{% else %}{{ camp.theme }}{% endif %}</option>
                     {% endfor %}
                 </select>
                 {% else %}

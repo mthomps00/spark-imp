@@ -103,27 +103,31 @@ def vote(request, round):
     
     if request.method == 'POST':
         tally = request.POST.getlist('vote_tally')
-        nominees = request.POST.getlist('voter_id')
+        nominees = request.POST.getlist('nominee_id')
         h = 0
         i = len(nominees)
         while h < i:
-            value = tally[h]
+            current_tally = int(float(tally[h]))
             nod = Nomination.objects.get(id=nominees[h])
+            votes = Vote.objects.filter(user=nod.user, ballot__voting_round=round).exclude(ballot=ballot).values_list('value', flat=True)
+            votecount = sum(votes)
+            value = current_tally - votecount
             vote, created = Vote.objects.get_or_create(user=nod.user, ballot=ballot)
-            if created == False:
-                vote.value = value
+            vote.value = value
+            if value == 0:
+                vote.delete()
+            else:
                 vote.save()
             h += 1
 
     for nomination in nominations:
         count = 0
-        nomination.allvotes = Vote.objects.filter(user=nomination.user)
-        nomination.othernods = Nomination.objects.filter(user=nomination.user, camp=camp).exclude(pk=nomination.pk)
-        your_vote, created = Vote.objects.get_or_create(user=nomination.user, ballot=ballot)
-        for vote in nomination.allvotes:
+        nomination.votes = Vote.objects.filter(user=nomination.user)
+        nomination.your_vote, created = Vote.objects.get_or_create(user=nomination.user, ballot=ballot)
+        for vote in nomination.votes:
             count = count + vote.value
         nomination.count = count
-        nomination.minimum = count - your_vote.value
+        nomination.minimum = count - nomination.your_vote.value
         
     ballot_votes = Vote.objects.filter(ballot=ballot)
     vote_count = 0
@@ -139,3 +143,46 @@ def vote(request, round):
     }
     
     return render_to_response('nod/vote.html', variables, context_instance=RequestContext(request))
+
+@login_required
+def round(request, round):
+    round = VotingRound.objects.get(id=round)
+    ballot, created = Ballot.objects.get_or_create(voter=request.user, voting_round=round)
+    votes = Vote.objects.filter(value__gt=0,ballot__voting_round=round)
+    all_ids = votes.values_list('user',flat=True)
+    all_picks = User.objects.filter(id__in=all_ids)
+    your_ids = Vote.objects.filter(value__gt=0,ballot=ballot).values_list('user',flat=True)
+    your_picks = User.objects.filter(id__in=your_ids)
+    
+    for pick in all_picks:
+        pick.value = sum(Vote.objects.filter(user=pick.id).values_list('value',flat=True))
+    
+    # Calculate the demographic breakdown of the round.
+    all_poc = all_picks.filter(sparkprofile__poc=True)
+    your_poc = your_picks.filter(sparkprofile__poc=True)
+    all_women = all_picks.filter(sparkprofile__woman=True)
+    your_women = your_picks.filter(sparkprofile__woman=True)
+    
+    def percent(part, whole):
+        denominator = float(len(whole))
+        numerator = float(len(part))
+        if denominator <= 0:
+            denominator = 1
+        return int(100 * (numerator/denominator))
+
+    percents = {
+        'poc': percent(all_poc, all_picks),
+        'women': percent(all_women, all_picks),
+        'your_poc': percent(your_poc, your_picks),
+        'your_women': percent(your_women, your_picks),
+        }
+    
+    variables = {
+        'round': round,
+        'all_picks': all_picks,
+        'your_picks': your_picks,
+        'ballot': ballot,
+        'percents': percents,
+    }
+    
+    return render_to_response('nod/round.html', variables, context_instance=RequestContext(request))

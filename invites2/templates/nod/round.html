@@ -1,0 +1,89 @@
+{% extends "nod/vote.html" %}
+
+    {% block pageheader %}
+    <div class="row">
+        <div class="col-lg-6">
+            <h1>Results so far <small> {{ round.short_name|lower }} for {{ round.camp.display_name }}</small></h1>
+            {% if your_picks %}
+            <p><strong>{{ percents.your_poc }}%</strong> of your votes are for POC. <strong>{{ percents.your_women }}%</strong> are for women. Overall, {{ percents.poc }}% of votes in this round are for POC, and <strong>{{ percents.women }}%</strong> are for women. <a href="{% url 'vote' round=round.id %}">You can adjust your votes here</a>, if you'd like.</p>
+            {% else %}
+            <p>You haven't cast any votes in this round as yet. <a href="{% url 'vote' round=round.id %}">Vote!</a></p>
+            {% endif %}   
+
+        </div>
+        <div class="col-lg-6">
+            <br />
+            <form action="{% url 'nodsearch' %}" class="form-inline" method="GET" >
+            <div class="form-group">
+                <input type="text" class="form-control" id="q" name="q" placeholder="Find users to nominate" />
+            </div>
+            <button type="submit" class="btn btn-default">Submit</button>
+            </form>
+        </div>
+    </div>
+    {% endblock pageheader %}
+
+    {% block main %}
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                {% if all_picks %}
+                    <div class="table-responsive">
+                    <table class="table table-bordered" id="vote-table">
+                        <thead>
+                            <tr>
+                                <th class="col-sm-1">Votes</th>
+                                <th>First name</th>
+                                <th>Last name</th>
+                                <th>Company</th>
+                                <th>Title</th>
+                                <th>Bio</th>
+                                <th>POC</th>
+                                <th>W</th>
+                                <th>J</th>
+                            </tr>
+                        </thead>
+                    {% for pick in all_picks %}
+                        <tr>
+                            <td>{{ pick.value }}</td>
+                            <td>{{ pick.first_name }}</td>
+                            <td>{{ pick.last_name }}</td>
+                            <td>{{ pick.sparkprofile.employer }}</td>
+                            <td>{{ pick.sparkprofile.job_title }}</td>
+                            <td>{{ pick.sparkprofile.bio }}</td>
+                            <td>{% if pick.sparkprofile.poc %}<span class="glyphicon glyphicon-ok"></span>{% endif %}</td>
+                            <td>{% if pick.sparkprofile.woman %}<span class="glyphicon glyphicon-ok"></span>{% endif %}</td>
+                            <td>{% if pick.sparkprofile.journo %}<span class="glyphicon glyphicon-ok"></span>{% endif %}</td>
+                        </tr>
+                    {% endfor %}
+                    </table>
+                    </div>
+                {% else %}
+                    <h3>No votes yet for this round.</h3>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <nav class="navbar navbar-default navbar-fixed-bottom text-right">
+        <div class="container">
+            <div class="navbar-form">
+                <input type="submit" class="btn btn-info navbar-right" value="Vote!" id="nodsubmit" />
+            </div>
+        </div>
+    </nav>        
+    </form>
+    {% endblock main %}
+
+    {% block customscripts %}
+    <script src="{{ STATIC_URL }}_js/jquery.tablesorter.mod.js"></script>
+    <script type="text/javascript">
+      $(document).ready(function() {
+        $("#vote-table").tablesorter({
+          sortList: [[0,1],[6,1],[7,1],[2,0],[1,0]],
+          cssDesc: 'active',
+          cssAsc: 'danger',
+        });
+      });
+    </script>
+    {% endblock customscripts %}

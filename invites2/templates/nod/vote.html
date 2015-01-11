@@ -4,6 +4,12 @@
     body { 
         padding-bottom: 70px; 
     }
+    
+    input[type=number]::-webkit-inner-spin-button, 
+    input[type=number]::-webkit-outer-spin-button { 
+      -webkit-appearance: none; 
+      margin: 0; 
+    }
 
     input.vote_tally {
         background-color: transparent;
@@ -24,7 +30,7 @@
             <br />
             <form action="{% url 'nodsearch' %}" class="form-inline" method="GET" >
             <div class="form-group">
-                <input type="text" class="form-control" id="q" name="q" placeholder="Search users to nominate others" />
+                <input type="text" class="form-control" id="q" name="q" placeholder="Find users to nominate" />
             </div>
             <button type="submit" class="btn btn-default">Submit</button>
             </form>
@@ -44,7 +50,7 @@
                         <thead>
                             <tr>
                                 <th><span class="glyphicon glyphicon-plus-sign" alt="Expand all rows" id="expand_all"></span></th>
-                                <th>Votes</th>
+                                <th class="col-sm-1">Votes</th>
                                 <th>First name</th>
                                 <th>Last name</th>
                                 <th>Company</th>
@@ -61,30 +67,41 @@
                             {% for nominee in nomination.list %}
                             {% if forloop.first %}
                             <td><span class="glyphicon glyphicon-plus-sign"></span></td>
-                            <td><span class="glyphicon glyphicon-chevron-left" class="subtract_vote"></span><input type="number" name="vote_tally" min="{{ nominee.minimum }}" max="50" size="2" value="{{ nominee.count }}" class="vote_tally" /></span>&nbsp;
-                                <span class="glyphicon glyphicon-chevron-right" class="add_vote"></span><input type="hidden" value="{{ nominee.pk }}" name="voter_id" /></td>
+                            <td><span class="glyphicon glyphicon-chevron-left" class="subtract_vote"></span><input type="number" name="vote_tally" min="{{ nominee.minimum }}" max="50" size="2" value="{{ nominee.count }}" class="vote_tally" /></span><span class="glyphicon glyphicon-chevron-right" class="add_vote"></span><input type="hidden" value="{{ nominee.pk }}" name="nominee_id" /></td>
                             <td>{{ nominee.user.first_name }}</td>
                             <td>{{ nominee.user.last_name }}</td>
                             <td>{{ nominee.user.sparkprofile.employer }}</td>
                             <td>{{ nominee.user.sparkprofile.job_title }}</td>
                             <td>{{ nominee.user.sparkprofile.bio }}</td>
                             <td>{% if nominee.user.sparkprofile.poc %}<span class="glyphicon glyphicon-ok"></span>{% endif %}</td>
-                            <td>{% if nominee.user.sparkprofile.w %}<span class="glyphicon glyphicon-ok"></span>{% endif %}</td>
+                            <td>{% if nominee.user.sparkprofile.woman %}<span class="glyphicon glyphicon-ok"></span>{% endif %}</td>
                             <td>{% if nominee.user.sparkprofile.journo %}<span class="glyphicon glyphicon-ok"></span>{% endif %}</td>
                         </tr>
                         <tr class="vote_more expand-child" style="display:none;">
-                            <td colspan="10">
+                            <td colspan="6">
+                                <h4>Nominations</h4>
+                                <ul>
                                 {% endif %}
-                                <p><strong>{{ nominee.nominated_by }}</strong>
-                                <dl class="dl-horizontal">
-                                    <dt>Reason:</dt><dd>{{ nominee.reason }}</dd>
-                                    <dt>Description:</dt><dd>{{ nominee.description }}</dd>
-                                </dl>
+                                <li><strong>{{ nominee.nominated_by }}</strong> {% if nominee.description %}<em>Description:</em> {{ nominee.description }}{% endif %} {% if nominee.reason %}<em>Reason:</em> {{ nominee.reason }}<br />{% endif %}</li>
                                 {% if forloop.last %}
+                                </ul>
+                                <h4>Votes</h4>
+                                <ul>
+                                {% for vote in nominee.votes %}
+                                    {% if vote.value > 0 %}
+                                    <li><strong>{{ vote.ballot.voter }}</strong> ({{ vote.value }})
+                                        {% if vote.comment %}{{ vote.comment }}{% endif %}</li>
+                                    {% endif %}
+                                {% endfor %}
+                                </ul>
                                 <div class="form-group">
                                     <label for="vote_comments" />Your comment:</label>
-                                    <input type="text" class="vote_more" value="{{ nominee.comments }}" id="vote_comments" />
+                                    <input type="text" class="vote_more" value="{{ nominee.comments }}"  />
                                 </div>
+                            </td>
+                            <td colspan = "4">
+                                <h4>More on {{ nominee.first_name }}</h4>
+                                <p>{{ nominee.sparkprofile.twitter }}</p>
                             </td>
                         </tr>
                     {% endif %}{% endfor %}{% endfor %}
@@ -93,7 +110,6 @@
                 {% else %}
                     <h3>No nominations yet for {{ camp.display_name }}.</h3>
                 {% endif %}
-                {% if request %}{{ request }}{% endif %}
             </div>
         </div>
     </div>
