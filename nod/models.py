@@ -28,6 +28,10 @@ class Tag(models.Model):
     name = models.CharField(max_length=50)
     user = models.ManyToManyField(User, related_name="tags", related_query_name="tag")
     
+    def __unicode__(self):
+        return self.name
+
+    
 class VotingRound(models.Model):
     camp = models.ForeignKey(Camp)
     short_name = models.CharField(max_length=25, default='New voting round')
