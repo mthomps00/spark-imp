@@ -190,7 +190,7 @@ def round(request, round):
     return render_to_response('nod/round.html', variables, context_instance=RequestContext(request))
   
 @login_required
-def invite(request, camptheme):
+def invites(request, camptheme):
     camp = Camp.objects.get(theme=camptheme)
     
     if request.method == 'POST':
@@ -223,7 +223,7 @@ def invite(request, camptheme):
         'emailless': emailless,
     }
     
-    return render_to_response('nod/invite.html', variables, context_instance=RequestContext(request))
+    return render_to_response('nod/invites.html', variables, context_instance=RequestContext(request))
 
 @login_required
 def process_emails(request):

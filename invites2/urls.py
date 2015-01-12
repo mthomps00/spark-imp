@@ -38,7 +38,7 @@ urlpatterns = patterns('',
     url(r'^nominated/$', nominated, name="nominated"), # nominated users
     url(r'^vote/(?P<round>\d+)/$', vote, name="vote"), # voting table
     url(r'^round/(?P<round>\d+)/$', round, name="round"), # voting round breakdown
-    url(r'^invite/(?P<camptheme>[a-zA-Z-,& ]+)/$', invite, name="invite"), # post-vote invite
+    url(r'^invites/(?P<camptheme>[a-zA-Z-,& ]+)/$', invites, name="invites"), # post-vote invite
     url(r'^process/$', process_emails, name="process_emails"), # voting round breakdown
 
 
