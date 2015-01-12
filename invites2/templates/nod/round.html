@@ -2,6 +2,12 @@
 
     {% block title %}{{ round.camp.display_name }} – {{ round.short_name }}{% endblock title %}
 
+{% block admin-navitems %}
+    <li><a href="{% url 'camp' camptheme=round.camp.theme %}">Event dashboard</a></li>
+    <li><a href="{% url 'admin:rsvp_camp_change' round.camp.id %}">Edit event</a></li>
+    <li><a href="{% url 'admin:nod_votinground_change' round.id %}">Edit round</a></li>
+    {% endblock admin-navitems %}
+
     {% block pageheader %}
     <div class="row">
         <div class="col-lg-6">
