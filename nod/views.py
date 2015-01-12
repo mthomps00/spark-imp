@@ -1,11 +1,12 @@
+from datetime import date, timedelta
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.db.models import Q
-from django.shortcuts import render, render_to_response
+from django.shortcuts import redirect, render, render_to_response
 from django.template import Context, RequestContext
 from rsvp.models import Camp, SparkProfile, Invitation
 from nod.models import *
-import re
+import re, datetime
 
 ####################
 # SEARCH VIEWS
@@ -97,7 +98,7 @@ def nominated(request, camp=False):
 def vote(request, round):
     current_round = VotingRound.objects.get(id=round)
     camp = Camp.objects.get(id=current_round.camp.id)
-    nominations = Nomination.objects.filter(camp=camp).order_by('user')
+    nominations = Nomination.objects.filter(camp=camp).exclude(success=True).order_by('user')
     ballot, created = Ballot.objects.get_or_create(voter=request.user, voting_round=current_round)
     num_votes = current_round.num_votes
     
@@ -119,6 +120,7 @@ def vote(request, round):
             else:
                 vote.save()
             h += 1
+        return redirect('round', round=round)
 
     for nomination in nominations:
         count = 0
@@ -186,3 +188,61 @@ def round(request, round):
     }
     
     return render_to_response('nod/round.html', variables, context_instance=RequestContext(request))
+  
+@login_required
+def invite(request, camptheme):
+    camp = Camp.objects.get(theme=camptheme)
+    
+    if request.method == 'POST':
+        invitees = request.POST.getlist('invite')
+        expires = request.POST.get('deadline')
+        today = datetime.date.today()
+    
+        # Change the number of days in the following line to alter the RSVP response deadline for the new invitations.
+        daysleft = timedelta(days=int(expires))
+        expiration = today + daysleft
+
+        for invitee in invitees:
+            user = User.objects.get(id=invitee)
+            invite, created = Invitation.objects.get_or_create(user=user,camp=camp)
+            if created:
+                Nomination.objects.filter(camp=camp,user=user).update(success=True)
+                invite.expires = expiration
+                if user.email:
+                    invite.status = 'P'
+                else:
+                    invite.status = 'Q'
+            invite.save()
+    
+    invitations = Invitation.objects.filter(camp=camp,status='P')
+    emailless = Invitation.objects.filter(camp=camp,status='Q')
+    
+    variables = {
+        'camp': camp,
+        'invitations': invitations,
+        'emailless': emailless,
+    }
+    
+    return render_to_response('nod/invite.html', variables, context_instance=RequestContext(request))
+
+@login_required
+def process_emails(request):
+    if request.method == 'POST':
+        
+        emails = request.POST.getlist('email')
+        invitations = request.POST.getlist('invite_id')
+        added = []
+        
+        for count, invitation in enumerate(invitations):
+            invite = Invitation.objects.get(id=invitations[count])
+            user = invite.user
+            if emails[count] != '':
+                user.email = emails[count]
+                user.sparkprofile.email = emails[count]
+                user.save()
+                user.sparkprofile.save()
+                
+        request = added
+        return render_to_response('nod/request.html', {'request': request }, context_instance=RequestContext(request))
+
+        

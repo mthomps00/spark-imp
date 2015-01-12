@@ -1,24 +1,19 @@
 {% extends "nod/vote.html" %}
 
+    {% block title %}{{ round.camp.display_name }} – {{ round.short_name }}{% endblock title %}
+
     {% block pageheader %}
     <div class="row">
         <div class="col-lg-6">
-            <h1>Results so far <small> {{ round.short_name|lower }} for {{ round.camp.display_name }}</small></h1>
+            <h1>Results so far</h1>  
+        </div>
+        <div class="col-lg-6">
             {% if your_picks %}
+            <h4>{{ round.short_name|lower }} for {{ round.camp.display_name }}</h4>
             <p><strong>{{ percents.your_poc }}%</strong> of your votes are for POC. <strong>{{ percents.your_women }}%</strong> are for women. Overall, {{ percents.poc }}% of votes in this round are for POC, and <strong>{{ percents.women }}%</strong> are for women. <a href="{% url 'vote' round=round.id %}">You can adjust your votes here</a>, if you'd like.</p>
             {% else %}
             <p>You haven't cast any votes in this round as yet. <a href="{% url 'vote' round=round.id %}">Vote!</a></p>
-            {% endif %}   
-
-        </div>
-        <div class="col-lg-6">
-            <br />
-            <form action="{% url 'nodsearch' %}" class="form-inline" method="GET" >
-            <div class="form-group">
-                <input type="text" class="form-control" id="q" name="q" placeholder="Find users to nominate" />
-            </div>
-            <button type="submit" class="btn btn-default">Submit</button>
-            </form>
+            {% endif %} 
         </div>
     </div>
     {% endblock pageheader %}
@@ -29,10 +24,13 @@
             <div class="col-lg-12">
                 {% if all_picks %}
                     <div class="table-responsive">
+                    <form action="{% url 'invite' camptheme=round.camp.theme %}" method="POST">
+                        {% csrf_token %}
                     <table class="table table-bordered" id="vote-table">
                         <thead>
                             <tr>
-                                <th class="col-sm-1">Votes</th>
+                                <th><input type="checkbox" id="check_all" /></th>
+                                <th>Votes</th>
                                 <th>First name</th>
                                 <th>Last name</th>
                                 <th>Company</th>
@@ -45,6 +43,7 @@
                         </thead>
                     {% for pick in all_picks %}
                         <tr>
+                            <td><input type="checkbox" name="invite" class="invite-check" value="{{ pick.id }}" /></td> 
                             <td>{{ pick.value }}</td>
                             <td>{{ pick.first_name }}</td>
                             <td>{{ pick.last_name }}</td>
@@ -65,10 +64,12 @@
         </div>
     </div>
 
-    <nav class="navbar navbar-default navbar-fixed-bottom text-right">
+    <nav class="navbar navbar-default navbar-fixed-bottom">
         <div class="container">
-            <div class="navbar-form">
-                <input type="submit" class="btn btn-info navbar-right" value="Vote!" id="nodsubmit" />
+            <div class="navbar-form navbar-right">
+                <label for="deadline" class="navbar-text" />Days till deadline:</label>
+                <input type="text" class="form-control" name="deadline" value="14" />
+                <input type="submit" class="btn btn-info navbar-right" value="Invite!" id="nodsubmit" />
             </div>
         </div>
     </nav>        
@@ -80,10 +81,24 @@
     <script type="text/javascript">
       $(document).ready(function() {
         $("#vote-table").tablesorter({
-          sortList: [[0,1],[6,1],[7,1],[2,0],[1,0]],
+          sortList: [[1,1],[7,1],[8,1],[3,0],[2,0]],
+          headers: { 0: { sorter: false}, },
           cssDesc: 'active',
           cssAsc: 'danger',
         });
+      $(document).ready(function() {
+        $('#check_all').click(function(event) {  //on click 
+            if(this.checked) { // check select status
+                $('input.invite-check').each(function() { //loop through each checkbox
+                    this.checked = true;  //select all checkboxes with class "checkbox1"               
+                });
+            }else{
+                $('input.invite-check').each(function() { //loop through each checkbox
+                    this.checked = false; //deselect all checkboxes with class "checkbox1"                       
+                });         
+            }
+        });
+      });
       });
     </script>
     {% endblock customscripts %}

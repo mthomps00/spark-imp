@@ -38,14 +38,14 @@ urlpatterns = patterns('',
     url(r'^nominated/$', nominated, name="nominated"), # nominated users
     url(r'^vote/(?P<round>\d+)/$', vote, name="vote"), # voting table
     url(r'^round/(?P<round>\d+)/$', round, name="round"), # voting round breakdown
+    url(r'^invite/(?P<camptheme>[a-zA-Z-,& ]+)/$', invite, name="invite"), # post-vote invite
+    url(r'^process/$', process_emails, name="process_emails"), # voting round breakdown
+
 
     # Deprecated views (replace these!)
-    url(r'^camps/$', camps, name="camps"),
     url(r'^camps/(?P<camptheme>[a-zA-Z-,& ]+)/dietary/$', dietary, name="dietary"),
     url(r'^camps/(?P<camptheme>[a-zA-Z-,& ]+)/stipends/$', stipends, name="stipends"),
     url(r'^camps/(?P<camptheme>[a-zA-Z-,& ]+)/sessions/$', sessions, name="sessions"),
-    url(r'^camps/(?P<camptheme>[a-zA-Z-,& ]+)/gsync/$', google_sync, name="google_sync"),
-    url(r'^camps/(?P<camptheme>[a-zA-Z-,& ]+)/gsync/(?P<deadline>\d{1,3})$', google_sync, name="google_sync"),
     url(r'^camps/(?P<camptheme>[a-zA-Z-,& ]+)/mailsync/$', mailsync, name="mailsync"),
     url(r'^user/(\w+)/$', user_page, name="user_page"),
                        

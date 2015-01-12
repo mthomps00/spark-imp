@@ -1,5 +1,7 @@
 {% extends "nod/search.html" %}
 
+    {% block title %}{% if camp %}{{ camp.display_name }} – {% endif %}Nominations{% endblock title %}
+
     {% block main %}
     <div class="container">
         <div class="row">

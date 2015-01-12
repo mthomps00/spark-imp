@@ -8,7 +8,8 @@
     {% endblock customstyles %}
     {% endif %}
 
-    
+    {% block title %}Search{% if query_string %} results for "{{ query_string }}"{% endif %}{% endblock title %}
+
     {% block pageheader %}
     <div class="row">
         <div class="col-lg-6">
@@ -37,7 +38,7 @@
                             <thead>
                                 <tr>
                                     {% if nominate %}
-                                    <th><input type="checkbox" /></th>
+                                    <th><input type="checkbox" id="check_all" /></th>
                                     {% endif %}
                                     <th>Name</th>
                                     <th>Company</th>
@@ -55,7 +56,7 @@
                         {% for result in results %}
                             <tr>
                                 {% if nominate %}
-                                <td><input type="checkbox" name="checked" value="{{ result.id }}" /></td>
+                                <td><input type="checkbox" name="checked" class="nod_check" value="{{ result.id }}" /></td>
                                 {% endif %}
                                 <td>{% if result.first_name %}{{ result.first_name }} {{ result.last_name }}{% else %}{{ result.username }}{% endif %}</td>
                                 <td>{{ result.sparkprofile.employer }}</td>
@@ -101,3 +102,21 @@
     {% endif %}
 
     {% endblock main %}
+
+    {% block customscripts %}
+    <script src="{{ STATIC_URL }}_js/jquery.tablesorter.mod.js"></script>
+    <script type="text/javascript">
+      $(document).ready(function() {
+        $('#check_all').click(function(event) {  //on click 
+            if(this.checked) { // check select status
+                $('input.nod_check').each(function() { //loop through each checkbox
+                    this.checked = true;  //select all checkboxes with class "checkbox1"               
+                });
+            }else{
+                $('input.nod_check').each(function() { //loop through each checkbox
+                    this.checked = false; //deselect all checkboxes with class "checkbox1"                       
+                });         
+            }
+        });
+      });
+    </script>

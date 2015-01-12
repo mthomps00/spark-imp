@@ -20,7 +20,14 @@
     }
     {% endblock customstyles %}
 
-    
+    {% block title %}{{ camp.display_name }} – {{ round.short_name }}{% endblock title %}
+
+    {% block admin-navitems %}
+    <li><a href="{% url 'camp' camptheme=round.camp.theme %}">Event dashboard</a></li>
+    <li><a href="{% url 'admin:rsvp_camp_change' camp.id %}">Edit event</a></li>
+    <li><a href="{% url 'admin:nod_votinground_change' round.id %}">Edit round</a></li>
+    {% endblock admin-navitems %}
+
     {% block pageheader %}
     <div class="row">
         <div class="col-lg-6">
@@ -78,30 +85,40 @@
                             <td>{% if nominee.user.sparkprofile.journo %}<span class="glyphicon glyphicon-ok"></span>{% endif %}</td>
                         </tr>
                         <tr class="vote_more expand-child" style="display:none;">
-                            <td colspan="6">
-                                <h4>Nominations</h4>
-                                <ul>
-                                {% endif %}
-                                <li><strong>{{ nominee.nominated_by }}</strong> {% if nominee.description %}<em>Description:</em> {{ nominee.description }}{% endif %} {% if nominee.reason %}<em>Reason:</em> {{ nominee.reason }}<br />{% endif %}</li>
-                                {% if forloop.last %}
-                                </ul>
-                                <h4>Votes</h4>
-                                <ul>
-                                {% for vote in nominee.votes %}
-                                    {% if vote.value > 0 %}
-                                    <li><strong>{{ vote.ballot.voter }}</strong> ({{ vote.value }})
-                                        {% if vote.comment %}{{ vote.comment }}{% endif %}</li>
-                                    {% endif %}
-                                {% endfor %}
-                                </ul>
-                                <div class="form-group">
-                                    <label for="vote_comments" />Your comment:</label>
-                                    <input type="text" class="vote_more" value="{{ nominee.comments }}"  />
-                                </div>
-                            </td>
-                            <td colspan = "4">
-                                <h4>More on {{ nominee.first_name }}</h4>
-                                <p>{{ nominee.sparkprofile.twitter }}</p>
+                            <td colspan="10">
+                            <table class="table">
+                              <tr>
+                                <td class="col-sm-3 info text-right">Nominated by</td>
+                                <td class="col-sm-9">
+                                  <dl class='dl-horizontal'>
+                                  {% endif %}
+                                  <dt>{{ nominee.nominated_by }}</dt> <dd>{% if nominee.description %}<em>Description:</em> {{ nominee.description }}{% endif %} {% if nominee.reason %}<em>Reason:</em> {{ nominee.reason }}<br />{% endif %}</dd>
+                                  {% if forloop.last %}
+                                  </dl>
+                                </td>
+                              </tr>
+                              <tr>
+                                <td class="info text-right">Votes</td>
+                                <td>
+                                  <dl class="dl-horizontal">
+                                  {% for vote in nominee.votes %}
+                                      {% if vote.value > 0 %}
+                                      <dt>{{ vote.ballot.voter }} ({{ vote.value }})</dt>
+                                      <dd>{% if vote.comment %}{{ vote.comment }}{% endif %}</dd>
+                                      {% endif %}
+                                  {% endfor %}
+                                  </dl>
+                                </td>
+                              </tr>
+                              <tr>
+                                <td class="info text-right">Tags</td>
+                                <td class="text-center">
+                                  {% for tag in nominee.user.tags.all %}
+                                  <span class="label label-default">{{ tag }}</span>
+                                  {% endfor %}
+                                </td>
+                              </tr>
+                              </table>
                             </td>
                         </tr>
                     {% endif %}{% endfor %}{% endfor %}

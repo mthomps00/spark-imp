@@ -1,5 +1,7 @@
 {% extends "reboot/camp.html" %}
 
+  {% block title %}{{ invitation.camp.display_name }} – Invitation{% endblock title %}
+
   {% block admin-invite-navitems %}
   <li><a href="{% url 'admin:rsvp_invitation_change' invitation.id %}">Edit invitation</a></li>
   <li><a href="{% url 'admin:auth_user_change' invitation.user.id %}">Edit user</a></li>

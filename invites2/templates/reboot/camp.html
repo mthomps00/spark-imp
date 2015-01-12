@@ -1,5 +1,7 @@
 {% extends "reboot/reboot.html" %}
 
+  {% block title %}{{ camp.display_name }} – Dashboard{% endblock title %}
+
   {% block admin-navitems %}
     <li><a href="{% url 'camp' camptheme=camp.theme %}">Event dashboard</a></li>
     <li><a href="{% url 'admin:rsvp_camp_change' camp.id %}">Edit event</a></li>
@@ -18,7 +20,7 @@
         <p class="lead">{{ camp.description }}</p>
         <p class="text-muted">Click any header in the table below to sort by that column. Hold shift while clicking to sort on multiple columns.</p>
       </div>
-      <div class="col-lg-3">
+      <div class="col-lg-2">
         <p>{{ confirmed|length }} confirmed /
           <span class="text-muted">{{ invitations|length }} total</span>
         </p>
@@ -32,27 +34,12 @@
           <span class="text-muted">{{ percent_all_journos }}% media</span>
         </p>
       </div>
-      <div class="col-lg-3">
-        {% if camp.spreadsheet_url %}
-        <h4>Sync with Google Spreadsheet</h4>
-        <form class="form-inline comment-form" action="{% url 'google_sync' camptheme=camp.theme %}" method="get" role="form">
-          <div class="form-group">
-            <label class="sr-only" for="deadline">Days till deadline:</label>
-            <input type="text" class="form-control input-sm" value="14" name="deadline" />
-            <input class="btn btn-sm" type="submit" value="Sync" />
-          </div>
-        </form>
-        {% endif %}
+      <div class="col-lg-4">
+        
         {% if camp.mailchimp_list %}
-        <h4>Sync with Mailchimp</h4>
-        <form class="form-inline comment-form" action="{% url 'mailsync' camptheme=camp.short_name %}" method="get" role="form">
-          <div class="form-group">
-            <input class="btn btn-sm" type="submit" value="Sync" />
-          </div>
-        </form>       
+        <p><span class="glyphicon glyphicon-transfer"></span>&nbsp;<a href="{% url 'mailsync' camptheme=camp.short_name %}" method="get" role="form">Sync with MailChimp</a></p>
         {% endif %}
-        <h4>Download CSV</h4>
-        <p><span class="glyphicon glyphicon-file"></span>&nbsp;<a href="{% url 'camp_table' camptheme=camp.theme %}">All invitees to this camp</a></p>    
+        <p><span class="glyphicon glyphicon-file"></span>&nbsp;<a href="{% url 'camp_table' camptheme=camp.theme %}">Download CSV of invitees</a></p>    
       </div>
     </div>
   </div>

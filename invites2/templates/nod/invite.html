@@ -1,0 +1,79 @@
+{% extends "nod/vote.html" %}
+
+    {% block title %}{{ camp.display_name }} – Invites{% endblock title %}
+
+    {% block admin-navitems %}
+    <li><a href="{% url 'camp' camptheme=camp.theme %}">Event dashboard</a></li>
+    <li><a href="{% url 'admin:rsvp_camp_change' camp.id %}">Edit event</a></li>
+    {% endblock admin-navitems %}
+
+    {% block pageheader %}
+    <div class="row">
+        <div class="col-lg-12">
+            <h1>Invites<small> for {{ camp.display_name }}</small></h1>  
+        </div>
+    </div>
+    {% endblock pageheader %}
+
+    {% block main %}
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                {% if invitations %}
+                <h3>Invitations pending a response:</h3>
+                    <div class="table-responsive">
+                    <table class="table table-bordered" id="vote-table">
+                        <thead>
+                            <tr>
+                                <th>First name</th>
+                                <th>Last name</th>
+                                <th>Status</th>
+                                <th>Expires</th>
+                            </tr>
+                        </thead>
+                        {% csrf_token %}
+                    {% for invite in invitations %}
+                        <tr>
+                            <td>{{ invite.user.first_name }}</td>
+                            <td>{{ invite.user.last_name }}</td>
+                            <td>{{ invite.status }}</td>
+                            <td>{{ invite.expires|date:"l, F j" }}</td>
+                        </tr>
+                    {% endfor %}
+                    </table>
+                    </div>
+                {% endif %}
+                {% if emailless %}
+                <h3>Emails needed before invites can be sent:</h3>
+                    <div class="table-responsive">
+                    <table class="table table-bordered" id="vote-table">
+                        <thead>
+                            <tr>
+                                <th>First name</th>
+                                <th>Last name</th>
+                                <th>Status</th>
+                                <th>Email</th>
+                                <th>Expires</th>
+                            </tr>
+                        </thead>
+                        {% for invite in emailless %}
+                        <tr>
+                            <td>{{ invite.user.first_name }}</td>
+                            <td>{{ invite.user.last_name }}</td>
+                            <td>{{ invite.status }}</td>
+                            <td><a href="{% url 'admin:auth_user_change' invite.user.id %}">Edit user</a> | <a href="{% url 'admin:rsvp_invitation_change' invite.pk %}">Edit invitation</a></td>
+                            <td>{{ invite.expires|date:"l, F j, Y" }}</td>
+                        </tr>
+                        {% endfor %}
+                    </table>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    {% endblock main %}
+
+    {% block customscripts %}
+    <script src="{{ STATIC_URL }}_js/jquery.tablesorter.mod.js"></script>
+    {% endblock customscripts %}
