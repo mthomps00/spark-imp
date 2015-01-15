@@ -88,17 +88,17 @@
                             <td colspan="10">
                             <table class="table">
                               <tr>
-                                <td class="col-sm-3 info text-right">Nominated by</td>
-                                <td class="col-sm-9">
+                                <td class="col-sm-2 default text-right">Nominated by</td>
+                                <td class="col-sm-10">
                                   <dl class='dl-horizontal'>
                                   {% endif %}
-                                  <dt>{{ nominee.nominated_by }}</dt> <dd>{% if nominee.description %}<em>Description:</em> {{ nominee.description }}{% endif %} {% if nominee.reason %}<em>Reason:</em> {{ nominee.reason }}<br />{% endif %}</dd>
+                                  <dt>{% if nominee.nominated_by.first_name %}{{ nominee.nominated_by.first_name }} {{ nominee.nominated_by.last_name }}{% else %}{{ nominee.nominated_by }}{% endif %}</dt> <dd>{% if nominee.description %}<em>Description:</em> {{ nominee.description }}{% endif %} {% if nominee.reason %}<em>Reason:</em> {{ nominee.reason }}<br />{% endif %}</dd>
                                   {% if forloop.last %}
                                   </dl>
                                 </td>
                               </tr>
                               <tr>
-                                <td class="info text-right">Votes</td>
+                                <td class="default text-right">Votes</td>
                                 <td>
                                   <dl class="dl-horizontal">
                                   {% for vote in nominee.votes %}
@@ -111,7 +111,7 @@
                                 </td>
                               </tr>
                               <tr>
-                                <td class="info text-right">Tags</td>
+                                <td class="default text-right">Tags</td>
                                 <td class="text-center">
                                   {% for tag in nominee.user.tags.all %}
                                   <span class="label label-default">{{ tag }}</span>
@@ -180,8 +180,8 @@
             $(this).toggleClass('glyphicon-plus-sign glyphicon-minus-sign');
             console.log($(this).parents('tr').next('tr'));
         });
-        $('span#expand-all').click(function(){
-            $('tr.expand-child').toggle();
+        $('span#expand_all').click(function(){
+            $('tr.vote_more').toggle();
             $('span.glyphicon-plus-sign').toggleClass('glyphicon-plus-sign glyphicon-minus-sign');
             $(this).toggleClass('glyphicon-plus-sign glyphicon-minus-sign');
         });

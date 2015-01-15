@@ -6,7 +6,7 @@ from nod.models import *
 import random, csv, datetime, unicodecsv
 from urllib import urlopen
 
-nominees_sheet = 'http://sparkcamp.com/wp-content/uploads/2015/01/december_campers.csv'
+nominees_sheet = 'http://sparkcamp.com/wp-content/uploads/2015/01/january_nods.csv'
 nominees = csv.DictReader(urlopen(nominees_sheet))
 camp = Camp.objects.get(theme='Giving')
 round, vroundcreated = VotingRound.objects.get_or_create(short_name='First-round vote',camp=camp)
