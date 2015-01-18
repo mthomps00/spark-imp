@@ -4,7 +4,7 @@ from nod.models import *
 
 class VoteInline(admin.TabularInline):
     model = Vote
-    ordering = ['-value']
+    ordering = ['-value', 'user']
     
 class BallotAdmin(admin.ModelAdmin):
     model = Ballot
