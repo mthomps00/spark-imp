@@ -214,8 +214,8 @@ def invites(request, camptheme):
                     invite.status = 'Q'
             invite.save()
     
-    invitations = Invitation.objects.filter(camp=camp,status='P')
-    emailless = Invitation.objects.filter(camp=camp,status='Q')
+    invitations = Invitation.objects.filter(camp=camp,status='P').order_by('user__last_name')
+    emailless = Invitation.objects.filter(camp=camp,status='Q').order_by('user__last_name')
     
     variables = {
         'camp': camp,

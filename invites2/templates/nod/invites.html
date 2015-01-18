@@ -28,6 +28,7 @@
                                 <th>First name</th>
                                 <th>Last name</th>
                                 <th>Status</th>
+                                <th>Edit</th>
                                 <th>Expires</th>
                             </tr>
                         </thead>
@@ -37,6 +38,7 @@
                             <td>{{ invite.user.first_name }}</td>
                             <td>{{ invite.user.last_name }}</td>
                             <td>{{ invite.status }}</td>
+                            <td><a href="{% url 'admin:auth_user_change' invite.user.id %}">Edit user</a> | <a href="{% url 'admin:rsvp_invitation_change' invite.pk %}">Edit invitation</a></td>
                             <td>{{ invite.expires|date:"l, F j" }}</td>
                         </tr>
                     {% endfor %}
@@ -52,7 +54,7 @@
                                 <th>First name</th>
                                 <th>Last name</th>
                                 <th>Status</th>
-                                <th>Email</th>
+                                <th>Edit</th>
                                 <th>Expires</th>
                             </tr>
                         </thead>
