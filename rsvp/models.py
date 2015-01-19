@@ -1,8 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save
-from imagekit.models import ImageSpecField
-from imagekit.processors import ResizeToFill
+#from imagekit.models import ImageSpecField
+#from imagekit.processors import ResizeToFill
 import random
 
 class Camp(models.Model):
