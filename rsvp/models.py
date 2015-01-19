@@ -1,8 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save
-#from imagekit.models import ImageSpecField
-#from imagekit.processors import ResizeToFill
+from imagekit.models import ImageSpecField
+from imagekit.processors import ResizeToFill
 import random
 
 class Camp(models.Model):
@@ -248,12 +248,12 @@ class PlusOne(models.Model):
 class SparkProfile(models.Model):
     user = models.OneToOneField(User)
     headshot = models.ImageField(blank=True,null=True,upload_to='headshot')
-    '''thumb = ImageSpecField(
+    thumb = ImageSpecField(
         source='headshot',
         processors=[ResizeToFill(125, 125)],
         format='JPEG',
         options={'quality': 85}
-    )'''
+    )
     bio = models.CharField(
         max_length=140,
         blank=True,
