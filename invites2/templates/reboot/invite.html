@@ -9,7 +9,7 @@
 
   {% block navitems %}
   {% if camp.faq_url %}
-  <li><a href="{{ camp.faq_url }}">Event FAQ</a></li>
+  <li><a href="{{ camp.faq }}">Event FAQ</a></li>
   {% endif %}
   {% endblock navitems %}
 
@@ -30,9 +30,12 @@
             </div>
             {% endfor %}
           {% endif %}
+          
 
           {% autoescape off %}
+          {% block welcome %}
           <p class="lead">{{ camp.welcome }}</p>
+          {% endblock welcome %}
           {% endautoescape %}
         </div>
         <div class="col-lg-4">

@@ -13,9 +13,16 @@ class BallotAdmin(admin.ModelAdmin):
       VoteInline,
     ]
 
+class NodAdmin(admin.ModelAdmin):
+    model = Nomination
+    search_fields = ('user__username', 'user__first_name', 'user__last_name',)
+    list_display = ('user', 'reason', 'description',)
+    list_filter = ('camp', 'success',)
+    ordering = ['user']
+    
 # Register your models here.
 
-admin.site.register(Nomination)
+admin.site.register(Nomination, NodAdmin)
 admin.site.register(Tag)
 admin.site.register(VotingRound)
 admin.site.register(Ballot, BallotAdmin)

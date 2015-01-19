@@ -38,11 +38,11 @@
   {% endif %}
 
     <p><span class="text-danger">
-      {% if not invitation.user.sparkprofile.has_headshot %}We need a headshot of you to finish your registration. Please email a clear, hi-res photo of yourself to <a href="mailto:sparkcampphotos@gmail.com">sparkcampphotos@gmail.com</a>, and check the 'Headshot sent' box below. {% endif %}
+      {% if not invitation.user.sparkprofile.headshot %}We need a headshot of you to finish your registration. Please upload a clear, high-resolution photo of yourself below. {% endif %}
       {% if invitation.user.sparkprofile.bio == '' %} We're missing a bio for you; please submit a brief bio below.{% endif %}
     </span></p>
 
-    <form action="{% url 'update' rand_id=invitation.rand_id %}" method="post">
+    <form action="{% url 'update' rand_id=invitation.rand_id %}" method="post" enctype="multipart/form-data">
       {% csrf_token %}
       <table class="table table-basic">
       {{ profileform.as_table }}

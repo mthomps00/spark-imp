@@ -1,0 +1,9 @@
+{% extends "reboot/invite.html" %}
+
+  {% block pageheader %}
+  <h1>{{ camp.display_name }} <small>FAQ</small></h1>
+  {% endblock pageheader %}
+
+  {% block welcome %}
+  {{ invitation.camp.faq }}
+  {% endblock welcome %}

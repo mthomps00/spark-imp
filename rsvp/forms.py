@@ -36,7 +36,7 @@ class InviteDetailForm(ModelForm):
 class SparkProfileForm(ModelForm):
     class Meta:
         model = SparkProfile
-        fields = ('job_title', 'employer', 'bio', 'phone', 'twitter', 'url', 'email', 'secondary_email', 'dietary', 'headshot', 'has_headshot')
+        fields = ('job_title', 'employer', 'bio', 'phone', 'twitter', 'url', 'email', 'secondary_email', 'dietary', 'headshot')
 
 # Custom forms
 class ResponseForm(forms.Form):

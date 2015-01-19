@@ -272,6 +272,15 @@ def invite(request, rand_id):
         'camp': invitation.camp,
     }
     return render_to_response('reboot/invite.html', variables, context_instance=RequestContext(request))
+
+def faq(request, rand_id):
+    invitation = get_object_or_404(Invitation, rand_id=rand_id)
+    
+    variables = {
+        'invitation': invitation,
+        'camp': invitation.camp,
+    }
+    return render_to_response('reboot/faq.html', variables, context_instance=RequestContext(request))
   
 def pay(request, rand_id):
     invitation = get_object_or_404(Invitation, rand_id=rand_id)
@@ -314,7 +323,7 @@ def pay(request, rand_id):
         # If this is actually a comp ticket, just process it as paid
         else:
             invitation.has_paid = True
-            if (invitation.has_paid == True) and (invitation.user.sparkprofile.bio != '') and (invitation.user.sparkprofile.has_headshot == True):
+            if (invitation.has_paid == True) and (invitation.user.sparkprofile.bio != '') and (bool(invitation.user.sparkprofile.headshot) == True):
                 invitation.status = 'Y'
             else:
                 invitation.status = 'I'
@@ -343,7 +352,7 @@ def update(request, rand_id):
 
     # If the user has submitted a profile form ...
     if request.method == 'POST':
-        profileform = SparkProfileForm(request.POST, instance=profile)
+        profileform = SparkProfileForm(request.POST, request.FILES, instance=profile)
 
         # ... and that form is valid ...
         if profileform.is_valid():
@@ -355,13 +364,13 @@ def update(request, rand_id):
             profile.phone = profileform.cleaned_data['phone']
             profile.email = profileform.cleaned_data['email']
             profile.dietary = profileform.cleaned_data['dietary']
-            profile.has_headshot = profileform.cleaned_data['has_headshot']
+            profile.headshot = profileform.cleaned_data['headshot']
             user.email = profileform.cleaned_data['email']
             profile.save()
             user.save()
 
             # ... AND that form has a bio and headshot ...
-            if profile.bio != '' and profile.has_headshot == True:
+            if profile.bio != '' and bool(profile.headshot) == True:
 
                 # If the user is on the waitlist, merely update their information. Send no email.
                 if invitation.status == 'W':
@@ -483,6 +492,7 @@ def details(request, rand_id):
         'stipend': stipend,
         'ignite': ignite,
         'session': session,
+        'headshot': bool(invitation.user.sparkprofile.headshot),
     }
     return render_to_response('reboot/details.html', variables, context_instance=RequestContext(request))
 
@@ -500,11 +510,7 @@ def stipend(request, rand_id):
             stipend.invitee_percentage = form.cleaned_data['invitee_percentage']
             stipend.details = form.cleaned_data['details']
             stipend.save()
-            invitation.has_paid = True
-            if invitation.user.sparkprofile.bio != '' and invitation.user.sparkprofile.has_headshot == True:
-                invitation.status = 'Y'
-            else:
-                invitation.status = 'I'
+            invitation.status = 'W'
             invitation.user.save()
             invitation.save()
             return redirect('route', rand_id=rand_id)
@@ -707,7 +713,7 @@ def receive_payment(request, rand_id):
             invitation.has_paid = False
         else:
             invitation.has_paid = True
-            if (invitation.has_paid == True) and (invitation.user.sparkprofile.bio != '') and (invitation.user.sparkprofile.has_headshot == True):
+            if (invitation.has_paid == True) and (invitation.user.sparkprofile.bio != '') and (bool(invitation.user.sparkprofile.headshot) == True):
                 invitation.status = 'Y'
             else:
                 invitation.status = 'I'
@@ -730,7 +736,7 @@ def registration_complete(request, rand_id):
     profile = SparkProfile.objects.get(user=user)
     
     if request.method == 'POST':
-        profileform = SparkProfileForm(request.POST, instance=profile)
+        profileform = SparkProfileForm(request.POST, request.FILES, instance=profile)
         if profileform.is_valid():
             profile.bio = profileform.cleaned_data['bio']
             profile.job_title = profileform.cleaned_data['job_title']
@@ -740,9 +746,9 @@ def registration_complete(request, rand_id):
             profile.phone = profileform.cleaned_data['phone']
             profile.email = profileform.cleaned_data['email']
             profile.dietary = profileform.cleaned_data['dietary']
-            profile.has_headshot = profileform.cleaned_data['has_headshot']
+            profile.headshot = profileform.cleaned_data['headshot']
             user.email = profileform.cleaned_data['email']
-            if profile.bio != '' and profile.has_headshot == True:
+            if profile.bio != '' and bool(profile.headshot) == True:
                 invitation.status = 'Y'
                 profile.save()
                 user.save()
@@ -778,7 +784,7 @@ def registration_update(request, rand_id):
     update = True
     
     if request.method == 'POST':
-        profileform = SparkProfileForm(request.POST, instance=profile)
+        profileform = SparkProfileForm(request.POST, request.FILES, instance=profile)
         if profileform.is_valid():
             profile.bio = profileform.cleaned_data['bio']
             profile.job_title = profileform.cleaned_data['job_title']
@@ -788,7 +794,7 @@ def registration_update(request, rand_id):
             profile.phone = profileform.cleaned_data['phone']
             profile.email = profileform.cleaned_data['email']
             profile.dietary = profileform.cleaned_data['dietary']
-            profile.has_headshot = profileform.cleaned_data['has_headshot']
+            profile.headshot = profileform.cleaned_data['headshot']
             user.email = profileform.cleaned_data['email']
             invitation.status = 'Y'
             profile.save()
@@ -1015,7 +1021,7 @@ def camp_table(request, camptheme):
     response['Content-Disposition'] = 'attachment; filename="all_invitees_for_' + camp.short_name + '.csv"'
     writer = unicodecsv.writer(response)    
 
-    writer.writerow(['Username', 'First name', 'Last name', 'Email address', 'Email 2', 'Phone', 'Job title', 'Organization', 'Bio', 'Twitter', 'URL', 'W', 'POC', 'J', 'Dietary needs', 'Headshot sent', 'Expires', 'Custom message', 'Invitation status', 'Special cost', 'Stipend requested', 'Has paid', 'Comp ticket'])
+    writer.writerow(['Username', 'First name', 'Last name', 'Email address', 'Email 2', 'Phone', 'Job title', 'Organization', 'Bio', 'Twitter', 'URL', 'W', 'POC', 'J', 'Dietary needs', 'Headshot URL', 'Expires', 'Custom message', 'Invitation status', 'Special cost', 'Stipend requested', 'Has paid', 'Comp ticket'])
     
     for invite in invitations:
         profile = SparkProfile.objects.get(user=invite.user)
@@ -1024,7 +1030,7 @@ def camp_table(request, camptheme):
         else:
             stipend = False
             
-        writer.writerow([invite.user.username, invite.user.first_name, invite.user.last_name, invite.user.email, profile.secondary_email, profile.phone, profile.job_title, profile.employer, profile.bio, profile.twitter, profile.url, profile.woman, profile.poc, profile.journo, profile.dietary, profile.has_headshot, invite.expires, invite.custom_message, invite.status, invite.special_cost, stipend, invite.has_paid, invite.comp_ticket])
+        writer.writerow([invite.user.username, invite.user.first_name, invite.user.last_name, invite.user.email, profile.secondary_email, profile.phone, profile.job_title, profile.employer, profile.bio, profile.twitter, profile.url, profile.woman, profile.poc, profile.journo, profile.dietary, profile.headshot.url, invite.expires, invite.custom_message, invite.status, invite.special_cost, stipend, invite.has_paid, invite.comp_ticket])
         
     return response
 

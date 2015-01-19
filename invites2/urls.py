@@ -18,6 +18,7 @@ urlpatterns = patterns('',
     url(r'^usercsv/$', user_table, name="user_table"), # CSV of all users
     url(r'^route/(?P<rand_id>\d{8})/$', route, name="route"), # routes incoming users based on invitation status
     url(r'^rsvp/(?P<rand_id>\d{8})/$', invite, name="invite"), # first landing page for invitees
+    url(r'^rsvp/(?P<rand_id>\d{8})/faq/$', faq, name="faq"), #faq
     url(r'^rsvp/(?P<rand_id>\d{8})/pay/$', pay, name="pay"), # processes payment for camp registration
     url(r'^rsvp/(?P<rand_id>\d{8})/update/$', update, name="update"), # allows invitees to update profile information and complete registration
     url(r'^rsvp/(?P<rand_id>\d{8})/details/$', details, name="details"), # landing page for confirmed attendees

@@ -40,6 +40,7 @@ INSTALLED_APPS = (
     'rsvp',
     # Third-party apps
     'grappelli',
+    'imagekit',
     'widget_tweaks',
     # Django default apps
     'django.contrib.admin',
