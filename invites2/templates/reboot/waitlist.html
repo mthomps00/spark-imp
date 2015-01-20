@@ -103,7 +103,7 @@
         <div class="panel panel-default">
           <div class="panel-heading" role="tab" id="headingOne">
             <h4 class="panel-title">
-              <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+              <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
                 Request a travel stipend
                 {% if stipend %}&nbsp;<span class="label label-success">Requested</a>{% endif %}
               </a>
@@ -123,8 +123,10 @@
                     <dt>Other details</dt>
                     <dd>{{ stipend.details }}</dd>
                   </dl>
-                  <a class="btn btn-default" href="{% url 'stipend' rand_id=invitation.rand_id %}">Edit this request</a>
-                  <a class="btn btn-default" href="{% url 'register_related_delete' main_object='Stipend' rand_id=invitation.rand_id %}">Cancel this request</a>
+                  <div class="text-center">
+                    <a class="btn btn-default" href="{% url 'stipend' rand_id=invitation.rand_id %}">Edit this request</a>
+                    <a class="btn btn-default" href="{% url 'signdown' main_object='Stipend' rand_id=invitation.rand_id %}">Cancel this request</a>
+                  </div>
               {% else %}
                 <p>A limited number of partial travel stipends are available to ensure campers can attend regardless of financial situation.</p>
                 <div class="text-center">

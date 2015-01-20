@@ -267,6 +267,24 @@ def invite(request, rand_id):
         invitation.key = STRIPE_PUBLIC_KEY
         invitation.stripe_cost = invitation.price() * 100
     
+    date_format = '%A, %B %d, %Y'
+    welcomedict = {
+        'first_name': invitation.user.first_name,
+        'last_name': invitation.user.first_name,
+        'display_name': invitation.camp.display_name,
+        'description': invitation.camp.description,
+        'logistics': invitation.camp.logistics,
+        'expires': invitation.expires.strftime(date_format),
+        'venue': invitation.camp.venue,
+        'venue_address': invitation.camp.venue_address,
+        'hotel': invitation.camp.hotel,
+        'hotel_link': invitation.camp.hotel_link,
+        'hotel_code': invitation.camp.hotel_code,
+        'invite_link': settings.EXTERNAL_URL + invitation.get_absolute_url(),
+    }
+    
+    invitation.welcome = invitation.camp.welcome % welcomedict
+    
     variables = {
         'invitation': invitation,
         'camp': invitation.camp,
@@ -572,10 +590,20 @@ def waitlist(request, rand_id):
 
     if invitation.status != 'W':
         return redirect('route', rand_id=rand_id)
+
+    # Find stipend requests
+    if invitation.stipend_set.all():
+        stipends = invitation.stipend_set.all()
+        stipend = stipends[0]
+        stipend.jobhelp = stipend.get_employer_subsidized_display()
+    else:
+        stipend = False
+   
     
     variables = {
         'invitation': invitation,
         'camp': invitation.camp,
+        'stipend': stipend,
     }
     return render_to_response('reboot/waitlist.html', variables, context_instance=RequestContext(request))
 

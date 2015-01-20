@@ -11,10 +11,10 @@
 
   <form action="{% url 'confirm_cancel' rand_id=invitation.rand_id %}" method="post">
       {% csrf_token %}
-  <h3 class="h3">Withdrawing from {{ invitation.camp.display_name }}?</h3><br />
+  <h3 class="h3">Can't make it to {{ invitation.camp.display_name }}?</h3><br />
   <p class="lead">We're very sorry to hear you won't be able to make it. The hardest part of producing our events is making sure the right people are in attendance{% if invitation.status == 'Y' %}, and we were highly looking forward to having you there{% endif %}. If financial considerations are preventing your attendance, <strong>please let us know</strong> by emailing us at <a href="mailto:rsvp@sparkcamp.com">rsvp@sparkcamp.com</a>; we may be able to offer help. And if by any chance your circumstances change, please do let us know.</p>
   {% if invitation.camp.paid and invitation.partial_refund %}<p><span class="danger">Because it's after {{ invitation.camp.cancel_by|date:"l, F j" }}, many of the costs of your attendance have already been incurred, and unfortunately we can only offer you a partial refund. We'll process your refund as soon as possible.</span></p>{% endif %}
-      <div class="text-center"><input class="btn btn-danger" type="submit" value="Confirm cancellation" /></div>
+      <div class="text-center"><input class="btn btn-danger" type="submit" value="Confirm" /></div>
 
   </form>
   {% endblock leftcolumn %}

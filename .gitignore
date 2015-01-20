@@ -37,3 +37,4 @@ app_settings.py
 readerscript.py
 mailsync.py
 0002_auto__add_field_invitation__order.py
+**/static/media/**

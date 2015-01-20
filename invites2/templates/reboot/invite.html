@@ -34,7 +34,7 @@
 
           {% autoescape off %}
           {% block welcome %}
-          <p class="lead">{{ camp.welcome }}</p>
+          <p class="lead">{{ invitation.welcome }}</p>
           {% endblock welcome %}
           {% endautoescape %}
         </div>
@@ -48,13 +48,13 @@
               {% if invitation.camp.paid %}
                 <p>The registration fee for {{ invitation.camp.display_name }} is ${{ invitation.camp.ticket_cost }}. 
                 {% if invitation.has_paid or invitation.comp_ticket %}
-                  But your registration fee is already taken care of. Just <a href="{% url 'update' rand_id=invitation.rand_id %}">proceed with your registration</a>, and we'll reserve your spot.</p>
+                  But your registration fee is already taken care of. Please <a href="{% url 'update' rand_id=invitation.rand_id %}">proceed with your registration</a>, and we'll reserve your spot.</p>
                 {% else %}
                   {% if invitation.special_cost %} 
                     However, your ticket comes at a special rate of ${{ invitation.special_cost }}.
                   {% endif %}
                   {% if invitation.camp.stipends %}
-                    If you won't be able to attend without financial assistance, please <a href="{% url 'stipend' rand_id=invitation.rand_id %}">request a stipend</a>.
+                    If you won't be able to attend without financial assistance, we offer stipends thanks to the generous support of our sponsors. Please <a href="{% url 'stipend' rand_id=invitation.rand_id %}">request a stipend here</a>, instead of clicking "Reserve your place" below.
                   {% endif %}
                   </p>
                   <form action="{% url 'pay' invitation.rand_id %}" method="POST" class="text-right">
