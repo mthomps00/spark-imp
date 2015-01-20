@@ -16,7 +16,7 @@ class SessionInline(admin.TabularInline):
     model = Session
 
 class InvitationAdmin(admin.ModelAdmin):
-    list_display = ('name', 'camp', 'status', 'expires', 'rand_id')
+    list_display = ('name', 'camp', 'status', 'expires', 'custom_message', 'nominated_by', 'rand_id')
     list_filter = ('camp', 'status',)
     search_fields = ('user__username', 'user__first_name', 'user__last_name',)
     ordering = ('user__last_name',)
