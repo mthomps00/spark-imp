@@ -258,7 +258,7 @@ def route(request, rand_id):
 def invite(request, rand_id):
     invitation = get_object_or_404(Invitation, rand_id=rand_id)
 
-    if invitation.status == 'N' or invitation.status == 'C':
+    if invitation.status == 'N' or invitation.status == 'C' or invitation.status == 'W':
         return redirect('route', rand_id=rand_id)
     
     if invitation.camp.paid:

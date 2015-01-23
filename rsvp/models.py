@@ -80,6 +80,7 @@ class Invitation(models.Model):
     special_cost = models.IntegerField(blank=True, null=True)
     comp_ticket = models.BooleanField(default=False)
     nominated_by = models.CharField(max_length=60, blank=True, null=True)
+    contact = models.ForeignKey(User, blank=True, null=True, related_name='contact')
     
     # User-specific metadata
     user = models.ForeignKey(User)
