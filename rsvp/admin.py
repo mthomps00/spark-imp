@@ -16,11 +16,11 @@ class SessionInline(admin.TabularInline):
     model = Session
 
 class InvitationAdmin(admin.ModelAdmin):
-    list_display = ('name', 'camp', 'status', 'expires', 'custom_message', 'nominated_by', 'rand_id')
+    list_display = ('name', 'camp', 'status', 'expires', 'custom_message', 'nominated_by', 'contact', 'rand_id')
     list_filter = ('camp', 'status',)
     search_fields = ('user__username', 'user__first_name', 'user__last_name',)
     ordering = ('user__last_name',)
-    actions = ('confirm', 'cant_make', 'cancel', 'no_response', 'no_show', 'waitlist', 'maybe',)
+    actions = ('confirm', 'cant_make', 'cancel', 'no_response', 'no_show', 'waitlist', 'maybe', 'set_self_as_contact')
     
     def name(self, obj):
         return ('%s %s' % (obj.user.first_name, obj.user.last_name))
@@ -54,6 +54,10 @@ class InvitationAdmin(admin.ModelAdmin):
     def maybe(modeladmin, request, queryset):
         queryset.update(status='Y')
     maybe.short_description = "Change to 'Maybe'"
+    
+    def set_self_as_contact(modeladmin, request, queryset):
+        queryset.update(contact=request.user)
+    set_self_as_contact.short_description = "Set yourself as the contact"
     
     inlines = [
         StipendInline,
