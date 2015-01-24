@@ -283,7 +283,7 @@ def invite(request, rand_id):
         'invite_link': settings.EXTERNAL_URL + invitation.get_absolute_url(),
     }
     
-    invitation.welcome = invitation.camp.welcome % welcomedict
+    invitation.welcome = invitation.camp.welcome.format(**welcomedict)
     
     variables = {
         'invitation': invitation,
@@ -350,6 +350,7 @@ def pay(request, rand_id):
         
     variables = {
         'invitation': invitation,
+        'headshot': bool(invitation.user.sparkprofile.headshot),
         'camp': invitation.camp,
         'cost': invitation.cost,
         'token': token,
@@ -423,7 +424,7 @@ def update(request, rand_id):
                             'hotel_code': invitation.camp.hotel_code,
                             'invite_link': settings.EXTERNAL_URL + invitation.get_absolute_url(),
                         }
-                        body = invitation.camp.confirmation_email % confirmdict
+                        body = invitation.camp.confirmation_email.format(**confirmdict)
                         subject = 'Confirming your registration for %s' % invitation.camp.display_name
                         if settings.DEBUG == False:
                             email = user.email
@@ -445,6 +446,7 @@ def update(request, rand_id):
         'invitation': invitation,
         'camp': invitation.camp,
         'profile': profile,
+        'headshot': bool(profile.headshot),
         'profileform': profileform,
     }
     return render_to_response('reboot/update.html', variables, context_instance=RequestContext(request))

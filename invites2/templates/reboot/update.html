@@ -13,7 +13,7 @@
   {% if invitation.status == 'I' %}
 
     <h3>{{ invitation.user.first_name }}, your spot is reserved.</h3>
-    <p><strong>To complete your registration</strong>, please make sure everything below is up-to-date.</p>
+    <p><strong>To complete your registration</strong>, please make sure everything below is up-to-date. <span class="text-danger">{% if not headshot %}We need a headshot of you to finish your registration. Please upload a clear, hi-res headshot of yourself below.{% endif %}{% if invitation.user.sparkprofile.bio == '' %} We're missing a bio for you; please submit a brief bio below.{% endif %}</span></p>
 
   {% elif invitation.status == 'W' %}
 
