@@ -183,10 +183,13 @@ def mailcamp(request, camptheme):
             cust_name = 'Custom message for ' + camp.display_name
             exp = code + '_EXP'
             exp_name = 'Expiration date for ' + camp.display_name
+            comp = code + '_COMP'
+            comp_name = 'Comp ticket status for ' + camp.display_name
             chimps.append(m.lists.merge_var_add(id=id,tag=url,name=url_name))
             chimps.append(m.lists.merge_var_add(id=id,tag=stat,name=stat_name))
             chimps.append(m.lists.merge_var_add(id=id,tag=nods,name=nods_name))
             chimps.append(m.lists.merge_var_add(id=id,tag=cust,name=cust_name))
+            chimps.append(m.lists.merge_var_add(id=id,tag=comp,name=comp_name))
             chimps.append(m.lists.merge_var_add(id=id,tag=exp,name=exp_name,options={'field_type':'date',}))
             struct = m.lists.static_segment_add(id=id,name=camp.short_name)
             camp.mailchimp_list = str(struct['id'])
@@ -220,6 +223,8 @@ def mailsync(request, camptheme):
             status = code + '_STAT'
             nods = code + '_NODS'
             custom = code + '_CUST'
+            exp = code + '_EXP'
+            comp = code + '_COMP'
             merge_vars = {
               'FNAME': invite.user.first_name,
               'LNAME': invite.user.last_name,
@@ -235,6 +240,8 @@ def mailsync(request, camptheme):
               status: invite.get_status_display(),
               nods: invite.nominated_by,
               custom: invite.custom_message,
+              exp: invite.expires.strftime('%A, %B %d, %Y'),
+              comp: str(bool(invite.comp_ticket)).upper(),
             }
             if invite.user.sparkprofile.mailchimp_id:
                 identifier = {
