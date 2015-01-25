@@ -10,6 +10,17 @@
   <div class="container">
     <div class="row">
       <div class="col-lg-12">
+        {% if messages %}
+          {% for message in messages %}
+          <div class="alert{% if message.tags %} alert-{{ message.tags }}{% endif %}" role="alert">{{ message }}</div>
+          {% endfor %}
+        {% endif %}
+        
+        <ol class="breadcrumb">
+          <li><a href="{% url 'camp' camptheme=camp.theme %}">Back</a></li>
+          <li class="active">MailChimp Setup</li>
+        </ol>
+        
         {% if not camp_exists %}
         <h4>New merge tags added to MailChimp</h4>
         <table class="table table-bordered">

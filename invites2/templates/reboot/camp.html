@@ -36,10 +36,10 @@
       </div>
       <div class="col-lg-4">
         
-        {% if not camp.mailchimp_code %}
-        <p><span class="glyphicon glyphicon-save-file"></span>&nbsp;<a href="{% url 'mailcamp' camptheme=camp.short_name %}" method="get" role="form">Set up camp in MailChimp</a></p>
+        {% if not camp.mailchimp_list %}
+        <p><span class="glyphicon glyphicon-save-file"></span>&nbsp;<a href="{% url 'mailcamp' camptheme=camp.theme %}">Set up camp in MailChimp</a></p>
         {% else %}
-        <p><span class="glyphicon glyphicon-transfer"></span>&nbsp;<a href="">Sync with MailChimp</a></p>
+        <p><span class="glyphicon glyphicon-transfer"></span>&nbsp;<a href="{% url 'mailsync' camptheme=camp.theme %}">Sync with MailChimp</a> | <a href="{% url 'mailcamp' camptheme=camp.theme %}">View merge tags</a></p>
         {% endif %}
         <p><span class="glyphicon glyphicon-file"></span>&nbsp;<a href="{% url 'camp_table' camptheme=camp.theme %}">Download CSV of invitees</a></p>    
       </div>
