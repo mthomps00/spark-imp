@@ -7,3 +7,14 @@
   {% block welcome %}
   {{ invitation.camp.faq }}
   {% endblock welcome %}
+
+    {% block action %}
+    <div class="panel panel-info">
+      <div class="panel-heading">
+        <h3 class="panel-title">Still have questions?</h3>
+      </div>
+      <div class="panel-body">
+        <p>If you can't find the answer to your question about {{ camp.display_name }}, please don't hesitate to ask us. Just <a href="mailto:{{ email_address }}?subject=Question about {{ camp.display_name }}">shoot us an email</a>, and we'll get back to you as soon as possible.</p>
+    </div> <!-- /panel-body -->
+  </div> <!-- /panel panel-info -->
+  {% endblock action %}

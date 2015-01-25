@@ -8,8 +8,9 @@
   {% endblock admin-invite-navitems %}
 
   {% block navitems %}
-  {% if camp.faq_url %}
-  <li><a href="{{ camp.faq }}">Event FAQ</a></li>
+  {% if invitation.camp.faq %}
+  <li><a href="{% url 'route' invitation.rand_id %}">Dashboard</a></li>
+  <li><a href="{% url 'faq' invitation.rand_id %}">FAQ</a></li>
   {% endif %}
   {% endblock navitems %}
 
@@ -46,12 +47,12 @@
             </div>
             <div class="panel-body">
               {% if invitation.camp.paid %}
-                <p>The registration fee for {{ invitation.camp.display_name }} is ${{ invitation.camp.ticket_cost }}. This fee does not cover travel or lodging.<br /><br />
+                <p>The registration fee for {{ invitation.camp.display_name }} is ${{ invitation.camp.ticket_cost }}. This covers all meals and camp programming and events, but does not cover personal travel or lodging.
                 {% if invitation.has_paid or invitation.comp_ticket %}
-                  But your registration fee is already taken care of, so you will not need to pay. Please <a href="{% url 'update' rand_id=invitation.rand_id %}">proceed with your registration</a>, and we'll reserve your spot.</p>
+                  <br /><br />Your registration fee is already taken care of, so you will not need to pay. Please <a href="{% url 'update' rand_id=invitation.rand_id %}">proceed with your registration</a>, and we'll reserve your spot.
                 {% else %}
                   {% if invitation.special_cost %} 
-                    However, your ticket comes at a special rate of ${{ invitation.special_cost }}.
+                    <br /><br />However, your registration comes at a special rate of ${{ invitation.special_cost }}.
                   {% endif %}
                   {% if invitation.camp.stipends %}
                     <br /><br />If you won't be able to attend without financial assistance, we offer stipends thanks to the generous support of our sponsors. Please <a href="{% url 'stipend' rand_id=invitation.rand_id %}">request a stipend</a>, instead of clicking "Reserve your place" below.
@@ -72,7 +73,7 @@
               {% else %}
                 <p>There's no charge to attend {{ invitation.camp.display_name }}, although you're responsible for your own travel and lodging. If you'd like to attend, please <a href="{% url 'update' rand_id=invitation.rand_id %}">register here</a>.
                 {% if invitation.camp.stipends %}
-                  If you won't be able to attend without financial assistance, please <a href="{% url 'stipend' rand_id=invitation.rand_id %}">request a stipend</a>.
+                  <br /><br />If you won't be able to attend without financial assistance, please <a href="{% url 'stipend' rand_id=invitation.rand_id %}">request a stipend</a>.
                 {% endif %}
                 </p>
               {% endif %}

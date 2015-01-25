@@ -399,10 +399,12 @@ def invite(request, rand_id):
 
 def faq(request, rand_id):
     invitation = get_object_or_404(Invitation, rand_id=rand_id)
+    email_address = settings.DEFAULT_FROM_USER
     
     variables = {
         'invitation': invitation,
         'camp': invitation.camp,
+        'email_address': email_address,
     }
     return render_to_response('reboot/faq.html', variables, context_instance=RequestContext(request))
   
