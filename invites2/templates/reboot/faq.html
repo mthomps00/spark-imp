@@ -5,6 +5,11 @@
   {% endblock pageheader %}
 
   {% block welcome %}
+    <ol class="breadcrumb">
+      <li><a href="{% url 'route' rand_id=invitation.rand_id %}">Back</a></li>
+      <li class="active">Semi-Frequently Asked Questions</li>
+    </ol>
+
   {{ invitation.camp.faq }}
   {% endblock welcome %}
 
