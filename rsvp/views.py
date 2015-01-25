@@ -648,6 +648,25 @@ def stipend(request, rand_id):
             invitation.status = 'W'
             invitation.user.save()
             invitation.save()
+            
+            stipenddict = {
+              'applicant': '%s %s' % (invitation.user.first_name, invitation.user.last_name),
+              'cost_estimate': stipend.cost_estimate,
+              'employer_percentage': stipend.employer_percentage,
+              'invitee_percentage': stipend.invitee_percentage,
+              'details': stipend.details,
+            }
+            
+            body = '''{applicant} has requested a stipend.
+            
+            Estimated cost: {cost_estimate}
+            Employer percentage: {employer_percentage}
+            Invitee percentage: {invitee_percentage}
+            Details: {details}
+            '''.format(**stipenddict)
+            subject = 'New stipend request for %s' % (stipenddict['applicant'])
+            send_mail(subject, body, 'rsvp@sparkcamp.com', ['rsvp@sparkcamp.com'], fail_silently=True)
+
             return redirect('route', rand_id=rand_id)
     else:
         form = StipendForm(instance=stipend)
