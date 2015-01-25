@@ -2,6 +2,12 @@
 
   {% block title %}{{ invitation.camp.display_name }} – Change Of Plans?{% endblock %}
 
+  {% autoescape off %}
+  {% block welcome %}
+  <p class="lead">{{ invitation.welcome }}</p>
+  {% endblock welcome %}
+  {% endautoescape %}
+
   {% block action %}
     <div class="panel panel-default">
       <div class="panel-heading">
