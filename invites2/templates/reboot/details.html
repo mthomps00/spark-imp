@@ -17,7 +17,7 @@
     {% endif %}
 
     {% if headshot %}
-    <img src="{{ invitation.user.sparkprofile.thumb.url }}" class="img-responsive img-circle pull-right" style="padding: 10px" />
+    <a href="{% url 'update' rand_id=invitation.rand_id %}"><img src="{{ invitation.user.sparkprofile.thumb.url }}" class="img-responsive img-circle pull-right" style="padding: 10px" id="headshot_thumb" /></a>
     {% endif %}
 
     <h3>Welcome, {{ invitation.user.first_name }}.</h3>
@@ -55,7 +55,7 @@
 
     </dl>
     <hr />
-    <h4>Make sure the following info is accurate. See anything wrong or missing? <a href="{% url 'update' rand_id=invitation.rand_id %}">Update it.</a></h4>
+    <h4>Make sure the following info is accurate. See anything wrong or missing? <span id="headshot_msg">Want to change your headshot?</span> <a href="{% url 'update' rand_id=invitation.rand_id %}">Update it.</a></h4>
     <dl class="dl-horizontal">
 
       <dt>Bio</dt>
@@ -123,7 +123,7 @@
       
       <dt>Organization</dt>
       <dd>
-        {% if invitation.user.sparkinvitation.user.sparkprofile.employer %}
+        {% if invitation.user.sparkprofile.employer %}
         {{ invitation.user.sparkprofile.employer }}
         {% else %}
         <span class="text-muted">Tell us where you work.</span>
@@ -289,3 +289,17 @@
         </div>
       </div>
   {% endblock rightmore %}
+
+  {% block customscripts %}
+    <script>
+      $(document).ready(function() {
+        $('#headshot_thumb').hover(
+          function() {
+            $('#headshot_msg').addClass( "text-warning" );
+          }, function() {
+            $('#headshot_msg').removeClass( "text-warning" );
+          }
+        );
+      });
+    </script>
+  {% endblock customscripts %}

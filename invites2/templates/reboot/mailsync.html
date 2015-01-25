@@ -1,0 +1,71 @@
+{% extends "reboot/mailcamp.html" %}
+
+  {% block title %}{{ camp.display_name }} – MailChimp Setup{% endblock title %}
+
+  {% block pageheader %}
+  <h1>{{ camp.display_name }} <small>MailChimp Sync</small></h1>
+  {% endblock pageheader %}
+
+  {% block main %}
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-12">
+        {% if sync.add_count > 0 %}
+        <h4>{{ sync.add_count }} new subscribers</h4>
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th>Email</th>
+              <th>Mailchimp ID</th>
+            </tr>
+          </thead>
+          {% for add in sync.adds %}
+          <tr>
+            <td>{{ add.email }}</td>
+            <td>{{ add.leid }}</td>
+          </tr>
+          {% endfor %}
+        </table>
+        {% endif %}
+        {% if sync.update_count > 0 %}
+        <h4>{{ sync.update_count }} updated subscribers</h4>
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th>Email</th>
+              <th>Mailchimp ID</th>
+            </tr>
+          </thead>
+          {% for update in sync.updates %}
+          <tr>
+            <td>{{ update.email }}</td>
+            <td>{{ update.leid }}</td>
+          </tr>
+          {% endfor %}
+        </table>
+        {% endif %}
+        {% if sync.error_count > 0 %}
+        <h4>{{ sync.error_count }} errors</h4>
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th>Identifier</th>
+              <th>Error message</th>
+              <th>Error code</th>
+              <th>Row</th>
+            </tr>
+          </thead>
+          {% for error in sync.errors %}
+          <tr>
+            <td>{{ error.email }}</td>
+            <td>{{ error.error }}</td>
+            <td>{{ error.code }}</td>
+            <td>{{ error.row }}</td>
+          </tr>
+          {% endfor %}
+        </table>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+  {% endblock main %}

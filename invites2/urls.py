@@ -14,6 +14,8 @@ urlpatterns = patterns('',
 
     url(r'^$', dashboard, name="dashboard"), # lists upcoming and recent camps
     url(r'^camp/(?P<camptheme>[a-zA-Z-,& ]+)/$', camp, name="camp"), # camp dashboard
+    url(r'^camp/(?P<camptheme>[a-zA-Z-,& ]+)/mailchimp/setup/$', mailcamp, name="mailcamp"), # setup camp in MailChimp
+    url(r'^camp/(?P<camptheme>[a-zA-Z-,& ]+)/mailchimp/sync/$', mailsync, name="mailsync"), # sync invites with MailChimp
     url(r'^camp/(?P<camptheme>[a-zA-Z-,& ]+)/csv/$', camp_table, name="camp_table"), # CSV of all camp invitees
     url(r'^usercsv/$', user_table, name="user_table"), # CSV of all users
     url(r'^route/(?P<rand_id>\d{8})/$', route, name="route"), # routes incoming users based on invitation status

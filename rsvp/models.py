@@ -44,9 +44,10 @@ class Camp(models.Model):
     
     # MailChimp list name
     mailchimp_list = models.CharField(max_length=140, blank=True)
+    mailchimp_code = models.CharField(max_length=5, blank=True, null=True, unique=True)
     
     def __unicode__(self):
-        return u'Spark Camp %s' % self.theme
+        return self.display_name
 
 class Invitation(models.Model):
     # Field choices
@@ -249,6 +250,7 @@ class PlusOne(models.Model):
 class SparkProfile(models.Model):
     user = models.OneToOneField(User)
     headshot = models.ImageField(blank=True,null=True,upload_to='headshot')
+    mailchimp_id = models.CharField(max_length=140,blank=True,null=True)
     thumb = ImageSpecField(
         source='headshot',
         processors=[ResizeToFill(125, 125)],

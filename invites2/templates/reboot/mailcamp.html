@@ -1,0 +1,53 @@
+{% extends "reboot/camp.html" %}
+
+  {% block title %}{{ camp.display_name }} – MailChimp Setup{% endblock title %}
+
+  {% block pageheader %}
+  <h1>{{ camp.display_name }} <small>MailChimp Setup</small></h1>
+  {% endblock pageheader %}
+
+  {% block main %}
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-12">
+        {% if not camp_exists %}
+        <h4>New merge tags added to MailChimp</h4>
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th>Merge tag</th>
+              <th>Type</th>
+              <th>What it means</th>
+            </tr>
+          </thead>
+          {% for chimp in chimps %}
+          <tr>
+            <td>{{ chimp.tag }}</td>
+            <td>{{ chimp.field_type }}</td>
+            <td>{{ chimp.name }}</td>
+          </tr>
+          {% endfor %}
+        </table>
+        {% else %}
+        <h4>All merge tags for this list</h4>
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th>Merge tag</th>
+              <th>Type</th>
+              <th>What it means</th>
+            </tr>
+          </thead>
+          {% for datum in data %}
+          <tr>
+            <td>{{ datum.tag }}</td>
+            <td>{{ datum.field_type }}</td>
+            <td>{{ datum.name }}</td>
+          </tr>
+          {% endfor %}
+         </table>
+       {% endif %}
+      </div>
+    </div>
+  </div>
+  {% endblock main %}

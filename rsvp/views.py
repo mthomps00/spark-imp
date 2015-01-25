@@ -13,7 +13,7 @@ from django.shortcuts import get_object_or_404, render_to_response, redirect
 from rsvp.models import *
 from rsvp.forms import *
 from rsvp.mailsnake import MailSnake
-import random, csv, datetime, unicodecsv
+import mailchimp, random, csv, datetime, unicodecsv
 from datetime import date, timedelta
 from urllib import urlopen
 
@@ -102,6 +102,7 @@ def sessions(request, camptheme):
     
     return render_to_response('sessions.html', variables, context_instance=RequestContext(request))
 
+'''
 @login_required
 def mailsync(request, camptheme):
     # Set variables for sync
@@ -150,16 +151,121 @@ def mailsync(request, camptheme):
         'camp': camp,
     }
     return render_to_response('mailsync.html', variables, context_instance=RequestContext(request))
+'''
 
+@login_required
+def mailcamp(request, camptheme):
+    m = mailchimp.Mailchimp(settings.MAILCHIMP_API_KEY)
+    id = settings.MAILCHIMP_LIST_ID
+    camp = get_object_or_404(Camp, theme__iexact=camptheme)
+    
+    if not camp.mailchimp_code:
+        messages.warning(request, 'This camp does not have a MailChimp code.')
+        return redirect('admin:rsvp_camp_change', camp.id)
+    else:
+        code = camp.mailchimp_code
+        data = m.lists.merge_vars(id=(id,))['data'][0]['merge_vars']
+        camp_exists = False
+        url = code + '_URL'
+        chimps = []
 
+        for item in data:
+            if item['tag'] == url:
+                camp_exists = True
 
+        if camp_exists == False:
+            url_name = 'Invitation link for ' + camp.display_name
+            stat = code + '_STAT'
+            stat_name = 'Invitation status for ' + camp.display_name
+            nods = code + '_NODS'
+            nods_name = 'Nominators for ' + camp.display_name
+            cust = code + '_CUST'
+            cust_name = 'Custom message for ' + camp.display_name
+            exp = code + '_EXP'
+            exp_name = 'Expiration date for ' + camp.display_name
+            chimps.append(m.lists.merge_var_add(id=id,tag=url,name=url_name))
+            chimps.append(m.lists.merge_var_add(id=id,tag=stat,name=stat_name))
+            chimps.append(m.lists.merge_var_add(id=id,tag=nods,name=nods_name))
+            chimps.append(m.lists.merge_var_add(id=id,tag=cust,name=cust_name))
+            chimps.append(m.lists.merge_var_add(id=id,tag=exp,name=exp_name,options={'field_type':'date',}))
+            struct = m.lists.static_segment_add(id=id,name=camp.short_name)
+            camp.mailchimp_list = str(struct['id'])
+            camp.save()
+        
+        variables = {
+            'camp': camp,
+            'data': data,
+            'camp_exists': camp_exists,
+            'chimps': chimps,
+        }
+            
+        return render_to_response('reboot/mailcamp.html', variables, context_instance=RequestContext(request))
 
+@login_required
+def mailsync(request, camptheme):
+    camp = get_object_or_404(Camp, theme__iexact=camptheme)
+    if not camp.mailchimp_list:
+        return redirect('mailcamp', camptheme=camptheme)
+    else:    
+        m = mailchimp.Mailchimp(settings.MAILCHIMP_API_KEY)
+        id = settings.MAILCHIMP_LIST_ID
+        batch = []
+        segment = []
+        invites = Invitation.objects.filter(camp=camp)
+        code = camp.mailchimp_code
 
+        for invite in invites:
+            invite_link = settings.EXTERNAL_URL + invite.get_absolute_url()
+            url = code + '_URL'
+            status = code + '_STAT'
+            nods = code + '_NODS'
+            custom = code + '_CUST'
+            merge_vars = {
+              'FNAME': invite.user.first_name,
+              'LNAME': invite.user.last_name,
+              'TWITTER': invite.user.sparkprofile.twitter,
+              'HEADSHOT': str(bool(invite.user.sparkprofile.headshot)).upper(),
+              'IMP_ID': invite.user.id,
+              'BIO': invite.user.sparkprofile.bio,
+              'ORG': invite.user.sparkprofile.employer,
+              'URL': invite.user.sparkprofile.url,
+              'EMAIL2': invite.user.sparkprofile.secondary_email,
+              'TITLE': invite.user.sparkprofile.job_title,
+              url: invite_link,
+              status: invite.get_status_display(),
+              nods: invite.nominated_by,
+              custom: invite.custom_message,
+            }
+            if invite.user.sparkprofile.mailchimp_id:
+                identifier = {
+                  'leid': invite.user.sparkprofile.mailchimp_id,
+                  }
+                merge_vars.update({'EMAIL': invite.user.email})
+            else:
+                identifier = {
+                  'email': invite.user.email,
+                  }
+            batch.append({
+                'email': identifier,
+                'merge_vars': merge_vars,
+            })
+            segment.append(identifier)
+        
+        sync = m.lists.batch_subscribe(id=id, batch=batch, double_optin=False, update_existing=True)
+        segsync = m.lists.static_segment_members_add(id=id, seg_id=camp.mailchimp_list, batch=segment)
 
-
-
-
-
+        # Store the returned leid as the user's MailChimp ID
+        for add in sync['adds']:
+          added = User.objects.filter(email=add['email'])
+          SparkProfile.objects.filter(user=added).update(mailchimp_id=add['leid'])        
+        
+        variables = {
+          'camp': camp,
+          'sync': sync,
+          'segsync': segsync,
+        }
+        
+        return render_to_response('reboot/mailsync.html', variables, context_instance=RequestContext(request))
 
 
 
