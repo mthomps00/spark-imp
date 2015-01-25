@@ -52,8 +52,8 @@
           {% for datum in data %}
           <tr>
             <td>*|{{ datum.tag }}|*</td>
-            <td>*|{{ datum.field_type }}|*</td>
-            <td>*|{{ datum.name }}|*</td>
+            <td>{{ datum.field_type }}</td>
+            <td>{{ datum.name }}</td>
           </tr>
           {% endfor %}
          </table>
