@@ -2,23 +2,44 @@
 
   {% block title %}{{ invitation.camp.display_name }} – Change Of Plans?{% endblock %}
 
-  {% autoescape off %}
-  {% block welcome %}
-  <p class="lead">{{ invitation.welcome }}</p>
-  {% endblock welcome %}
-  {% endautoescape %}
+{% block main %}
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8">
+          
+          {% if messages %}
+            {% for message in messages %}
+            <div class="alert{% if message.tags %} alert-{{ message.tags }}{% endif %} alert-dismissible" role="alert">
+              <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+              {{ message }}
+            </div>
+            {% endfor %}
+          {% endif %}
+          
 
-  {% block action %}
-    <div class="panel panel-default">
-      <div class="panel-heading">
-        <h3 class="panel-title">Can you make it after all?</h3>
-      </div>
-      <div class="panel-body">
-        <form action="{% url 'confirm_restore' rand_id=invitation.rand_id %}" method="post">
-          {% csrf_token %}
-          <p class="text-med">As far as we know, you won't be able to make it to {{ invitation.camp.display_name }}. But if your plans change and you can make it after all, we'll do our best to accommodate you, just let us know by hitting this button:</p>
-          <div class="text-center"><input class="btn btn-info" type="submit" value="I can make it!" /></div>
-        </form>
-      </div>
-    </div>
-  {% endblock action %}
+          {% autoescape off %}
+          {% block welcome %}
+          <p class="lead">{{ invitation.welcome }}</p>
+          {% endblock welcome %}
+          {% endautoescape %}
+          
+        </div>
+        <div class="col-lg-4">
+        {% block action %}
+          <div class="panel panel-default">
+            <div class="panel-heading">
+              <h3 class="panel-title">Can you make it after all?</h3>
+            </div>
+            <div class="panel-body">
+              <form action="{% url 'confirm_restore' rand_id=invitation.rand_id %}" method="post">
+                {% csrf_token %}
+                <p class="text-med">As far as we know, you won't be able to make it to {{ invitation.camp.display_name }}. But if your plans change and you can make it after all, we'll do our best to accommodate you, just let us know by hitting this button:</p>
+                <div class="text-center"><input class="btn btn-info" type="submit" value="I can make it!" /></div>
+              </form>
+            </div>
+          </div>
+        {% endblock action %}
+        </div> <!-- /col-lg-4 -->
+    </div> <!-- /row -->
+  </div> <!-- /container -->
+  {% endblock main %}

@@ -39,6 +39,10 @@ class SparkProfileForm(ModelForm):
         fields = ('job_title', 'employer', 'bio', 'phone', 'twitter', 'url', 'email', 'secondary_email', 'dietary', 'headshot')
 
 # Custom forms
+class ContactsForm(forms.Form):
+    subject = forms.CharField(max_length=100, label='Email subject line')
+    body = forms.CharField(widget=forms.Textarea, label='Email body')
+
 class ResponseForm(forms.Form):
     RSVP_CHOICES = (
         ('', '-- Please select your RSVP --'),

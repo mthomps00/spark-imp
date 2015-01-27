@@ -1,0 +1,75 @@
+{% extends "reboot/camp.html" %}
+{% load widget_tweaks %}
+
+  {% block title %}{{ camp.display_name }} – Contacts{% endblock title %}
+
+  {% block pageheader %}
+  <h1>{{ camp.display_name }} <small>About this event</small></h1>
+  {% endblock pageheader %}
+
+  {% block main %}
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-6">
+        <p class="lead">Your one-on-one contacts are listed below. Please use the form at right to pre-fill a default subject and body for your contact emails. Click on a user's first or last name to open a draft email to that user in your computer's default email application.</p>
+      </div>
+      <div class="col-lg-6">
+        <form action="{% url 'contacts' camptheme=camp.theme %}" method="POST">
+          <div class="form-group">
+            {% csrf_token %}
+            {{ form.non_field_errors }}
+            {{ form.subject.errors }}
+            <label for="{{ form.subject.id_for_label }}">Email subject:</label>
+            {{ form.subject|add_class:'form-control' }}
+            {{ form.body.errors }}
+            <label for="{{ form.body.id_for_label }}">Email body:</label>
+            {{ form.body|add_class:'form-control' }}
+            <button type="submit" class="btn btn-default">Set default message text</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+
+  {% if invitations %}
+  <div class="container">
+    <div class="table-responsive">
+      <table class="table table-striped table-condensed table-bordered" id="invites-table">
+        <thead>
+          <tr id="invites-header">
+            <th>Invite No.</th>
+            <th>First name</th>
+            <th>Last name</th>
+            <th>Job title</th>
+            <th>Organization</th>
+            <th>Bio</th>
+            <th>Status</th>
+            <th>Nominated by</th>
+          </tr>
+        </thead>                        
+        {% for invite in invitations %}
+        <tr>
+          <td><a href="{% url 'route' invite.rand_id %}">{{ invite.rand_id }}</a></td>
+          <td><a href="mailto:{{ invite.user.email }}?subject={{ subject }}&body={{ body }}">{{ invite.user.first_name }}</a></td>
+          <td><a href="mailto:{{ invite.user.email }}?subject={{ subject }}&body={{ body }}">{{ invite.user.last_name }}</a></td>
+          <td>{{ invite.user.sparkprofile.job_title }}</td>
+          <td>{{ invite.user.sparkprofile.employer }}</td>
+          <td>{{ invite.user.sparkprofile.bio }}</td>
+          <td>{{ invite.status }}</td>
+          <td>{{ invite.nominated_by }}</td>
+        </tr>
+        {% endfor %}
+      </table>
+
+    </div>
+  </div>
+
+  {% else %}
+  <div class="container">
+    <div class="row">
+      <h3>You haven't been assigned any users for this camp.</h3>
+    </div>
+  </div>
+  {% endif %}
+  {% endblock main %}

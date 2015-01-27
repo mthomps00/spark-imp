@@ -102,56 +102,77 @@ def sessions(request, camptheme):
     
     return render_to_response('sessions.html', variables, context_instance=RequestContext(request))
 
-'''
+
+
+
+
+
+
+
+
+
+
+##########
+# Admin views - REBOOTED TEMPLATE
+##########
+
 @login_required
-def mailsync(request, camptheme):
-    # Set variables for sync
-    ms = MailSnake(settings.MAILCHIMP_API_KEY)
-    subscribers = []
-    
-    # Get relevant Django objects
-    camp = get_object_or_404(Camp, theme__iexact=camptheme)
-    list_name = camp.mailchimp_list
-    invitations = Invitation.objects.filter(camp=camp)
-    
-    # Adjust Django objects for export
-    for invitation in invitations:
-        profile = SparkProfile.objects.get(user=invitation.user)
-        subscribers.append({
-            'EMAIL': invitation.user.email,
-            'EMAIL2': profile.secondary_email,
-            'FNAME': invitation.user.first_name,
-            'LNAME': invitation.user.last_name,
-            'STATUS': invitation.get_status_display(),
-            'INVITE': 'https://imp.sparkcamp.com/register/%s' % invitation.rand_id,
-            'EXPIRES': invitation.expires.strftime('%B %e, %Y'),
-            'BIO': profile.bio,
-            'TWITTER': profile.twitter,
-            })
-    
-    # Get relevant MailSnake objects
-    lists = ms.lists()
-    
-    # MailSnake options
-    # No confirmation email to subscribers after adding them to the list
-    double_optin = False
-    # If members are already found on the list, update their status instead of adding a duplicate subscriber
-    update_existing = True
-    
-    def find_needle(haystack, needle):
-        for list in haystack:
-                if list['name'] == needle:
-                        return list['id']
-    
-    list_id = find_needle(lists['data'], list_name)
-    ms_response = ms.listBatchSubscribe(id=list_id, batch=subscribers, double_optin=double_optin, update_existing=update_existing)
+def dashboard(request):
+    today = date.today()
+    upcoming = Camp.objects.filter(start_date__gte=today)
+    past = Camp.objects.filter(start_date__lte=today).order_by('-start_date')
     
     variables = {
-        'ms_response': ms_response,
-        'camp': camp,
+        'upcoming' : upcoming,
+        'past': past,
     }
-    return render_to_response('mailsync.html', variables, context_instance=RequestContext(request))
-'''
+    return render_to_response('reboot/reboot.html', variables, context_instance=RequestContext(request))
+
+@login_required
+def camp(request, camptheme):
+    camp = get_object_or_404(Camp, theme__iexact=camptheme)
+    syncform = GoogleSyncForm()
+    invitations = Invitation.objects.filter(camp=camp)
+    for invitation in invitations:
+        invitation.status = invitation.get_status_display()
+        invitation.stipend = invitation.stipend_set.all()
+        invitation.roommate = invitation.roommate_set.all()
+        invitation.ignite = invitation.ignite_set.all()
+        
+    confirmed = invitations.filter(status='Y')
+    confirmed_pocs = confirmed.filter(user__sparkprofile__poc=True)
+    confirmed_women = confirmed.filter(user__sparkprofile__woman=True)
+    confirmed_journos = confirmed.filter(user__sparkprofile__journo=True)
+    invitee_pocs = invitations.filter(user__sparkprofile__poc=True)
+    invitee_women = invitations.filter(user__sparkprofile__woman=True)
+    invitee_journos = invitations.filter(user__sparkprofile__journo=True)
+    
+    def percent(part, whole):
+        denominator = float(len(whole))
+        numerator = float(len(part))
+        if denominator <= 0:
+            denominator = 1
+        return int(100 * (numerator/denominator))
+        
+    percent_poc = percent(confirmed_pocs, confirmed)
+    percent_women = percent(confirmed_women, confirmed)
+    percent_journos = percent(confirmed_journos, confirmed)
+    percent_all_poc = percent(invitee_pocs, invitations)
+    percent_all_women = percent(invitee_women, invitations)
+    percent_all_journos = percent(invitee_journos, invitations)
+    
+    variables = {
+        'camp': camp,
+        'invitations': invitations,
+        'confirmed': confirmed,
+        'percent_poc': percent_poc,
+        'percent_women': percent_women,
+        'percent_journos': percent_journos,
+        'percent_all_poc': percent_all_poc,
+        'percent_all_women': percent_all_women,
+        'percent_all_journos': percent_all_journos,
+    }
+    return render_to_response('reboot/camp.html', variables, context_instance=RequestContext(request))
 
 @login_required
 def mailcamp(request, camptheme):
@@ -274,75 +295,35 @@ def mailsync(request, camptheme):
         
         return render_to_response('reboot/mailsync.html', variables, context_instance=RequestContext(request))
 
-
-
-
-
-
-
-##########
-# Admin views - REBOOTED TEMPLATE
-##########
-
 @login_required
-def dashboard(request):
-    today = date.today()
-    upcoming = Camp.objects.filter(start_date__gte=today)
-    past = Camp.objects.filter(start_date__lte=today).order_by('-start_date')
-    
-    variables = {
-        'upcoming' : upcoming,
-        'past': past,
-    }
-    return render_to_response('reboot/reboot.html', variables, context_instance=RequestContext(request))
-
-@login_required
-def camp(request, camptheme):
+def contacts(request, camptheme):
     camp = get_object_or_404(Camp, theme__iexact=camptheme)
-    syncform = GoogleSyncForm()
-    invitations = Invitation.objects.filter(camp=camp)
-    for invitation in invitations:
-        invitation.status = invitation.get_status_display()
-        invitation.stipend = invitation.stipend_set.all()
-        invitation.roommate = invitation.roommate_set.all()
-        invitation.ignite = invitation.ignite_set.all()
-        
-    confirmed = invitations.filter(status='Y')
-    confirmed_pocs = confirmed.filter(user__sparkprofile__poc=True)
-    confirmed_women = confirmed.filter(user__sparkprofile__woman=True)
-    confirmed_journos = confirmed.filter(user__sparkprofile__journo=True)
-    invitee_pocs = invitations.filter(user__sparkprofile__poc=True)
-    invitee_women = invitations.filter(user__sparkprofile__woman=True)
-    invitee_journos = invitations.filter(user__sparkprofile__journo=True)
+    invitations = Invitation.objects.filter(camp=camp,contact=request.user)
     
-    def percent(part, whole):
-        denominator = float(len(whole))
-        numerator = float(len(part))
-        if denominator <= 0:
-            denominator = 1
-        return int(100 * (numerator/denominator))
-        
-    percent_poc = percent(confirmed_pocs, confirmed)
-    percent_women = percent(confirmed_women, confirmed)
-    percent_journos = percent(confirmed_journos, confirmed)
-    percent_all_poc = percent(invitee_pocs, invitations)
-    percent_all_women = percent(invitee_women, invitations)
-    percent_all_journos = percent(invitee_journos, invitations)
+    if request.method == 'POST':
+        form = ContactsForm(request.POST)
+        if form.is_valid():
+            subject = form.cleaned_data['subject']
+            body = form.cleaned_data['body']
+    else:
+        form = ContactsForm()
+        subject = ''
+        body = ''
     
     variables = {
         'camp': camp,
         'invitations': invitations,
-        'confirmed': confirmed,
-        'percent_poc': percent_poc,
-        'percent_women': percent_women,
-        'percent_journos': percent_journos,
-        'percent_all_poc': percent_all_poc,
-        'percent_all_women': percent_all_women,
-        'percent_all_journos': percent_all_journos,
+        'subject': subject,
+        'body': body,
+        'form': form,
     }
-    return render_to_response('reboot/camp.html', variables, context_instance=RequestContext(request))
+    
+    return render_to_response('reboot/1on1.html', variables, context_instance=RequestContext(request))
+  
 
-
+  
+  
+  
   
   
   
@@ -809,6 +790,16 @@ def delete_signup(request, main_object, object_id, rand_id):
   return redirect('route', rand_id=rand_id)
 
 
+
+
+
+
+
+
+
+
+
+
 ##########
 # Registration views - UPSTATEMENT TEMPLATE
 ##########
@@ -1167,6 +1158,17 @@ def register_confirm_delete(request, main_object, object_id):
     object.delete()
     return HttpResponseRedirect(url)
 
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
 ##########
 # Export views
 ##########

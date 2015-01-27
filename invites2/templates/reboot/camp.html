@@ -41,7 +41,8 @@
         {% else %}
         <p><span class="glyphicon glyphicon-transfer"></span>&nbsp;<a href="{% url 'mailsync' camptheme=camp.theme %}">Sync with MailChimp</a> | <a href="{% url 'mailcamp' camptheme=camp.theme %}">View merge tags</a></p>
         {% endif %}
-        <p><span class="glyphicon glyphicon-file"></span>&nbsp;<a href="{% url 'camp_table' camptheme=camp.theme %}">Download CSV of invitees</a></p>    
+        <p><span class="glyphicon glyphicon-file"></span>&nbsp;<a href="{% url 'camp_table' camptheme=camp.theme %}">Download CSV of invitees</a></p>
+        <p><span class="glyphicon glyphicon-envelope"></span>&nbsp;<a href="{% url 'contacts' camptheme=camp.theme %}">View your contacts</a></p>
       </div>
     </div>
   </div>
