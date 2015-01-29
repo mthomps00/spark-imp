@@ -12,7 +12,9 @@
       <div class="col-lg-12">
         {% if messages %}
           {% for message in messages %}
-          <div class="alert{% if message.tags %} alert-{{ message.tags }}{% endif %}" role="alert">{{ message }}</div>
+          <div class="alert{% if message.tags %} alert-{{ message.tags }}{% endif %}" role="alert">
+            <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+            {{ message }}</div>
           {% endfor %}
         {% endif %}
         
