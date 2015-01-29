@@ -41,7 +41,7 @@ class SparkProfileForm(ModelForm):
 # Custom forms
 class ContactsForm(forms.Form):
     subject = forms.CharField(max_length=100, label='Email subject line')
-    body = forms.CharField(widget=forms.Textarea, label='Email body')
+    body = forms.CharField(widget=forms.Textarea, label='Email body', initial='Remember, the character for a new line is %0D%0A')
 
 class ResponseForm(forms.Form):
     RSVP_CHOICES = (
