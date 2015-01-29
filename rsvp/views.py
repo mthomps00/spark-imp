@@ -270,7 +270,7 @@ def mailsync(request, camptheme):
                   }
                 try:
                   m.lists.update_member(id=id,email=identifier,merge_vars={'new-email':invite.user.email})
-                except ListNotSubscribedError:
+                except:
                   messages.warning(request, 'MailChimp raised an error when updating %s' % (invite.user.username))
             else:
                 identifier = {
