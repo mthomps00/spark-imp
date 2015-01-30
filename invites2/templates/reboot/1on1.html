@@ -10,6 +10,14 @@
   {% block main %}
   <div class="container">
     <div class="row">
+      <div class="col-lg-12">
+        <ol class="breadcrumb">
+          <li><a href="{% url 'camp' camptheme=camp.theme %}">Back</a></li>
+          <li class="active">Contacts</li>
+        </ol>
+      </div>
+    </div>
+    <div class="row">
       <div class="col-lg-6">
         <p class="lead">Your one-on-one contacts are listed below. Please use the form at right to pre-fill a default subject and body for your contact emails. Click on a user's first or last name to open a draft email to that user in your computer's default email application.</p>
       </div>

@@ -17,7 +17,15 @@
 
     {% block main %}
     <div class="container">
-        <div class="row">
+      <div class="row">
+        <div class="col-lg-12">
+          <ol class="breadcrumb">
+            <li><a href="{% url 'camp' camptheme=camp.theme %}">Back</a></li>
+            <li class="active">Edit Invitations and Users</li>
+          </ol>
+        </div>
+      </div>
+      <div class="row">
             <div class="col-lg-12">
                 {% if invitations %}
                 <h3>Invitations pending a response:</h3>
