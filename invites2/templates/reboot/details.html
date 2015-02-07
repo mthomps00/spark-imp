@@ -147,7 +147,7 @@
         <table class="table table-striped">
           {% for camper in confirmed %}
           <tr>
-            <td class="col-lg-2">
+            <td style="min-width:125px">
             {% if camper.user.sparkprofile.headshot %}
               <img src="{{ camper.user.sparkprofile.thumb.url }}" class="img-responsive img-circle" style="padding: 10px" id="headshot_thumb" />
             {% endif %}
