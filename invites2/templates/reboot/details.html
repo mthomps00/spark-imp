@@ -148,16 +148,19 @@
           {% for camper in confirmed %}
           <tr>
             <td>
-              <img src="{{ camper.sparkprofile.thumb.url }}" class="img-responsive img-circle" style="padding: 10px" id="headshot_thumb" />
+            {% if camper.user.sparkprofile.headshot %}
+              <img src="{{ camper.user.sparkprofile.thumb.url }}" class="img-responsive img-circle" style="padding: 10px" id="headshot_thumb" />
+            {% endif %}
             </td>
-            <td><h4><strong>{{ camper.user.first_name }}&nbsp;{{ camper.user.last_name }}</strong></h4></td>
             <td>
               <dl class="dl-horizontal">
-                <dt>Organization</dt>
+                <dt></dt>
+                <dd><h4><strong>{{ camper.user.first_name }} {{ camper.user.last_name }}</strong></h4></dd>
+                <dt class="text-muted">Organization</dt>
                 <dd>{{ camper.user.sparkprofile.employer }}</dd>
-                <dt>Title</dt>
+                <dt class="text-muted">Title</dt>
                 <dd>{{ camper.user.sparkprofile.job_title }}</dd>
-                <dt>Bio</dt>
+                <dt class="text-muted">Bio</dt>
                 <dd>{{ camper.user.sparkprofile.bio }}</dd>
               </dl>
             </td>
