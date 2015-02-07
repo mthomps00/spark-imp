@@ -70,7 +70,7 @@
         <tr>
           <td><a href="{% url 'route' invite.rand_id %}">{{ invite.rand_id }}</a>&nbsp;<a href="{% url 'admin:rsvp_invitation_change' invite.id %}" alt="Edit invitation"><span class="glyphicon glyphicon-pencil pull-right"></span></a></td>
           <td>{{ invite.user.first_name }}</td>
-          <td>{{ invite.user.last_name }}&nbsp;<a href="{% url 'admin:auth_user_change' invite.id %}" alt="Edit user" title="Edit user"><span class="glyphicon glyphicon-user pull-right"></span></a></td>
+          <td>{{ invite.user.last_name }}&nbsp;<a href="{% url 'admin:auth_user_change' invite.user.id %}" alt="Edit user" title="Edit user"><span class="glyphicon glyphicon-user pull-right"></span></a></td>
           <td>{{ invite.status }}</td>
           {% if camp.paid %}
           <td style="text-align: center">{% if invite.has_paid or invite.comp_ticket %}<span class="glyphicon glyphicon-ok"></span>{% endif %}</td>
