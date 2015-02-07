@@ -55,9 +55,9 @@
       <table class="table table-striped table-condensed table-bordered" id="invites-table">
         <thead>
           <tr id="invites-header">
-            <th>Invite No.</th>
+            <th>Invite No.<span class="pull-right text-muted"><small>Edit</small></span></th>
             <th>First name</th>
-            <th>Last name</th>
+            <th>Last name<span class="pull-right text-muted"><small>Edit</small></span></th>
             <th>Status</th>
             {% if camp.paid %}<th>Paid</th>{% endif %}
             {% if camp.stipends %}<th>Stipend</th>{% endif %}
@@ -68,9 +68,9 @@
         </thead>                        
         {% for invite in invitations %}
         <tr>
-          <td><a href="{% url 'route' invite.rand_id %}">{{ invite.rand_id }}</a></td>
+          <td><a href="{% url 'route' invite.rand_id %}">{{ invite.rand_id }}</a>&nbsp;<a href="{% url 'admin:rsvp_invitation_change' invite.id %}" alt="Edit invitation"><span class="glyphicon glyphicon-pencil pull-right"></span></a></td>
           <td>{{ invite.user.first_name }}</td>
-          <td>{{ invite.user.last_name }}</td>
+          <td>{{ invite.user.last_name }}&nbsp;<a href="{% url 'admin:auth_user_change' invite.id %}" alt="Edit user" title="Edit user"><span class="glyphicon glyphicon-user pull-right"></span></a></td>
           <td>{{ invite.status }}</td>
           {% if camp.paid %}
           <td style="text-align: center">{% if invite.has_paid or invite.comp_ticket %}<span class="glyphicon glyphicon-ok"></span>{% endif %}</td>

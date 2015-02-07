@@ -145,22 +145,22 @@
           </p>
         </div>
         <table class="table table-striped">
-          <thead>
-            <tr class="text-muted info">
-              <td>Name</td>
-              <td>Employer</td>
-              <td>Title</td>
-              <td>Bio</td>
-            </tr>
-          </thead>
           {% for camper in confirmed %}
           <tr>
             <td>
-              <strong>{{ camper.user.first_name }} {{ camper.user.last_name }}</strong>
+              <img src="{{ camper.sparkprofile.thumb.url }}" class="img-responsive img-circle" style="padding: 10px" id="headshot_thumb" />
             </td>
-            <td>{{ camper.user.sparkprofile.employer }}</td>
-            <td>{{ camper.user.sparkprofile.job_title }}</td>
-            <td>{{ camper.user.sparkprofile.bio }}</td>
+            <td><h4><strong>{{ camper.user.first_name }}&nbsp;{{ camper.user.last_name }}</strong></h4></td>
+            <td>
+              <dl class="dl-horizontal">
+                <dt>Organization</dt>
+                <dd>{{ camper.user.sparkprofile.employer }}</dd>
+                <dt>Title</dt>
+                <dd>{{ camper.user.sparkprofile.job_title }}</dd>
+                <dt>Bio</dt>
+                <dd>{{ camper.user.sparkprofile.bio }}</dd>
+              </dl>
+            </td>
           </tr>
           {% endfor %}
         </table>
@@ -184,7 +184,7 @@
           <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
             <div class="panel-body">
               {% if stipend %}
-                  <p>You've requested a travel stipend, and we hope to be able to accommodate your request. We'll get back to you as soon as we've finalized our attendee list. Meanwhile, be sure the information below is correct.</p>
+                  <p>You've requested a travel stipend. Please make sure the information below is correct.</p>
                   <dl class="dl-horizontal">
                     <dt>Cost estimate</dt>
                     <dd>{{ stipend.cost_estimate }}</dd>
