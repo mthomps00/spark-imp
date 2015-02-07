@@ -268,9 +268,9 @@ def mailsync(request, camptheme):
                 identifier = {
                   'leid': invite.user.sparkprofile.mailchimp_id,
                   }
-                merge_vars.append({
-                    'new-email': invite.user.email,
-                  })
+                m.lists.update_member(id=id,email=identifier,merge_vars={'new-email':invite.user.email})
+                except:
+                  messages.warning(request, 'MailChimp raised an error when updating %s' % (invite.user.username))
             else:
                 identifier = {
                   'email': invite.user.email,
