@@ -75,7 +75,7 @@
                             {% for nominee in nomination.list %}
                             {% if forloop.first %}
                             <td><span class="glyphicon glyphicon-plus-sign"></span></td>
-                            <td><span class="glyphicon glyphicon-chevron-left" class="subtract_vote"></span><input type="number" name="vote_tally" min="0" max="{{ round.num_votes }}" size="2" value="{{ nominee.yours }}" class="vote_tally" disabled /></span><span class="glyphicon glyphicon-chevron-right" class="add_vote"></span><input type="hidden" value="{{ nominee.pk }}" name="nominee_id" /></td>
+                            <td><span class="glyphicon glyphicon-chevron-left" class="subtract_vote"></span><input type="number" name="vote_tally" min="0" max="{{ round.num_votes }}" size="2" value="{{ nominee.yours }}" class="vote_tally" /></span><span class="glyphicon glyphicon-chevron-right" class="add_vote"></span><input type="hidden" value="{{ nominee.pk }}" name="nominee_id" /></td>
                             <td>{{ nominee.count }}</td>
                             <td>{{ nominee.user.first_name }}</td>
                             <td>{{ nominee.user.last_name }}</td>
