@@ -206,7 +206,7 @@ def vote(request, round):
 
     for nomination in nominations:
         count = 0
-        nomination.votes = Vote.objects.filter(user=nomination.user)
+        nomination.votes = Vote.objects.filter(user=nomination.user, ballot__voting_round=round)
         nomination.your_vote, created = Vote.objects.get_or_create(user=nomination.user, ballot=ballot)
         for vote in nomination.votes:
             count = count + vote.value
