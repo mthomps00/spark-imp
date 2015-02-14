@@ -6,10 +6,10 @@ from nod.models import *
 import random, csv, datetime, unicodecsv
 from urllib import urlopen
 
-nominees_sheet = 'http://sparkcamp.com/wp-content/uploads/2015/01/january_nods.csv'
+nominees_sheet = 'http://sparkcamp.com/wp-content/uploads/2015/02/feb13_import.csv'
 nominees = csv.DictReader(urlopen(nominees_sheet))
 camp = Camp.objects.get(theme='Giving')
-round, vroundcreated = VotingRound.objects.get_or_create(short_name='First-round vote',camp=camp)
+round, vroundcreated = VotingRound.objects.get_or_create(short_name='Second round',camp=camp)
 Amy = User.objects.get(username='Amy')
 awballot, awballotcreated = Ballot.objects.get_or_create(voter=Amy,voting_round=round)
 Amanda = User.objects.get(username='Amanda')
@@ -68,7 +68,7 @@ for row in nominees:
         t, tagcreated = Tag.objects.get_or_create(name=tag)
         user.tags.add(t)
         
-    if row['AM votes'] != '':
+    '''if row['AM votes'] != '':
         amvalue = int(float(row['AM votes']))
         amvote, amcreated = Vote.objects.update_or_create(user=user,value=amvalue,ballot=amballot)
     if row['AP votes'] != '':
@@ -79,6 +79,6 @@ for row in nominees:
         awvote, awcreated = Vote.objects.update_or_create(user=user,value=awvalue,ballot=awballot)
     if row['MT votes'] != '':
         mtvalue = int(float(row['MT votes']))
-        mtvote, mtcreated = Vote.objects.update_or_create(user=user,value=mtvalue,ballot=mtballot)
+        mtvote, mtcreated = Vote.objects.update_or_create(user=user,value=mtvalue,ballot=mtballot)'''
         
     print user,sparkprofile

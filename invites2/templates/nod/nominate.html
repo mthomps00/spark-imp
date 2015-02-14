@@ -1,0 +1,68 @@
+{% extends "reboot/reboot.html" %}
+
+{% block title %}Nominate someone for Spark Camp{% endblock title %}
+
+{% block pageheader %}
+<h1>Nominate someone for Spark Camp</h1>
+{% endblock pageheader %}
+
+{% block main %}
+<div class="container">
+  <div class="row">
+    <div class="col-lg-12">
+      {% if messages %}
+        {% for message in messages %}
+        <div class="alert{% if message.tags %} alert-{{ message.tags }}{% endif %} alert-dismissible" role="alert">
+          <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+          {{ message }}
+        </div>
+        {% endfor %}
+      {% endif %}
+        
+        {{ request }}
+      <form action="{% url 'nominate' %}" method="POST">
+        {% csrf_token %}
+        <table class="table table-responsive table-condensed">
+          {% if nodchoice %}
+          <tr class="warning">
+            <th>We have multiple matches on your name in our database. Select which of these users is really you (or has the most current information):</th>
+            <td>
+              {% for choice in nodchoice %}             
+              <div class="radio">
+                <label>
+                <input type="radio" name="nominator" id="nominator{{ choice.id }}" value="{{ choice.id }}" />
+                  <strong>{{ choice.first_name }} {{ choice.last_name }}</strong> ({{ choice.email }})<br />
+                  {{ choice.sparkprofile.bio }} <em class="text-muted">{{ choice.sparkprofile.job_title }} {{ choice.sparkprofile.employer }}</em>
+                </label>
+              </div>
+              {% endfor %}
+            </td>
+          </tr>
+          {% endif %}
+          {% if userchoice %}
+          <tr class="warning">
+            <th>We have multiple matches for this nominee's name in our database. Select which of these users is your nominee (or has the most current information):</th>
+            <td>
+              {% for choice in userchoice %}             
+              <div class="radio">
+                <label>
+                <input type="radio" name="chosenuser" id="chosenuser{{ choice.id }}" value="{{ choice.id }}" />
+                  <strong>{{ choice.first_name }} {{ choice.last_name }}</strong> ({{ choice.email }})<br />
+                  {{ choice.sparkprofile.bio }} <em class="text-muted">{{ choice.sparkprofile.job_title }} {{ choice.sparkprofile.employer }}</em>
+                </label>
+              </div>
+              {% endfor %}
+            </td>
+          </tr>
+          {% endif %}
+          {{ form.as_table }}
+          <tr>
+            <th></th>
+            <td><input type="submit" class="btn btn-default" /></td>
+          </tr>
+        </table>
+        </form>
+    </div>
+  </div>
+</div>
+{% endblock main %}

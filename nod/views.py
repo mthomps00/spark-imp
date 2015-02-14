@@ -1,4 +1,5 @@
 from datetime import date, timedelta
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.db.models import Q
@@ -6,6 +7,7 @@ from django.shortcuts import redirect, render, render_to_response
 from django.template import Context, RequestContext
 from rsvp.models import Camp, SparkProfile, Invitation
 from nod.models import *
+from nod.forms import *
 import re, datetime
 
 ####################
@@ -46,6 +48,86 @@ def get_query(query_string, search_fields):
             query = query & or_query
     return query
 
+def nominate(request):
+    if request.method == 'POST':
+        form = NominationForm(request.POST)
+
+        if form.is_valid():
+            user_first_name = form.cleaned_data['user_first_name']
+            user_last_name = form.cleaned_data['user_last_name']
+            user_email = form.cleaned_data['user_email']
+            user_alum = form.cleaned_data['user_alum']
+            reason = form.cleaned_data['reason']
+            description = form.cleaned_data['description']
+            employer = form.cleaned_data['employer']
+            job_title = form.cleaned_data['job_title']
+            first_name = form.cleaned_data['first_name']
+            last_name = form.cleaned_data['last_name']
+            email = form.cleaned_data['email']
+            gender = form.cleaned_data['gender']
+            secondary_email = form.cleaned_data['secondary_email']
+            
+            if gender == 'F':
+                woman = True
+            else:
+                woman = False
+            
+            nominators = User.objects.filter(first_name=user_first_name, last_name=user_last_name, email=user_email)
+            if len(nominators) > 1:
+                if form.cleaned_data['nominator']:
+                    nominated_by = User.objects.get(id=form.cleaned_data['nominator'])
+                else:
+                    nodchoice = nominators
+            elif len(nominators) == 1:
+                nominated_by = nominators[0]
+                nodchoice = False
+            else:
+                nominated_by = User.objects.create(first_name=user_first_name, last_name=user_last_name, email=user_email)
+                nodchoice = False
+            
+            users = User.objects.filter(first_name=first_name, last_name=last_name, email=email)
+            if len(users) > 1:
+                if form.cleaned_data['chosenuser']:
+                    user = User.objects.get(id=form.cleaned_data['chosenuser'])
+                else:    
+                    userchoice = users
+            elif len(users) == 1:
+                user = users[0]
+                userchoice = False
+            else:
+                user = User.objects.create(first_name=first_name, last_name=last_name, email=email)
+                userchoice = False
+                    
+            if not nodchoice and not userchoice:
+                profile = SparkProfile.objects.get(user=user)
+                profile.employer = employer
+                profile.email = email
+                profile.job_title = job_title
+                profile.secondary_email = secondary_email
+                profile.woman = woman
+                profile.save()
+                nomination, nodcreated = Nomination.objects.update_or_create(user=user, nominated_by=nominated_by, reason=reason, description=description)
+                messages.success(request, 'Thank you for nominating someone for Spark Camp!')
+
+                userdata = {
+                    'user_first_name': user_first_name,
+                    'user_last_name': user_last_name,
+                    'user_email': user_email,
+                }
+                form = NominationForm(initial=userdata)
+    else:
+        form = NominationForm()
+            
+    variables = {
+        'form': form,
+        'nodchoice': nodchoice,
+        'userchoice': userchoice,
+        'request': request,
+    }
+            
+    return render_to_response('nod/nominate.html', variables, context_instance=RequestContext(request))
+
+  
 @login_required
 def search(request, nominate=False):
     query_string = ''
