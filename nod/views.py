@@ -191,27 +191,25 @@ def vote(request, round):
         i = len(nominees)
         while h < i:
             current_tally = int(float(tally[h]))
-            nod = Nomination.objects.get(id=nominees[h])
-            votes = Vote.objects.filter(user=nod.user, ballot__voting_round=round).exclude(ballot=ballot).values_list('value', flat=True)
-            votecount = sum(votes)
-            value = current_tally - votecount
-            vote, created = Vote.objects.get_or_create(user=nod.user, ballot=ballot)
-            vote.value = value
-            if value == 0:
-                vote.delete()
-            else:
+            if current_tally > 0:
+                nod = Nomination.objects.get(id=nominees[h])
+                vote, created = Vote.objects.get_or_create(user=nod.user, ballot=ballot)
+                vote.value=current_tally
                 vote.save()
             h += 1
         return redirect('round', round=round)
 
     for nomination in nominations:
         count = 0
-        nomination.votes = Vote.objects.filter(user=nomination.user, ballot__voting_round=round)
-        nomination.your_vote, created = Vote.objects.get_or_create(user=nomination.user, ballot=ballot)
-        for vote in nomination.votes:
+        yours = 0
+        nomination.othervotes = Vote.objects.filter(user=nomination.user, ballot__voting_round=round).exclude(ballot__voter=request.user)
+        nomination.yourvotes = Vote.objects.filter(user=nomination.user, ballot=ballot)
+        for vote in nomination.othervotes:
             count = count + vote.value
+        for vote in nomination.yourvotes:
+            yours = yours + vote.value
         nomination.count = count
-        nomination.minimum = count - nomination.your_vote.value
+        nomination.yours = yours
         
     ballot_votes = Vote.objects.filter(ballot=ballot)
     vote_count = 0
