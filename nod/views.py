@@ -237,7 +237,7 @@ def round(request, round):
     your_picks = User.objects.filter(id__in=your_ids)
     
     for pick in all_picks:
-        pick.value = sum(Vote.objects.filter(user=pick.id).values_list('value',flat=True))
+        pick.value = sum(Vote.objects.filter(user=pick.id,ballot__voting_round=round).values_list('value',flat=True))
     
     # Calculate the demographic breakdown of the round.
     all_poc = all_picks.filter(sparkprofile__poc=True)
