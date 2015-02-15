@@ -1,38 +1,42 @@
 {% extends "nod/vote.html" %}
 
-    {% block title %}{{ round.camp.display_name }} – {{ round.short_name }}{% endblock title %}
+  {% block title %}{{ round.camp.display_name }} – {{ round.short_name }}{% endblock title %}
 
-{% block admin-navitems %}
-    <li><a href="{% url 'camp' camptheme=round.camp.theme %}">Event dashboard</a></li>
-    <li><a href="{% url 'admin:rsvp_camp_change' round.camp.id %}">Edit event</a></li>
-    <li><a href="{% url 'admin:nod_votinground_change' round.id %}">Edit round</a></li>
-    {% endblock admin-navitems %}
+  {% block admin-navitems %}
+  <li><a href="{% url 'camp' camptheme=round.camp.theme %}">Event dashboard</a></li>
+  <li><a href="{% url 'admin:rsvp_camp_change' round.camp.id %}">Edit event</a></li>
+  <li><a href="{% url 'admin:nod_votinground_change' round.id %}">Edit round</a></li>
+  {% endblock admin-navitems %}
 
-    {% block pageheader %}
-    <div class="row">
-        <div class="col-lg-6">
-            <h1>{{ all_picks|length }} nominees</h1>
-            {% if your_picks %}
-            <h4>{{ round.short_name|lower }} for {{ round.camp.display_name }}</h4>
-            <p><strong>{{ percents.your_poc }}%</strong> of your votes are for POC. <strong>{{ percents.your_women }}%</strong> are for women. Overall, {{ percents.poc }}% of votes in this round are for POC, and <strong>{{ percents.women }}%</strong> are for women. <a href="{% url 'vote' round=round.id %}">You can adjust your votes here</a>, if you'd like.</p>
-            {% else %}
-            <p>You haven't cast any votes in this round as yet. <a href="{% url 'vote' round=round.id %}">Vote!</a></p>
-            {% endif %} 
-        </div>
-        <div class="col-lg-6">
-            <ul class="list-group">
-              <li class="list-group-item"><a href="{% url 'vote' round.id %}">Vote again</a></li>
-              <li class="list-group-item">Select nominees with: <a id="2plus">2+ votes</a> | <a id="3plus">3+ votes</a> | <a id="unselect">Unselect all</a></li>
-              <li class="list-group-item"><a id="countchecked">Count selected</a></li>
-            </ul>
-            </div>
-            
-        </div>
-    </div>
-    {% endblock pageheader %}
-
-    {% block main %}
+  {% block pageheader %}
+    <h1>{{ all_picks|length }} nominees</h1>
+  {% endblock pageheader %}
+  
+  {% block main %}
     <div class="container">
+      <div class="row">
+        <div class="col-lg-5">
+            <p class="lead">{{ round.short_name|lower }} for {{ round.camp.display_name }}</p>
+            <p class="text-muted">Click any header in the table below to sort by that column. Hold shift while clicking to sort on multiple columns.</p>
+        </div>
+        <div class="col-lg-3">
+        {% if your_picks %}
+          <p>your votes / all votes</p>
+          <p>{{ percents.your_poc }}% POC / <span class="text-muted">{{ percents.poc }}% POC</span></p>
+          <p>{{ percents.your_women }}% women / <span class="text-muted">{{ percents.women }}% women</span></p>
+        {% else %}
+          <p>You haven't cast any votes in this round as yet. <a href="{% url 'vote' round=round.id %}">Vote!</a></p>
+        {% endif %} 
+        </div>
+        <div class="col-lg-4">
+          <p><span class="glyphicon glyphicon-flag"></span>&nbsp;<a href="{% url 'vote' round.id %}">Vote again</a></p>
+          <p><span class="glyphicon glyphicon-check"></span>&nbsp;Select: <a id="2plus">2+ votes</a> | <a id="3plus">3+ votes</a> | <a id="unselect">none</a></p>
+          <p><span class="glyphicon glyphicon-tasks"></span>&nbsp;<a id="countchecked">Count selected</a></p>
+        </div>            
+      </div>
+    </div>
+
+      <div class="container">
         <div class="row">
             <div class="col-lg-12">
                 {% if all_picks %}
