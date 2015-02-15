@@ -112,7 +112,7 @@ def nominate(request, camptheme=''):
             profile.job_title = job_title
             profile.secondary_email = secondary_email
             profile.woman = woman
-            if poc = True:
+            if poc == True:
                 profile.poc = True            
             profile.save()
             nomination, nodcreated = Nomination.objects.update_or_create(user=user, nominated_by=nominated_by, reason=reason, description=description)
