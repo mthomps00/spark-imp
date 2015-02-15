@@ -3,6 +3,15 @@ from django.forms import ModelForm
 from rsvp.models import *
 from nod.models import *
 
+def camp_choices():
+    camps = Camp.objects.all()
+    CAMP_CHOICES = [
+      ('N', 'Any Spark Camp event'),
+    ]
+    for camp in camps:
+        CAMP_CHOICES.append(tuple((camp.short_name, camp.display_name)))
+    return tuple(CAMP_CHOICES)
+
 class NominationForm(forms.Form):
     user_first_name = forms.CharField(max_length=30, required=True, label="Your first name")
     user_last_name = forms.CharField(max_length=30, required=True, label="Your last name")
@@ -21,4 +30,5 @@ class NominationForm(forms.Form):
         ('N', 'Neither male nor female / Prefer not to say'),
     )
     gender = forms.ChoiceField(required=True, choices=GENDER_CHOICES, label="Gender", help_text="What gender does this person identify as?")
+    camp = forms.ChoiceField(required=False, choices=camp_choices(), label="Camp", help_text="Got a particular event in mind?")
     secondary_email = forms.EmailField(required=False, label="Secondary email", help_text="If this person has an assistant or secondary email address, please list that here.")

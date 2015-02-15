@@ -1,6 +1,6 @@
 {% extends "reboot/reboot.html" %}
 
-{% block title %}Nominate someone for Spark Camp{% endblock title %}
+{% block title %}Nominate someone for Spark Camp {% if camptheme %}{{ camptheme }}{% endif %}{% endblock title %}
 
 {% block pageheader %}
 <h1>Nominate someone for Spark Camp</h1>
@@ -19,6 +19,7 @@
         {% endfor %}
       {% endif %}
         
+      {{ request }}
       <form action="{% url 'nominate' %}" method="POST">
         {% csrf_token %}
         <table class="table table-responsive table-condensed">

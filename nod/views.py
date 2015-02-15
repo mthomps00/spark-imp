@@ -49,7 +49,7 @@ def get_query(query_string, search_fields):
             query = query & or_query
     return query
 
-def nominate(request):
+def nominate(request, camptheme=''):
     if request.method == 'POST':
         form = NominationForm(request.POST)
 
@@ -66,6 +66,7 @@ def nominate(request):
             last_name = form.cleaned_data['last_name']
             email = form.cleaned_data['email']
             gender = form.cleaned_data['gender']
+            camp = form.cleaned_data['camp']
             secondary_email = form.cleaned_data['secondary_email']
             
             if gender == 'F':
@@ -113,11 +114,16 @@ def nominate(request):
             profile.save()
             nomination, nodcreated = Nomination.objects.update_or_create(user=user, nominated_by=nominated_by, reason=reason, description=description)
             messages.success(request, 'Thank you for nominating someone for Spark Camp!')
+            
+            if camp != 'N':
+                nomination.camp = Camp.objects.get(short_name=camp)
+                nomination.save()
 
             userdata = {
                 'user_first_name': user_first_name,
                 'user_last_name': user_last_name,
                 'user_email': user_email,
+                'camp': camp,
             }
             form = NominationForm(initial=userdata)
     else:
@@ -125,6 +131,7 @@ def nominate(request):
             
     variables = {
         'form': form,
+        'camptheme': camptheme,
     }
             
     return render_to_response('nod/nominate.html', variables, context_instance=RequestContext(request))
