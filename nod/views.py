@@ -66,6 +66,7 @@ def nominate(request, camptheme=''):
             last_name = form.cleaned_data['last_name']
             email = form.cleaned_data['email']
             gender = form.cleaned_data['gender']
+            poc = form.cleaned_data['poc']
             camp = form.cleaned_data['camp']
             secondary_email = form.cleaned_data['secondary_email']
             
@@ -111,6 +112,8 @@ def nominate(request, camptheme=''):
             profile.job_title = job_title
             profile.secondary_email = secondary_email
             profile.woman = woman
+            if poc = True:
+                profile.poc = True            
             profile.save()
             nomination, nodcreated = Nomination.objects.update_or_create(user=user, nominated_by=nominated_by, reason=reason, description=description)
             messages.success(request, 'Thank you for nominating someone for Spark Camp!')

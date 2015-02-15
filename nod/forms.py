@@ -30,5 +30,6 @@ class NominationForm(forms.Form):
         ('N', 'Neither male nor female / Prefer not to say'),
     )
     gender = forms.ChoiceField(required=True, choices=GENDER_CHOICES, label="Gender", help_text="What gender does this person identify as?")
+    poc = forms.BooleanField(required=False, label="POC", help_text="Check this box if your nominee is a person of color.")
     camp = forms.ChoiceField(required=False, choices=camp_choices(), label="Camp", help_text="Got a particular event in mind?")
     secondary_email = forms.EmailField(required=False, label="Secondary email", help_text="If this person has an assistant or secondary email address, please list that here.")
