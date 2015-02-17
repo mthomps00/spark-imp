@@ -46,9 +46,9 @@
       
       {% if invitation.camp.hotel %}
       <dt>Recommended hotel</dt>
-      <dd>{% if invitation.camp.hotel_url %}<a href="{{ invitation.camp.hotel_url }}">{% endif %}
+      <dd>{% if invitation.camp.hotel_link %}<a href="{{ invitation.camp.hotel_url }}">{% endif %}
         {{ invitation.camp.hotel }}
-        {% if invitation.camp.hotel_url %}</a>{% endif %}
+        {% if invitation.camp.hotel_link %}</a>{% endif %}
         {% if invitation.camp.hotel_code %} | Group code: {{ invitation.camp.hotel_code }} {% endif %}
       </dd>
       {% endif %}

@@ -26,6 +26,7 @@ class Camp(models.Model):
     hotel_link = models.URLField(blank=True)
     hotel_code = models.CharField(max_length=60, blank=True, verbose_name='Hotel promotion code')
     hotel_deadline = models.DateField(blank=True, null=True)
+    hotel_address = models.CharField(max_length=140, blank=True, null=True)
     
     # Venue information
     venue = models.CharField(max_length=60, blank=True)
