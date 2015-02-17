@@ -53,6 +53,11 @@
       </dd>
       {% endif %}
 
+      {% if invitation.camp.hotel_address %}
+      <dt>Hotel address</dt>
+      <dd>{{ invitation.camp.hotel_address }}</dd>
+      {% endif %}
+
     </dl>
     <hr />
     <h4>Make sure the following info is accurate. See anything wrong or missing? <span id="headshot_msg">Want to change your headshot?</span> <a href="{% url 'update' rand_id=invitation.rand_id %}">Update it.</a></h4>
