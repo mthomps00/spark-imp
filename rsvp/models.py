@@ -250,7 +250,7 @@ class PlusOne(models.Model):
 
 class SparkProfile(models.Model):
     user = models.OneToOneField(User)
-    headshot = models.ImageField(blank=True,null=True,upload_to='headshot')
+    headshot = models.ImageField(blank=True,null=True,upload_to='headshot',help_text='Acceptable file-types: JPG or PNG.')
     mailchimp_id = models.CharField(max_length=140,blank=True,null=True)
     thumb = ImageSpecField(
         source='headshot',
@@ -261,7 +261,7 @@ class SparkProfile(models.Model):
     bio = models.CharField(
         max_length=140,
         blank=True,
-        help_text='Tell us your bio. Keep it Twitter-length.'
+        help_text='Tell us your bio. Keep it short. 140 characters max.'
     )
     employer = models.CharField(
         max_length=140,
