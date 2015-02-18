@@ -539,7 +539,10 @@ def update(request, rand_id):
                 invitation.status = 'I'
                 messages.warning(request, 'We\'re still missing some key pieces of info to finalize your registration.')
                 invitation.save()
-                
+        
+        else:
+            messages.warning(request, 'Sorry, there was an error with your form. Please see below.')
+        
     else:
         profileform = SparkProfileForm(instance=profile)
     
