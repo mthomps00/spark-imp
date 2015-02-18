@@ -437,6 +437,8 @@ def pay(request, rand_id):
                 invitation.has_paid = False
             else:
                 invitation.has_paid = True
+                invitation.status = 'I'
+                invitation.save()
         # If this is actually a comp ticket, just process it as paid
         else:
             invitation.has_paid = True
