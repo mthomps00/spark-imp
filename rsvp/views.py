@@ -541,7 +541,7 @@ def update(request, rand_id):
                 invitation.save()
         
         else:
-            messages.warning(request, 'Sorry, there was an error with your form. Please see below.')
+            messages.warning(request, 'Sorry, there was an error with your form. Please correct the fields that are highlighted below.')
         
     else:
         profileform = SparkProfileForm(instance=profile)
