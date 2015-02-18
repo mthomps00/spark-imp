@@ -39,6 +39,7 @@ INSTALLED_APPS = (
     'nod',
     'rsvp',
     # Third-party apps
+    'bootstrapform',
     'grappelli',
     'imagekit',
     'widget_tweaks',

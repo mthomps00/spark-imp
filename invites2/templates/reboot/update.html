@@ -42,10 +42,11 @@
       {% if invitation.user.sparkprofile.bio == '' %} We're missing a bio for you; please submit a brief bio below.{% endif %}
     </span></p>
 
-    <form action="{% url 'update' rand_id=invitation.rand_id %}" method="post" enctype="multipart/form-data">
+    <form action="{% url 'update' rand_id=invitation.rand_id %}" method="post" enctype="multipart/form-data" class="form-horizontal">
       {% csrf_token %}
+      {% load bootstrap %}
       <table class="table table-basic">
-      {{ profileform.as_table }}
+      {{ profileform|bootstrap_horizontal }}
       </table>
       <div class="well text-center">
         <input class="btn btn-success" type="submit" value="Submit" />
