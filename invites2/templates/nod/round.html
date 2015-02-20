@@ -53,6 +53,7 @@
                                 <th>Company</th>
                                 <th>Title</th>
                                 <th>Bio</th>
+                                <th>Email</th>
                                 <th>POC</th>
                                 <th>W</th>
                                 <th>J</th>
@@ -67,6 +68,7 @@
                             <td>{{ pick.sparkprofile.employer }}</td>
                             <td>{{ pick.sparkprofile.job_title }}</td>
                             <td>{{ pick.sparkprofile.bio }}</td>
+                            <td{% if not pick.email %} class="bg-warning"{% endif %}>{{ pick.email }}</td>
                             <td>{% if pick.sparkprofile.poc %}<span class="glyphicon glyphicon-ok"></span>{% endif %}</td>
                             <td>{% if pick.sparkprofile.woman %}<span class="glyphicon glyphicon-ok"></span>{% endif %}</td>
                             <td>{% if pick.sparkprofile.journo %}<span class="glyphicon glyphicon-ok"></span>{% endif %}</td>
@@ -98,12 +100,23 @@
     <script type="text/javascript">
       $(document).ready(function() {
         $("#vote-table").tablesorter({
-          sortList: [[1,1],[7,1],[8,1],[3,0],[2,0]],
+          sortList: [[1,1],[8,1],[9,1],[3,0],[2,0]],
           headers: { 0: { sorter: false}, },
           cssDesc: 'active',
           cssAsc: 'danger',
         });
-      $(document).ready(function() {
+        function checkcount(selector) {
+            selector = typeof selector !== 'undefined' ? selector : 'a#countchecked';
+            var countchecked = $('input.invite-check:checked').size();
+            var noemail = $('input.invite-check:checked').parents('tr').children('td.bg-warning').size();
+            $(selector).text(countchecked + ' nominees selected; ' + noemail + ' lack emails');
+        };
+        function unselect() {
+            $('input.invite-check').each(function(){
+                this.checked = false;
+            })
+            checkcount();
+        };
         $('#check_all').click(function(event) {  //on click 
             if(this.checked) { // check select status
                 $('input.invite-check').each(function() { //loop through each checkbox
@@ -114,35 +127,28 @@
                     this.checked = false; //deselect all checkboxes with class "checkbox1"                       
                 });         
             }
-            var countchecked = $('input.invite-check:checked').size();
-            $('a#countchecked').text(countchecked + ' nominees selected');
+            checkcount();
         });
         $('#2plus').click(function(event) { 
+            unselect();
             $('input.2plus').each(function() {
                 this.checked = true;
             })
-            var countchecked = $('input.invite-check:checked').size();
-            $('a#countchecked').text(countchecked + ' nominees selected');
+            checkcount();
         });
         $('#3plus').click(function(event) { 
+            unselect();
             $('input.3plus').each(function() {
                 this.checked = true;
             })
-            var countchecked = $('input.invite-check:checked').size();
-            $('a#countchecked').text(countchecked + ' nominees selected');
+            checkcount();
         });
         $('a#countchecked').click(function(event){
-            var countchecked = $('input.invite-check:checked').size();
-            $(this).text(countchecked + ' nominees selected');
+            checkcount(this);
         });
         $('a#unselect').click(function(event){
-            $('input.invite-check').each(function(){
-                this.checked = false;
-            })
-            var countchecked = $('input.invite-check:checked').size();
-            $('a#countchecked').text(countchecked + ' nominees selected');
+            unselect();
         });
-      });
       });
     </script>
     {% endblock customscripts %}
