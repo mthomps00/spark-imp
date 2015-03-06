@@ -41,7 +41,7 @@
         {% else %}
         <p><span class="glyphicon glyphicon-transfer"></span>&nbsp;<a href="{% url 'mailsync' camptheme=camp.theme %}">Sync with MailChimp</a> | <a href="{% url 'mailcamp' camptheme=camp.theme %}">View merge tags</a></p>
         {% endif %}
-        <p><span class="glyphicon glyphicon-file"></span>&nbsp;<a href="{% url 'camp_table' camptheme=camp.theme %}">Download CSV of invitees</a></p>
+        <p><span class="glyphicon glyphicon-file"></span>&nbsp;<a href="{% url 'camp_table' camptheme=camp.theme %}">Download CSV of invitees</a> | <a href="{% url 'campdetail' camptheme=camp.theme %}">Invitee details</a></p>
         <p><span class="glyphicon glyphicon-envelope"></span>&nbsp;<a href="{% url 'contacts' camptheme=camp.theme %}">View your contacts</a></p>
         <p><span class="glyphicon glyphicon-list"></span>&nbsp;<a href="{% url 'invites' camptheme=camp.theme %}">Edit users and invitations</a></p>
           <p><span class="glyphicon glyphicon-flag"></span>&nbsp;Voting rounds: {% for round in camp.votinground_set.all %}

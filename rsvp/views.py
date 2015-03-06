@@ -1220,7 +1220,7 @@ def camp_table(request, camptheme):
         else:
             stipend = False
             
-        writer.writerow([invite.user.username, invite.user.first_name, invite.user.last_name, invite.user.email, profile.secondary_email, profile.phone, profile.job_title, profile.employer, profile.bio, profile.twitter, profile.url, profile.woman, profile.poc, profile.journo, profile.dietary, profile.headshot.url, invite.expires, invite.custom_message, invite.status, invite.special_cost, stipend, invite.has_paid, invite.comp_ticket])
+        writer.writerow([invite.user.username, invite.user.first_name, invite.user.last_name, invite.user.email, profile.secondary_email, profile.phone, profile.job_title, profile.employer, profile.bio, profile.twitter, profile.url, profile.woman, profile.poc, profile.journo, profile.dietary, profile.headshot, invite.expires, invite.custom_message, invite.status, invite.special_cost, stipend, invite.has_paid, invite.comp_ticket])
         
     return response
 

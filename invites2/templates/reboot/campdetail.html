@@ -32,6 +32,7 @@
       <table class="table table-striped table-condensed table-bordered" id="invites-table">
         <thead>
           <tr id="invites-header">
+            <th>Headshot</th>
             <th>Invite No.</th>
             <th>First name</th>
             <th>Last name</th>
@@ -46,9 +47,11 @@
             {% if camp.ignite %}<th>Ignite</th>{% endif %}
             <th>Expires</th>
           </tr>
-        </thead>                        
+        </thead>
+        {% load staticfiles %}
         {% for invite in invitations %}
         <tr>
+          <td>{% if invite.user.sparkprofile.headshot %}<a href="{{ MEDIA_URL }}{{ invite.user.sparkprofile.headshot }}"><img src="{{ invite.user.sparkprofile.thumb.url }}" /></a>{% endif %}</td>
           <td><a href="{% url 'route' invite.rand_id %}">{{ invite.rand_id }}</a></td>
           <td>{{ invite.user.first_name }}</td>
           <td>{{ invite.user.last_name }}</td>
