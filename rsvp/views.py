@@ -175,6 +175,22 @@ def camp(request, camptheme):
     return render_to_response('reboot/camp.html', variables, context_instance=RequestContext(request))
 
 @login_required
+def campdetail(request, camptheme):
+    camp = get_object_or_404(Camp, theme__iexact=camptheme)
+    invitations = Invitation.objects.filter(camp=camp)
+    for invitation in invitations:
+        invitation.status = invitation.get_status_display()
+        invitation.stipend = invitation.stipend_set.all()
+        invitation.roommate = invitation.roommate_set.all()
+        invitation.ignite = invitation.ignite_set.all()
+
+    variables = {
+        'camp': camp,
+        'invitations': invitations,
+    }
+    return render_to_response('reboot/campdetail.html', variables, context_instance=RequestContext(request))
+
+@login_required
 def mailcamp(request, camptheme):
     m = mailchimp.Mailchimp(settings.MAILCHIMP_API_KEY)
     id = settings.MAILCHIMP_LIST_ID
