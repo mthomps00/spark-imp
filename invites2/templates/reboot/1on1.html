@@ -53,6 +53,7 @@
             <th>Organization</th>
             <th>Bio</th>
             <th>Status</th>
+            <th>Expires</th>
             <th>Nominated by</th>
           </tr>
         </thead>                        
@@ -65,6 +66,7 @@
           <td>{{ invite.user.sparkprofile.employer }}</td>
           <td>{{ invite.user.sparkprofile.bio }}</td>
           <td>{{ invite.status }}</td>
+          <td>{{ invite.expires }}</td>
           <td>{{ invite.nominated_by }}</td>
         </tr>
         {% endfor %}
@@ -81,3 +83,16 @@
   </div>
   {% endif %}
   {% endblock main %}
+
+  {% block customscripts %}
+    <script src="{{ STATIC_URL }}_js/jquery.tablesorter.min.js"></script>
+    <script type="text/javascript">
+      $(document).ready(function() {
+        $("#invites-table").tablesorter({
+          sortList: [[7,0],[6,0],[2,0],[1,0]],
+          cssDesc: 'active',
+          cssAsc: 'danger',
+        });
+      });
+    </script>
+  {% endblock customscripts %}
