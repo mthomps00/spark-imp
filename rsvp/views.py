@@ -441,7 +441,8 @@ def pay(request, rand_id):
                   amount=invitation.stripe_cost, # amount in cents, again
                   currency="usd",
                   card=token,
-                  description=invitation.user.username
+                  description=invitation.user.username,
+                  receipt_email=email
                 )
             except stripe.CardError, e:
             # The card has been declined
